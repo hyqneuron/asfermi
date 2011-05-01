@@ -1,6 +1,6 @@
 #summary Source format specification
 
-= Introduction =
+= Source Code Format =
 
 This file specifies the format that should be taken by the source assembly code
 
