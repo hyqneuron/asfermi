@@ -3,7 +3,7 @@
 == Introduction ==
 This page contains a list of features of the assembler that are supported/to be supported.
 
-  * 0>: Already supported
+  * 0: Already supported
   * 1: To be supported
   * 2: May be supported
   * 8: Unlikely to be supported
@@ -13,7 +13,7 @@ This page contains a list of features of the assembler that are supported/to be 
 For the source code language features, such as the support for directives and instructions, please view the SourceFormat page.
 
 === cubin Operations ===
-  * <1>: Output assembled file as cubin (elf)
-  * <2>: Replace specific instructions inside a cubin
-  * <2>: Insert instructions into a cubin
-  * <8>: Optimization of instructions (for specific architectures)
+  * 1: Output assembled file as cubin (elf)
+  * 2: Replace specific instructions inside a cubin
+  * 2: Insert instructions into a cubin
+  * 8: Optimization of instructions (for specific architectures)
