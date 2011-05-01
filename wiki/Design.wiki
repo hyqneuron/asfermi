@@ -6,18 +6,19 @@
 {{{
 struct Line
 {
-  public:
     char* line_content;
     int line_number;
 }
 struct Directive:: public Line
 {
-  public:
     int directive_type;
     int* directive_content; //array of pointers specific to each directive_type
 }
 struct Instruction:: public Line
 {
+    char *instruction_string;
+    int instruction_type;
+    int *instruction_content; //array of pointers to content specific to each instruction_type. Usually include operator1, operator2 or operator3
 }
 }}}
 
