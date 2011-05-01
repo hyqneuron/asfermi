@@ -5,21 +5,28 @@
 This file specifies the format that should be taken by the source assembly code
 
 General rules:
+  * The source file sent to the assembler should only contain 3 types of lines:
+    * Directive
+    * Instruction
+    * Comment
   * Everything is case-sensitive
-  * Everything in cuobjdump format should be upper-case
-  * Everything in PTX-like format should be lower-case
-  * The assembler does not enforce the use of the semi-colon. It could be used in a line to separate one instruction from another
-  * If a line contains a directive, it must contain only the directive and no other things
-  * If a line contains a label, it could contain instructions and comments as well. But the label must precede everything else.
+  * If a line contains a directive, it must not contain any other directives or instructions. However, comments could be inserted right after the directive.
+
+----
 ==Directives==
-Declare symbols: kernel (parameters), texture symbol, constant memory, shared memory, external symbols
-Declare source format: PTX, cuobjdump
+
+Use:
+  * Declare symbols: kernel (parameters), texture symbol, constant memory, shared memory, external symbols
+  * Send specific commands to the assembler
+For a list of directives that are supported/to be supported, see [Directives].
 
 Format:
 {{{
 !directive_name argument1 argument2...
 }}}
+----
 ==Instructions==
+For a list of instructions that are supported/to be supported, see [Instructions].
 
 Format:
 {{{
@@ -27,19 +34,21 @@ NAME OP1 [ OP2 [OP3]]
 name.mod1.mod2 op1, [ op2, [op3]]
 }}}
 
-==label==
+General rules:
+  * Everything in cuobjdump format should be upper-case
+  * Everything in PTX-like format should be lower-case
+  * The assembler does not enforce the use of the semi-colon. It could be used in a line to separate one instruction from another
 
-Format:
-{{{
-label_name:
-}}}
-
+----
 ==Comments==
+State: 1
+
 Comments are exactly the same as as in C/C++.
 
 Format:
 {{{
 //in-line comment
+
 /*
 block comment
 */
