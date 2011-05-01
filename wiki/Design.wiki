@@ -4,7 +4,7 @@
 
 =Source file processing=
   # Read source file
-  # Split source file into char'**', with each char'**' containing one line
+  # Split source file into char/*, with each char/* containing one line
   # foreach( char* in char**) {parse(char*)} 
 =Parsing=
   # Ignore if this line is inside a multi-line comment section
