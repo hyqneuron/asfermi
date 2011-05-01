@@ -19,11 +19,11 @@ This is a page where all other wiki pages of this project are listed and briefly
 
 == Stage 1, Assembler ==
 === Assembler Features ===
-A list of features that are supported/planned to be executed. See Features
+A list of features that are supported/planned to be executed. See [Features].
 === Source specification ===
-A specification of the format of source code that can be assembled. See SourceFormat.
+A specification of the format of source code that can be assembled. See [SourceFormat].
 === Instructions ===
-A list of instructions that are supported/planned to be executed. See Instructions
+A list of instructions that are supported/planned to be executed. See [Instructions].
 
 == Stage 2, Microbenchmarking ==
 Currently no documentation has been written for this stage yet.
