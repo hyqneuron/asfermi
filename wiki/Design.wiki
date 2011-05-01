@@ -4,7 +4,23 @@
 
 =Basic types and global variables=
 {{{
+
+//Global states
+stack<int *(Line line)> pr_lparser;               //Stack of previously used parser
+stack<int *(Instruction instruction)> pr_iparser;
+stack<int *(Directive directive)> pr_dparser;
+
+list<Lparser> lparsers;        //List of parsers loaded at initialization
+list<Iparser> iparsers;
+list<Dparser> dparsers;
+
+
 //current states
+int cs_ln;                       //current line number
+list<Directive> cs_directives;   //list of directives encountered so far
+list<int[]> cs_labels;           //list of labels encountered so far
+bool cs_incomment;               //whether there is an not-yet-closed comment block
+
 int (*cs_lparser)(Line line);                //Current line parser
 int (*cs_iparser)(Instruction instruction);  //Current instruction parser
 int (*cs_dparser)(Directive directive);      //Current directive parser
@@ -13,9 +29,9 @@ int (*cs_dparser)(Directive directive);      //Current directive parser
 under the command of specific directives. For example, directives can indicate 
 whether the following section of code is in cuobjdump format or in PTX-like format.
 
-The line parser removes unnecessary white-space and identifies whether a line 
-contains directive/comment. If there is a not-yet-closed comment block, it 
-searches for "star/". If not found the parsing is over. If found, the
+The default line parser removes unnecessary white-space and identifies whether a 
+line contains directive/comment. If there is a not-yet-closed comment block, it 
+searches for "star/". If not found, the parsing would be over. If found, the
 cs_incomment is set to false. The line parser then removes unnecessary white-space 
 and comment, and checks for the existence of the directive identifier "!" in the
 first character. If it is found, the parser will build a Directive object and 
@@ -24,11 +40,14 @@ instruction delimiter ";" and breaks the filtered string into tokens. It then
 builds up an Instruction object for each token obtained and asks the Instruction 
 object to parse itself.
 
+However, line parsers can be changed. The general behaviour: The next line is 
+picked. The current line parser is used to parse this line. While default line
+parser often generates Instruction/Directive objects, custom line parsers need not 
+to, meaning that a line could be of a type other than directive/instruction. Thus 
+great flexibility of the source code is provided.
+
 */
 
-int cs_ln;                       //current line number
-list<Directive> cs_directives;   //list of directives encountered so far
-bool cs_incomment;               //whether there is an not-yet-closed comment block
 
 struct Line
 {
