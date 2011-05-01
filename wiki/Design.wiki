@@ -1,6 +1,11 @@
-= Stages =
-|| A. Source file processing || 1. Read source file ||
-|| || 2. Split source file into char'**', with each char'**' containing one line ||
-|| || 3. foreach( char* in char**) {parse(char*)} ||
-|| B. Parsing || 1. Ignore if this line is inside a multi-line comment section||
-|| || 2. Remove unnecessary white-space and in-line comment ||
+#summary Program design of the assembler
+
+<wiki:toc max_depth="1" />
+
+=Source file processing=
+  # Read source file
+  # Split source file into char'**', with each char'**' containing one line
+  # foreach( char* in char**) {parse(char*)} 
+=Parsing=
+  # Ignore if this line is inside a multi-line comment section
+  # Remove unnecessary white-space and in-line comment
