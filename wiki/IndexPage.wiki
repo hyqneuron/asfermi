@@ -15,7 +15,7 @@ This is a page where all other wiki pages of this project are listed and briefly
 
 
 = Stage 1, Assembler =
-== Assembler features ==
+== [http://code.google.com/p/asfermi/wiki/Features Assembler features] ==
 A list of features that are supported/planned to be executed.
 == [http://code.google.com/p/asfermi/wiki/SourceFormat Source specification] ==
 A specification of the format of source code that can be assembled.
