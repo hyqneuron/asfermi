@@ -2,28 +2,47 @@
 
 <wiki:toc max_depth="2" />
 
-=Basic types=
+=Basic types and global variables=
 {{{
+struct
+{
+int (*current_line_parser)(Line line);
+int (*current_instruction_parser)(Instruction instruction);
+int (*current_directive_parser)(Directive directive);
+}current_state;
+
 struct Line
 {
     char* line_content;
     int line_number;
-}
+    void Parse()
+    {
+        curret_state.current_line_parser(self);
+    }
+};
 struct Directive:: public Line
 {
     int directive_type;
     int* directive_content; //array of pointers specific to each directive_type
-}
+    void Parse()
+    {
+        current_state.current_directive_parser(self);
+    }
+};
 struct Instruction:: public Line
 {
     char *instruction_string;
     int instruction_type;
+    char *instruction_bytes;
     int *instruction_content; //array of pointers to content specific to each instruction_type. 
                               //Usually include operator1, operator2 or operator3
-}
+    void Parse()
+    {
+        current_state.current_instruction_parser(self);
+    }
+};
 }}}
 
-=Global states=
 All the global states will be contained in a single struct
   * int line_number
   * List of directives encountered
