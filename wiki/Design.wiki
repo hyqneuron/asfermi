@@ -1,6 +1,6 @@
 = Stages =
 || A. Source file processing || 1. Read source file ||
-|| ||2. Split source file into char'*''*', with each char* containing one line 
+|| || 2. Split source file into char'*''*', with each char* containing one line ||
 || || 3. foreach( char* in char**) {parse(char*)} ||
 || B. Parsing || 1. Ignore if this line is inside a multi-line comment section||
 || || 2. Remove unnecessary white-space and in-line comment ||
