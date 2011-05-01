@@ -18,7 +18,8 @@ struct Instruction:: public Line
 {
     char *instruction_string;
     int instruction_type;
-    int *instruction_content; //array of pointers to content specific to each instruction_type. Usually include operator1, operator2 or operator3
+    int *instruction_content; //array of pointers to content specific to each instruction_type. 
+                              //Usually include operator1, operator2 or operator3
 }
 }}}
 
