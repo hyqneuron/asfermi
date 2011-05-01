@@ -20,6 +20,8 @@ This is a page where all other wiki pages of this project are listed and briefly
 == Stage 1, Assembler ==
   === Assembler Features ===
   A list of features that are supported/planned to be executed. See [Features].
+  === Assembler Design ===
+  This page describes the framework under which the program is planned to be written. See [Design]
   === Source specification ===
   A specification of the format of source code that can be assembled. See [SourceFormat].
   === Instructions ===
