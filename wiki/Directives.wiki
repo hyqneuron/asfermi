@@ -2,6 +2,26 @@
 
 = Directives =
 
+This page provides a list of directives that are supported/to be supported, as well as their descriptions. For usage syntax, see [SourceFormat].
+
 Directives are used to declare symbols and to send specific instructions to the assembler.
 
-TBD
+== Symbol Declarations ==
+  === Kernel ===
+  State: 1
+  === Texture Object ===
+  State: 1
+  === Shared Memory Object ===
+  State: 1
+  === Constant Memory Object ===
+  State: 1
+  === External Symbol ===
+  State: 1
+
+== Assembler Commands ==
+  === Label ===
+  State: 1
+  === Type-checking ===
+  State: 2
+  === Unrolling ===
+  State: 1
