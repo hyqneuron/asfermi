@@ -1,12 +1,14 @@
 #summary Index page of the documentation
 
+=Index=
+
 This is a page where all other wiki pages of this project are listed and briefly described.
 
 <wiki:toc>
 
 
-= Overview =
-== [http://code.google.com/p/asfermi/ Summary page] ==
+== Overview ==
+=== [http://code.google.com/p/asfermi/ Summary page] ===
   * Brief introduction to the project
   * Planned stages of the project
   * Current development state
@@ -14,13 +16,13 @@ This is a page where all other wiki pages of this project are listed and briefly
 
 
 
-= Stage 1, Assembler =
-== [http://code.google.com/p/asfermi/wiki/Features Assembler features] ==
-A list of features that are supported/planned to be executed.
-== [http://code.google.com/p/asfermi/wiki/SourceFormat Source specification] ==
-A specification of the format of source code that can be assembled.
-== [http://code.google.com/p/asfermi/wiki/Instructions Instructions] ==
-A list of instructions that are supported/planned to be executed.
+== Stage 1, Assembler ==
+=== Assembler Features ===
+A list of features that are supported/planned to be executed. See Features.
+=== Source specification ===
+A specification of the format of source code that can be assembled. See SourceFormat.
+=== Instructions ===
+A list of instructions that are supported/planned to be executed. See Instructions.
 
-= Stage 2, Microbenchmarking =
+== Stage 2, Microbenchmarking ==
 Currently no documentation has been written for this stage yet.
