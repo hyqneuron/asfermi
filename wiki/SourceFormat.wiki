@@ -1,0 +1,32 @@
+#summary Source format specification
+
+= Introduction =
+
+This file specifies the format that should be taken by the source assembly code
+
+General rules:
+  * Everything is case-sensitive
+  * Everything in cuobjdump format should be upper-case
+  * Everything in PTX-like format should be lower-case
+  * The assembler does not enforce the use of the semi-colon. It could be used in a line to separate one instruction from another
+  * If a line contains a directive, it must contain only the directive and no other things
+  * If a line contains a label, it could contain instructions and comments as well. But the label must precede everything else.
+==Directives==
+Declare symbols: kernel, texture symbol, constant memory, shared memory
+
+Format:
+{{{!directive_name argument1 argument2...}}}
+==Instructions==
+
+Format:
+{{{
+NAME OP1 [ OP2 [OP3]]
+name.mod1.mod2 op1, [ op2, [op3]]}}}
+
+==label==
+
+Format:
+{{{label_name:}}}
+
+==Comments==
+Comments are treated exactly the same as as in C/C++.
