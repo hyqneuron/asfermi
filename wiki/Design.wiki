@@ -26,9 +26,9 @@ object to parse itself.
 
 */
 
-int cs_ln; //current line number
-list<Directive> cs_directives; //list of directives encountered so far
-bool cs_incomment; //whether there is an not-yet-closed comment block
+int cs_ln;                       //current line number
+list<Directive> cs_directives;   //list of directives encountered so far
+bool cs_incomment;               //whether there is an not-yet-closed comment block
 
 struct Line
 {
