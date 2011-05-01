@@ -1,19 +1,20 @@
 #summary Program design of the Fermi assembler
 
-<wiki:toc max_depth="1" />
+<wiki:toc max_depth="2" />
 
 =Basic types=
 {{{
 struct Line
 {
   public:
-    char* content;
+    char* line_content;
     int line_number;
 }
 struct Directive:: public Line
 {
   public:
-    
+    int directive_type;
+    int* directive_content; //array of pointers specific to each directive_type
 }
 struct Instruction:: public Line
 {
