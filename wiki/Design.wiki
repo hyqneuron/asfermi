@@ -79,4 +79,45 @@ struct Instruction:: public Line
         cs_iparser(self);
     }
 };
+struct Parser
+{
+    char* Name;
+};
+struct Lparser:: public Parser
+{
+    int Function(Line line)
+    {
+    }
+};
+struct Iparser:: public Parser
+{
+    int Function(Instruction instruction)
+    {
+    }
+};
+struct Dparser:: public Parser
+{
+    int Function(Directive directive)
+    {
+    }
+};
+
+
+
+void Set_lparser(char* name) //same goes for i/d parsers
+{
+    pr_lparsers.push();
+    foreach(Lparser p in lparsers)
+    {
+        if(p.Name == name)
+        {
+            cs_lparser=p.Function;
+            break;
+        }
+    }
+}
+void Set_pr_lparser() //Same goes for i/d parsers
+{
+    cs_lparser = pr_lparsers.pop();
+}
 }}}
