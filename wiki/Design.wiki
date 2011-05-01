@@ -3,9 +3,9 @@
 <wiki:toc max_depth="1" />
 
 =Source file processing=
-  # Read source file
-  # Split source file into char\*, with each char\* containing one line
-  # foreach( char* in char**) {parse(char*)} 
+  * Read source file
+  * Split source file into char"*", with each char\* containing one line
+  * foreach( char* in char**) {parse(char*)} 
 =Parsing=
-  # Ignore if this line is inside a multi-line comment section
-  # Remove unnecessary white-space and in-line comment
+  * Ignore if this line is inside a multi-line comment section
+  * Remove unnecessary white-space and in-line comment
