@@ -17,7 +17,7 @@ The line parser removes unnecessary white-space and identifies whether a line
 contains directive/comment. If there is a not-yet-closed comment block, it 
 searches for "star/". If not found the parsing is over. If found, the
 cs_incomment is set to false. The line parser then removes unnecessary white-space 
-and comment, and checks for the existence of the directive identifier "#" in the
+and comment, and checks for the existence of the directive identifier "!" in the
 first character. If it is found, the parser will build a Directive object and 
 ask the Directive object to parse itself. If it is not found, the parser looks for 
 instruction delimiter ";" and breaks the filtered string into tokens. It then 
