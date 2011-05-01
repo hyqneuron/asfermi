@@ -5,14 +5,15 @@
 =Basic types and global variables=
 {{{
 //current states
-int (*cs_lparser)(Line line); //Current line parser
-int (*cs_iparser)(Instruction instruction); //Current instruction parser
-int (*cs_dparser)(Directive directive); //Current directive parser
+int (*cs_lparser)(Line line);                //Current line parser
+int (*cs_iparser)(Instruction instruction);  //Current instruction parser
+int (*cs_dparser)(Directive directive);      //Current directive parser
+
 /*function pointers are used so that different parsers can be used when needed, 
 under the command of specific directives. For example, directives can indicate 
 whether the following section of code is in cuobjdump format or in PTX-like format.
 
-The line parser removes unnecessary white-space identifies whether a line 
+The line parser removes unnecessary white-space and identifies whether a line 
 contains directive/comment. If there is a not-yet-closed comment block, it 
 searches for "star/". If not found the parsing is over. If found, the
 cs_incomment is set to false. The line parser then removes unnecessary white-space 
@@ -20,7 +21,7 @@ and comment, and checks for the existence of the directive identifier "#" in the
 first character. If it is found, the parser will build a Directive object and 
 ask the Directive object to parse itself. If it is not found, the parser looks for 
 instruction delimiter ";" and breaks the filtered string into tokens. It then 
-build up a Instruction object for each token obtained and asks the Instruction 
+builds up an Instruction object for each token obtained and asks the Instruction 
 object to parse itself.
 
 */
@@ -60,13 +61,3 @@ struct Instruction:: public Line
     }
 };
 }}}
-
-
-=Stages=
-==Source file processing==
-  * Read source file
-  * Split source file into char`*``*`, with each char`*` containing one line
-  * foreach( char`*` in char`*``*`)  {  parse(char`*`) }
-==Parsing==
-  * Ignore if this line is inside a multi-line comment section
-  * Remove unnecessary white-space and in-line comment
