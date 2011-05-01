@@ -2,10 +2,36 @@
 
 <wiki:toc max_depth="1" />
 
-=Source file processing=
+=Basic types=
+{{{
+struct Line
+{
+  public:
+    char* content;
+    int line_number;
+}
+struct Directive:: public Line
+{
+  public:
+    
+}
+struct Instruction:: public Line
+{
+}
+}}}
+
+=Global states=
+All the global states will be contained in a single struct
+  * int line_number
+  * List of directives encountered
+  * bool inside_multi_line_comment
+  * int current_parser
+
+=Stages=
+==Source file processing==
   * Read source file
   * Split source file into char`*``*`, with each char`*` containing one line
   * foreach( char`*` in char`*``*`)  {  parse(char`*`) }
-=Parsing=
+==Parsing==
   * Ignore if this line is inside a multi-line comment section
   * Remove unnecessary white-space and in-line comment
