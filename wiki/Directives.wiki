@@ -25,3 +25,7 @@ Directives are used to declare symbols and to send specific instructions to the 
   State: 2
   === Unrolling ===
   State: 1
+  === Macro ===
+  State: 2
+  === Set_(i/d/l)parser, Set_pr_(i/d/l)parser ===
+  State: 2
