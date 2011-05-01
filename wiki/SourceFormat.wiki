@@ -12,7 +12,8 @@ General rules:
   * If a line contains a directive, it must contain only the directive and no other things
   * If a line contains a label, it could contain instructions and comments as well. But the label must precede everything else.
 ==Directives==
-Declare symbols: kernel, texture symbol, constant memory, shared memory
+Declare symbols: kernel (parameters), texture symbol, constant memory, shared memory, external symbols
+Declare source format: PTX, cuobjdump
 
 Format:
 {{{
@@ -34,4 +35,12 @@ label_name:
 }}}
 
 ==Comments==
-Comments are treated exactly the same as as in C/C++.
+Comments are exactly the same as as in C/C++.
+
+Format:
+{{{
+//in-line comment
+/*
+block comment
+*/
+}}}
