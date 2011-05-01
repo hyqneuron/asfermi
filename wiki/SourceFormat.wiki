@@ -15,18 +15,23 @@ General rules:
 Declare symbols: kernel, texture symbol, constant memory, shared memory
 
 Format:
-{{{!directive_name argument1 argument2...}}}
+{{{
+!directive_name argument1 argument2...
+}}}
 ==Instructions==
 
 Format:
 {{{
 NAME OP1 [ OP2 [OP3]]
-name.mod1.mod2 op1, [ op2, [op3]]}}}
+name.mod1.mod2 op1, [ op2, [op3]]
+}}}
 
 ==label==
 
 Format:
-{{{label_name:}}}
+{{{
+label_name:
+}}}
 
 ==Comments==
 Comments are treated exactly the same as as in C/C++.
