@@ -4,12 +4,30 @@
 
 =Basic types and global variables=
 {{{
-struct
-{
-int (*current_line_parser)(Line line);
-int (*current_instruction_parser)(Instruction instruction);
-int (*current_directive_parser)(Directive directive);
-}current_state;
+//current states
+int (*cs_lparser)(Line line); //Current line parser
+int (*cs_iparser)(Instruction instruction); //Current instruction parser
+int (*cs_dparser)(Directive directive); //Current directive parser
+/*function pointers are used so that different parsers can be used when needed, 
+under the command of specific directives. For example, directives can indicate 
+whether the following section of code is in cuobjdump format or in PTX-like format.
+
+The line parser removes unnecessary white-space identifies whether a line 
+contains directive/comment. If there is a not-yet-closed comment block, it 
+searches for "*/". If not found the parsing is over. If found, the
+cs_incomment is set to false. The line parser then removes unnecessary white-space 
+and comment, and checks for the existence of the directive identifier "#" in the
+first character. If it is found, the parser will build a Directive object and 
+ask the Directive object to parse itself. If it is not found, the parser looks for 
+instruction delimiter ";" and breaks the filtered string into tokens. It then 
+build up a Instruction object for each token obtained and asks the Instruction 
+object to parse itself.
+
+*/
+
+int cs_ln; //current line number
+list<Directive> cs_directives; //list of directives encountered so far
+bool cs_incomment; //whether there is an not-yet-closed comment block
 
 struct Line
 {
@@ -17,7 +35,7 @@ struct Line
     int line_number;
     void Parse()
     {
-        curret_state.current_line_parser(self);
+        cs_lparser(self);
     }
 };
 struct Directive:: public Line
@@ -26,7 +44,7 @@ struct Directive:: public Line
     int* directive_content; //array of pointers specific to each directive_type
     void Parse()
     {
-        current_state.current_directive_parser(self);
+        cs_dparser(self);
     }
 };
 struct Instruction:: public Line
@@ -38,16 +56,11 @@ struct Instruction:: public Line
                               //Usually include operator1, operator2 or operator3
     void Parse()
     {
-        current_state.current_instruction_parser(self);
+        cs_iparser(self);
     }
 };
 }}}
 
-All the global states will be contained in a single struct
-  * int line_number
-  * List of directives encountered
-  * bool inside_multi_line_comment
-  * int current_parser
 
 =Stages=
 ==Source file processing==
