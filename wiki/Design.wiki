@@ -1,4 +1,4 @@
-#summary Program design of the assembler
+#summary Program design of the Fermi assembler
 
 <wiki:toc max_depth="1" />
 
