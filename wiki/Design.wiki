@@ -7,19 +7,32 @@
 == Organisation ==
 === General structure ===
 ==== Line Parser ====
-Line parser -> (Instruction parser, Directive Parser)
+{{{
+foreach(line in file)
+{
+    line = basic_processing(line);
+    if(line is directive)
+        directive_parser(line);
+    else if(line is instruction)
+        instruction_parser(line);
+}
+}}}
 
 The *Line parser* picks a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
   * Asks the *directive parser* to parse the processed part of the line, if the line is a directive, or
   * Asks the *instruction parser* to parse the processed part of the line, if the line is an instruction.
 
-There could be two types of line parsers: passive and active. Passive parsers parses only a specific number of lines given by the caller. White active parsers takes full control and is free to jump between lines.
+There could be two types of line parsers: passive and active. Passive parsers parse only one line that is given by the caller. While active parsers are usually only given a starting point and is free to jump between lines.
 
 The default line parser is a passive one and there is another function that is in charge of reading the source file, splitting the source into lines and calling the line parser n (number of lines) times.
 
 ==== Instruction Parser ====
+An instruction parser is a passive parser. It receives a single instruction from the caller (line parser), and then analyses the instruction to produce the correct opcode. It then appends the opcode to a list and increase an offset count by the byte length of the opcode.
 
 ==== Directive Parser ====
+A directive parser is a passive parser. It receives a single command (a single line) from the caller (line parser), and does the corresponding changes to the assembler's states.
+
+It is also in charge of registering the labels found into a list along with its current instruction offset.
 
 === Extensions ===
 ----
