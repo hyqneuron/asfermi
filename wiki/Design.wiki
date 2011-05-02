@@ -6,11 +6,21 @@
 ----
 == Organisation ==
 === General structure ===
+==== Line Parser ====
 Line parser -> (Instruction parser, Directive Parser)
 
-The Line parser picks a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
-  * Asks the directive parser to parse the processed part of the line, if the line is a directive, or
-  * Asks the instruction parser to parse the processed part of the line, if the line is an instruction.
+The *Line parser* picks a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
+  * Asks the *directive parser* to parse the processed part of the line, if the line is a directive, or
+  * Asks the *instruction parser* to parse the processed part of the line, if the line is an instruction.
+
+There could be two types of line parsers: passive and active. Passive parsers parses only a specific number of lines given by the caller. White active parsers takes full control and is free to jump between lines.
+
+The default line parser is a passive one and there is another function that is in charge of reading the source file, splitting the source into lines and calling the line parser n (number of lines) times.
+
+==== Instruction Parser ====
+
+==== Directive Parser ====
+
 === Extensions ===
 ----
 ==Basic types and global variables==
