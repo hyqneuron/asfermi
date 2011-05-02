@@ -8,14 +8,12 @@
 === General structure ===
 ==== Line Parser ====
 {{{
-foreach(line in file)
-{
+    //line is the content of the current line
     line = basic_processing(line);
     if(line is directive)
         directive_parser(line);
     else if(line is instruction)
         instruction_parser(line);
-}
 }}}
 
 The *Line parser* picks a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
