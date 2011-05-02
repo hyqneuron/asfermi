@@ -34,3 +34,10 @@ State: 1
 State: 2
 ==== Set`_`(i/d/l)parser, Set`_`pr`_`(i/d/l)parser ====
 State: 2
+==== Capitalize ====
+State: 1
+Description: Defines whether the instruction parser should capitalize all letters of the input before it starts parsing. Can be enabled to support lower-case source code.
+Format:
+{{{
+!Capitalie (on/off)
+}}}
