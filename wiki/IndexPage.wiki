@@ -8,12 +8,12 @@ This is a page where all other wiki pages of this project are listed and briefly
 
 ----
 == Overview ==
-  === Summary page ===
-    * Brief introduction to the project
-    * Planned stages of the project
-    * Current development state
-    * Other trivial information
-  [http://code.google.com/p/asfermi/ Link to summary page]
+=== Summary page ===
+  * Brief introduction to the project
+  * Planned stages of the project
+  * Current development state
+  * Other trivial information
+[http://code.google.com/p/asfermi/ Link to summary page]
 
 
 ----
