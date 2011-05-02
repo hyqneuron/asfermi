@@ -54,6 +54,11 @@ list<Lparser> lparsers;        //List of parsers loaded at initialization
 list<Iparser> iparsers;
 list<Dparser> dparsers;
 
+//List of known instructions and directives loaded at initialization
+list<InstructionRule>[] known_instructions;
+list<DirectiveRule>[] known_directives;
+//SHOULDN'T USE LIST HERE. WILL MAKE MY OWN DATA STRUCTURE FOR THIS
+
 
 //current states
 int cs_ln;                         //current line number
