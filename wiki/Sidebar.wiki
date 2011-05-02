@@ -1,5 +1,5 @@
 #summary Sidebar for all wiki pages
-====Documentation====
+
 [http://code.google.com/p/asfermi/ Project Home]
 ===Stage 1===
   * [Features]
