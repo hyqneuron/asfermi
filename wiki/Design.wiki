@@ -4,7 +4,7 @@
 
 == Organisation ==
 === General structure Line ===
- parser -> (Instruction parser, Directive Parser)
+parser -> (Instruction parser, Directive Parser)
 
 The Line parser picks a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
   * Asks the directive parser to parse the processed part of the line, if the line is a directive, or
