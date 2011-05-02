@@ -24,6 +24,8 @@ Format:
 {{{
 !directive_name argument1 argument2...
 }}}
+
+Note: labels are written as directives.
 ----
 ==Instructions==
 For a list of instructions that are supported/to be supported, see [Instructions].
