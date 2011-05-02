@@ -16,6 +16,6 @@ For the source code language features, such as the support for directives and in
   * 1: Output assembled file as cubin (elf)
   * 2: Replace specific instructions inside a cubin
   * 2: Insert instructions into a cubin
-
+----
 == Others ==
   * 8: Optimization of instructions (for specific architectures)
