@@ -8,10 +8,10 @@ This page contains a list of features of the assembler that are supported/to be 
   * 2: May be supported
   * 8: Unlikely to be supported
   * 9: Not supported
-
+----
 == Source code format ==
 For the source code language features, such as the support for directives and instructions, please view the SourceFormat page.
-
+----
 == cubin Operations ==
   * 1: Output assembled file as cubin (elf)
   * 2: Replace specific instructions inside a cubin
