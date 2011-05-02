@@ -2,7 +2,14 @@
 
 <wiki:toc max_depth="2" />
 
-=Basic types and global variables=
+== Organisation ==
+General structure: Line parser -> (Instruction parser, Directive Parser)
+The Line parser picks a line, does certain basic processing, makes a judgement about whether this line is a directive or instruction, and then
+  * Asks the directive parser to parse the processed part of the line, if the line is a directive, or
+  * Asks the instruction parser to parse the processed part of the line, if the line is an instruction.
+
+
+==Basic types and global variables==
 {{{
 
 //Global states
