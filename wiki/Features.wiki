@@ -13,7 +13,7 @@ This page contains a list of features of the assembler that are supported/to be 
 For the source code language features, such as the support for directives and instructions, please view the [SourceFormat] page.
 ----
 == Extensibility ==
-  * 1: Passive Parser, see [Design]
+  * 1: Passive Parser, see [Design#Line_Parser]
   * 2: Active Parser
 ----
 == cubin Operations ==
