@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Instruction names currently listed here are pseudo-names. They are directly obtained from cuobjdump.pdf and will be different from the actual instruction names, which will be listed at a later time.
+Instruction names currently listed here are pseudo-names as they bear certain slight differences to the output of cuobjdump. They are directly obtained from cuobjdump.pdf for convenience's sake. The accurate instruction names will be listed at a later time.
 
 
 == Floating point Instructions ==
