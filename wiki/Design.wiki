@@ -32,6 +32,8 @@ A directive parser is a passive parser. It receives a single command (a single l
 
 It is also in charge of registering the labels found into a list along with its current instruction offset.
 
+For more details of the instructions and directives, see SourceFormat
+
 === Extensions ===
 ----
 ==Basic types and global variables==
@@ -48,10 +50,12 @@ list<Dparser> dparsers;
 
 
 //current states
-int cs_ln;                       //current line number
-list<Directive> cs_directives;   //list of directives encountered so far
-list<int[]> cs_labels;           //list of labels encountered so far
-bool cs_incomment;               //whether there is an not-yet-closed comment block
+int cs_ln;                         //current line number
+int cs_offset;                     //current instruction offset
+list<Directive> cs_directives;     //list of directives encountered so far
+list<int[]> cs_labels;             //list of labels encountered so far
+list<Instruction> cs_instructions; //list of instructions encountered
+bool cs_incomment;                 //whether there is an not-yet-closed comment block
 
 int (*cs_lparser)(Line line);                //Current line parser
 int (*cs_iparser)(Instruction instruction);  //Current instruction parser
@@ -117,18 +121,21 @@ struct Parser
 };
 struct Lparser:: public Parser
 {
+    Lparser(){Name = "default_lparser"}
     int Function(Line line)
     {
     }
 };
 struct Iparser:: public Parser
 {
+    Iparser(){Name = "default_iparser"}
     int Function(Instruction instruction)
     {
     }
 };
 struct Dparser:: public Parser
 {
+    Dparser(){Name = "default_dparser"}
     int Function(Directive directive)
     {
     }
@@ -150,6 +157,6 @@ void Set_lparser(char* name) //same goes for i/d parsers
 }
 void Set_pr_lparser() //Same goes for i/d parsers
 {
-    cs_lparser = pr_lparsers.pop();
+    cs_lparser = pr_lparsers.pop().Function;
 }
 }}}
