@@ -27,12 +27,18 @@ The default line parser is a passive one and there is another function that is i
 ==== Instruction Parser ====
 An instruction parser is a passive parser. It receives a single instruction from the caller (line parser), and then analyses the instruction to produce the correct opcode. It then appends the opcode to a list and increase an offset count by the byte length of the opcode.
 
+The default instruction parser, upon receiving the instruction line, would check against a *list of known instructions* names and treat the instruction operators in accordance with the rules specified under the corresponding instruction name.
+
+For more details of the instructions, see [SourceFormat]
+
 ==== Directive Parser ====
 A directive parser is a passive parser. It receives a single command (a single line) from the caller (line parser), and does the corresponding changes to the assembler's states.
 
 It is also in charge of registering the labels found into a list along with its current instruction offset.
 
-For more details of the instructions and directives, see SourceFormat
+The default directive parser, upon receiving the directive line, would check against a *list of known directive* names and treat the arguments of the directive in accordance with the rules specified under the corresponding directive name.
+
+For more details of the directives, see [SourceFormat]
 
 === Extensions ===
 ----
