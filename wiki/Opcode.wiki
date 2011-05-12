@@ -14,7 +14,7 @@ Currently 2 types of opcodes found: 4-byte and 8-byte
 na   mod    pr   re1    re0    addr                             cc nb  res
 ====re1 re2====
 
-r1 to 111111 gives MOV32I RZ, -0x1; => proving 111111 is indeed RZ
+`r1` to 111111 gives MOV32I RZ, -0x1; => proving 111111 is indeed RZ
 changing the re1 from 111111 to 111110 gives R62 => correctly coded register
 changing re0 to 111111 gives no diff from cuobjdump => cuobjdump does not use this reg for mov32i
 
