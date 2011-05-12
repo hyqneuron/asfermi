@@ -1,0 +1,55 @@
+#summary This page describes the opcode format of fermi
+
+Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate as so far I only experimented with MOV.
+
+= Opcode Information =
+Currently 2 types of opcodes found: 4-byte and 8-byte
+
+----
+== 8-byte ==
+
+<pre>
+/`*`0018`*`/     /`*`0xfc035de21bffffff`*`/ 	MOV32I R13, -0x1;
+0100 011110 1110 101100 000000 11111111111111111111111111111111 0  110 00
+na   mod    pr   re1    re0    addr                             cc nb  res
+====re1 re2====
+r1 to 111111 gives MOV32I RZ, -0x1; => proving 111111 is indeed RZ
+changing the re1 from 111111 to 111110 gives R62 => correctly coded register
+changing re0 to 111111 gives no diff from cuobjdump => cuobjdump does not use this reg for mov32i
+
+==== bx ====
+flipping any one of the first 4 bits in bx would change the instruction name
+bx4: 1: .S to mov32i
+bx5: 1: .X not to mov32i, but to lop32i
+bx6: 0: .AND; 1: .OR; all added to lop32i
+bx7: 1: .XOR
+bx6-7: 11: PASS_B
+bx8: no effect to lop32i
+bx9: 1: ~on second operator
+flipping bx5-9 changes nothing
+==== pr ====
+pr0-2: predicate number, little endian, from 0-6
+when pr3 is set to 1, means negate predicate
+however, when set to negate, doesn't use, P7(1111), the predicate becomes @!pt. what is pt?
+When does not negate, P7 means no predicate used
+====be====
+flipping be0 shows no change with mov32i
+flipping be2 to 0 makes the instruction name iadd32i;
+changing be1,2 to 00 makes the instruction name IMAD32I.U32.U32
+whenever be4,5 are set to 1, the instruction becomes invalid.
+when be becomes:
+		000000: IMAD32I.U32.U32 R0, -R0, -0x1, R0;
+		000100: FFMA32I R0, -R0, -0x1, R0;
+		001000: IMUL32I.U32.U32 R0, R0, -0x1;
+		001100: FMUL32I.FMA2 R0, R0, -0x1;
+		010000: IADD32I R0, -R0, -0x1;
+		010100: FADD32I R0, -R0, -0x1;
+		011000: MOV32I R0, -0x1, 0x0;
+		011100: LOP32I.AND R0, ~R0, -0x1;
+		111100: LOP32I.AND R0.CC, ~R0, -0x1;
+		101000: IMUL32I.U32.U32 R0.CC, R0, -0x1;
+looks like be0 has to do with .CC modifier for the destination register
+be1-3 determines what the instruction starts with, yet they don't change the fact that they all end with 'I'
+</pre>
+
+== 4-byte ==
