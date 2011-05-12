@@ -9,5 +9,6 @@
   * [SourceFormat]
   * [Instructions]
   * [Directives]
+  * [Opcode]
 ===Stage 2===
 No documentation yet
