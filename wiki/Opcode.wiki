@@ -2,8 +2,6 @@
 
 Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate as so far I only experimented with MOV.
 
-Note: the wiki automatically changes things in square brackets to wikilinks. So when you see hyperlinks below, you know it's supposed to be surrounded by square brackets.
-
 = Opcode Information =
 Currently 2 types of opcodes found: 4-byte and 8-byte
 
@@ -15,6 +13,7 @@ Currently 2 types of opcodes found: 4-byte and 8-byte
 0100 011110 1110 101100 000000 11111111111111111111111111111111 0  110 00
 na   mod    pr   re1    re0    addr                             cc nb  res
 ====re1 re2====
+
 r1 to 111111 gives MOV32I RZ, -0x1; => proving 111111 is indeed RZ
 changing the re1 from 111111 to 111110 gives R62 => correctly coded register
 changing re0 to 111111 gives no diff from cuobjdump => cuobjdump does not use this reg for mov32i
