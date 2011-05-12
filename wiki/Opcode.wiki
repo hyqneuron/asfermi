@@ -2,6 +2,8 @@
 
 Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate as so far I only experimented with MOV.
 
+Note: the wiki automatically changes things in square brackets to wikilinks. So when you see hyperlinks below, you know it's supposed to be surrounded by square brackets.
+
 = Opcode Information =
 Currently 2 types of opcodes found: 4-byte and 8-byte
 
