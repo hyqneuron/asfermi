@@ -28,6 +28,8 @@ A specification of the format of source code that can be assembled. See [SourceF
 A list of instructions that are supported/ to be executed. See [Instructions].
 === Directives ===
 A list of directives that are supported/to be executed. See [Directives]
+=== Opcode Information ===
+A page describing the opcode format of the Fermi instructions. See [Opcode].
 ----
 == Stage 2, Microbenchmarking ==
 Currently no documentation has been written for this stage yet.
