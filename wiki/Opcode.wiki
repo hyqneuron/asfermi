@@ -56,6 +56,7 @@ be1-3 determines what the instruction starts with, yet they don't change the fac
 == 4-byte ==
 
 ==Some code==
+Previously I was thinking even data type would have an effect on the mov instruction as the normal mov I get is named MOV32I. I thought that 'I' at the end had some thing to do with integers. Apparently I was wrong. Now I think it means 'immediate'.
 {{{
 	.version 2.3
 	.target sm_21
