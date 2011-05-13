@@ -4,11 +4,14 @@
 
 [IndexPage]
 ===Stage 1===
+====Opcode====
+  * [Opcode]
+  * [PTXpriority]
+====Assembler====
   * [Features]
   * [Design]
   * [SourceFormat]
   * [Instructions]
   * [Directives]
-  * [Opcode]
 ===Stage 2===
 No documentation yet
