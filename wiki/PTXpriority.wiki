@@ -4,7 +4,7 @@
 This page lists the sequence in which various PTX instructions and their respective opcode will be probed.
 
 The lesser the indent, the greater the priority.
-<pre>
+
 ===First Group===
 mov, ld, st, add, sub
 
@@ -13,7 +13,8 @@ set, setp, testp, neg, and, or, mul, bra, call, ret, exit
 
 === By Type ===
 ====Integer Instructions====
- add //addition, all 6 types
+<pre>
+add //addition, all 6 types
 sub //substraction, 6 types
 mul //multiplication
 neg //negate
@@ -35,9 +36,11 @@ neg //negate
 		sub.cc, subc
 		mul24
 		mad24
+</pre>
 
 ====Floating Point Instructions====
- testp
+<pre>
+testp
 add
 sub
 mul
@@ -56,24 +59,28 @@ div
 		cos
 		lg2
 		ex2
+</pre>
 
 ====Comparison and Select Instructions====
- set
+<pre>
+set
 setp
 	selp
 	slct
-
+</pre>
 ====Logical Shift Instructions====
- and
+<pre>
+and
 or
 	xor
 	not
 	cnot
 	shl
 	shr
-
+</pre>
 ====Data Movement and Conversion Instructions====
- mov
+<pre>
+mov
 ld
 st
 	ldu
@@ -81,9 +88,10 @@ st
 	isspacep
 	cvta
 	cvt
-
+</pre>
 
 ====Texture And Surface====
+<pre>
 	tex
 	tld4
 	txq
@@ -91,18 +99,19 @@ st
 	sust
 	sured
 	suq
-
+</pre>
 ====Execution Control Instructions====
- bra
+<pre>
+bra
 call
 ret
 exit
-
+</pre>
 ====Parallel Synchronization and Communication Instructions====
+<pre>
 	bar
 	membar
 	atom
 	red
 	vote
-
 </pre>
