@@ -1,10 +1,10 @@
 #summary Sidebar for all wiki pages
 
-<pre>
-[http://code.google.com/p/asfermi/ Project Home]
-[IndexPage]
-[Plan]
-</pre>
+
+  * [http://code.google.com/p/asfermi/ Project Home]
+  * [IndexPage]
+  * [Plan]
+
 ===Stage 1===
 ====Opcode====
   * [Opcode]
