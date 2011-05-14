@@ -2,6 +2,8 @@
 
 Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate as so far I only experimented with MOV.
 
+The registers below are automatically marked by the wiki as revisions. That's the problem with the wiki.
+
 = Opcode Information =
 Currently 2 types of opcodes found: 4-byte and 8-byte
 
