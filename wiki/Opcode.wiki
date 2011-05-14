@@ -12,8 +12,11 @@ Currently 2 types of opcodes found: 4-byte and 8-byte
 
 <pre>
 /`*`0018`*`/     /`*`0xfc035de21bffffff`*`/ 	MOV32I R13, -0x1;
+LSB                                                                  MSB
 0100 011110 1110 101100 000000 11111111111111111111111111111111 0  11000
 na   mod    pr   re1    re0    addr                             cc nb
+
+The numbering below, such as mod0, start from the LSB
 ====na nb====
 These two bit fields specify the instruction name. Invalid bits result in invalid opcode.
 
