@@ -15,7 +15,7 @@ This is a page where all other wiki pages of this project are listed and briefly
 [http://code.google.com/p/asfermi/ Link to home page]
 
 === Project Plan ===
-  * Planned stages of the project
+ This page deacribes the planned stages of the project. See [Plan]. 
 
 ----
 == Stage 1, Assembler ==
