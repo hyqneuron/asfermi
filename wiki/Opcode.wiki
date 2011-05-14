@@ -30,10 +30,10 @@ mod4: no effect seen so far
 mod5: 1: ~on second operator of lop32i
 
 #pr:
-pr0-2: predicate number, little endian, from 0-6
-when pr3 is set to 1, means negate predicate
-however, when set to negate, doesn't use, P7(1111), the predicate becomes @!pt. what is pt?
-When does not negate, P7 means no predicate used
+pr0~2: predicate number, little endian, from 0-6
+pr3: 1: negate predicate
+pr: 1111: @!pt. what is pt?
+pr: 1110: No predicate
 
 #re1, re2:
 re1 to 111111 gives MOV32I RZ, -0x1; => proving 111111 is indeed RZ
