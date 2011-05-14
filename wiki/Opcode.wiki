@@ -43,9 +43,10 @@ changing re0 to 111111 gives no diff from cuobjdump => cuobjdump does not use th
 ====addr====
 This field contains either immediate value or address for certain instructions
 Eg. 
+{{{
 /*0000*/     /*0x00005de428004404*/ 	MOV R1, c [0x1] [0x100];0010 011110 1110 100000 000000 0000000010000000 1000 100000000000 0 10100
 											       0x100	        0x1  another mod?
-
+}}}
 
 ====cc====
 has effect on first operator for some instructions
