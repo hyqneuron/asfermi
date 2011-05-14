@@ -1,0 +1,53 @@
+#summary Project plans
+
+= Introduction =
+==Project Stages==
+This project involves two stages. First is the making of the assembler. Second is the probing of various detailed features of the GF1xx architectures.
+
+===Assembler===
+  # Determining the format of assembly source code. Most likely the output format of cuobjdump will be followed so that its output can be directly assembled by the assembler. However, there exists the possibility that a PTX-like format may also be supported.
+  # Probing Fermi's opcode format
+  # Writing the assembler
+  # Completing the assembler by adding support for directly producing .cubin files, which can then be used by CUDA programmes and nvcc.
+
+===Microbenchmarking===
+====Instruction-related====
+  * Instruction cache
+    * Cache associativity
+    * Cacheline size
+    * Prefetch pattern
+    * Effects of large jumping
+  * Warp scheduling
+    * ILP depth: How many unfinished instructions could the scheduler deal with before stalling?
+    * Scheduling behaviour: depth-first? width-first? Or a mix or the two?
+    * Divergence behaviour
+    * Processing Unit Group characteristics
+    * Is ILP considered when picking warps on CC2.1 devices?
+  * Instruction latencies
+  * Effects of larger-than-32-bit accesses
+  * Register bank conflict
+
+====Memory-related====
+  * Latency
+    * Various types of caches and memories
+    * Various modifiers
+    * Memoryfence
+    * Atomic
+  * Cache associativity
+  * Cache eviction protocol
+  * Cache consistency across kernel launches, context switches
+  * Cache sharing. (L2)
+  * Specific types
+    * Constant memory
+    * Texture memory
+    * Local memory
+    * Global memory
+    * Shared memory
+
+====Others====
+  * Kernel launch overhead
+  * Block scheduling overhead
+  * Block scheduling pattern
+===Sidelines===
+  * cuobjdump output processor. Done in C++: produces the binary digits of the opcode from the wrongly positioned hex digits output by the cuobjdump
+  * .cubin GUI binary mode editor, to be done in C#.NET: I can't find a perfect binary editor for meddling with the cubins directly. Currently I'm using Hex Editor Neo which is still not perfect for my editing purpose.
