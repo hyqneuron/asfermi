@@ -6,8 +6,8 @@
 This project involves two stages. First is the making of the assembler. Second is the probing of various detailed features of the GF1xx architectures.
 
 ===Assembler===
-  # Determining the format of assembly source code. Most likely the output format of cuobjdump will be followed so that its output can be directly assembled by the assembler. However, there exists the possibility that a PTX-like format may also be supported.
-  # Probing Fermi's opcode format
+  # *Started, 1/3 complete*: Determining the format of assembly source code. Most likely the output format of cuobjdump will be followed so that its output can be directly assembled by the assembler. However, there exists the possibility that a PTX-like format may also be supported.
+  # *Started, 1/20 complete*: Probing Fermi's opcode format
   # Writing the assembler
   # Completing the assembler by adding support for directly producing .cubin files, which can then be used by CUDA programmes and nvcc.
 
@@ -49,6 +49,7 @@ This project involves two stages. First is the making of the assembler. Second i
   * Kernel launch overhead
   * Block scheduling overhead
   * Block scheduling pattern
+----
 ===Sidelines===
   * cuobjdump output processor. Done in C++: produces the binary digits of the opcode from the wrongly positioned hex digits output by the cuobjdump
   * .cubin GUI binary mode editor, to be done in C#.NET: I can't find a perfect binary editor for meddling with the cubins directly. Currently I'm using Hex Editor Neo which is still not perfect for my editing purpose.
