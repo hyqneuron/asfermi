@@ -1,6 +1,7 @@
-#summary Project plans
+#summary Project outline
 
-= Introduction =
+= Project Plans =
+
 ==Project Stages==
 This project involves two stages. First is the making of the assembler. Second is the probing of various detailed features of the GF1xx architectures.
 
