@@ -9,6 +9,7 @@
 ====Opcode====
   * [Opcode]
   * [PTXpriority]
+  * [Utilities]
 ====Assembler====
   * [Features]
   * [Design]
