@@ -6,15 +6,18 @@
   * [Plan]
 
 ===Stage 1===
+
 ====Opcode====
   * [Opcode]
   * [PTXpriority]
   * [Utilities]
+
 ====Assembler====
   * [Features]
   * [Design]
   * [SourceFormat]
   * [Instructions]
   * [Directives]
+
 ===Stage 2===
 No documentation yet
