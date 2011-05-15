@@ -24,6 +24,8 @@ This is a page where all other wiki pages of this project are listed and briefly
 The probing of various PTX instruction and their corresponding opcode will be done in stages. This page lists the priority of each PTX instruction in the probing process. See [PTXpriority].
 ==== Opcode Information ====
 A page describing the opcode format of the Fermi instructions. See [Opcode].
+==== Utilities ====
+A page describing the utilities made for the purpose of this project. See [Utilities].
 === Part B: Assembler ===
 ==== Assembler Features ====
 A list of features that are supported/planned to be executed. See [Features].
