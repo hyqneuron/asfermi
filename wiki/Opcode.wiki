@@ -13,41 +13,41 @@ Currently 2 types of opcodes found: 4-byte and 8-byte
 {{{
 /*0018*/     /*0xfc035de21bffffff*/ 	MOV32I R13, -0x1;
 LSB                                                                  MSB
-0100 011110 1110 101100 000000 11111111111111111111111111111111 0  11000
-na   mod    pr   re1    re0    addr                             cc nb
-The numbering below, such as mod0, start from the LSB
+0100 011110 1110 101100 000000 11111111111111111111111111111111 0   11000
+  na    mod   pr    re1    re0                             imme cc     nb
+The numbering below, such as mod0, start from the MSB
 
 na, nb:
 These two bit fields specify the instruction name. Invalid bits result in invalid opcode.
 
 #mod:
-mod0: 1: .S to mov32i
-mod1: 1: .X to lop32i
-mod2: 0: .AND; 1: .OR; all added to lop32i
-mod3: 1: .XOR
+mod5: 1: .S to mov32i
+mod4: 1: .X to lop32i
+mod3: 0: .AND; 1: .OR; all added to lop32i
+mod2: 1: .XOR to lop32i
 mod2-3: 11: .PASS_B to lop32i
-mod4: no effect seen so far
-mod5: 1: ~on second operator of lop32i
+mod1: no effect seen so far
+mod0: 1: ~on second operator of lop32i
 
 #pr:
-pr0~2: predicate number, little endian, from 0-6
-pr3: 1: negate predicate
+pr0: 1: negate predicate
+pr1~3: predicate number, 0-6
 pr: 1111: @!pt. what is pt?
-pr: 1110: No predicate
+pr: 1110: No predicate used
 
-#re1, re2:
-re1 to 111111 gives MOV32I RZ, -0x1; => proving 111111 is indeed RZ
-changing the re1 from 111111 to 111110 gives R62 => correctly coded register
-changing re0 to 111111 gives no diff from cuobjdump => cuobjdump does not use this reg for mov32i
+#re0, re1:
+registers
 
-#addr:
-This field contains either immediate value or address for certain instructions
+
+#imme:
+This field contains immediate value for certain instructions
 Eg. 
 /*0000*/     /*0x00005de428004404*/ 	MOV R1, c [0x1] [0x100];0010 011110 1110 100000 000000 0000000010000000 1000 100000000000 0 10100
 											       0x100	        0x1  another mod?
+Sometimes it could also contain the third register used by the instruction.
 
 #cc:
-has effect on first operator for some instructions
+Has effect on first operator for some instructions. Looks like it has other functions as well.
 
 #random info:
 when last 6 bits become:
