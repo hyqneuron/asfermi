@@ -17,9 +17,9 @@ For the source code language features, such as the support for directives and in
   * 2: Active Parser
 ----
 == cubin Operations ==
-  * 1: Output assembled file as cubin (elf)
-  * 2: Replace specific instructions inside a cubin
-  * 2: Insert instructions into a cubin
+  * 1: Replace specific instructions inside a cubin
+  * 1: Insert instructions into a cubin
+  * 2: Output assembled file as cubin (elf)
 ----
 == Others ==
-  * 8: Optimization of instructions (for specific architectures)
+  * 5: Optimization of instructions (for specific architectures)
