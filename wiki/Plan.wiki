@@ -78,4 +78,4 @@ Now supports command line arguments
 <pre>CUBINEditor inputfile offset</pre>
 
 Note: May contain bug, as most of it was written while I was half-asleep. This program is written with minimal complexity so you could expect crashes whenever you do something I did not expect.
-[http://code.google.com/p/asfermi/downloads/detail?name=CUBINEditor v2.zip Download]
+[http://code.google.com/p/asfermi/downloads/detail?name=CUBINEditor%20v2.zip Download]
