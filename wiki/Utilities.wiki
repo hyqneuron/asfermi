@@ -21,7 +21,10 @@ This program displays opcode in binary mode and the least significant bit is dis
 Usage: Open program. Click Browse, choose file. Click Load. Scroll to the instruction location you want(You need another binary editor to locate the instruction first). If your instruction location has an offset that is a multiple of 4 instead of 8, enter 4 into the num box and click Set Offset. Do editing as you normally would with a binary editor then click Write Back.
 
 Ctrl+Up = go to the box above
+
 Ctrl+Down = go to box below
+
+You will need [http://www.go-mono.com/mono-downloads/download.html Mono] if your OS does not already support .NET 3.5
 
 Now supports command line arguments
 
