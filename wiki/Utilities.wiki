@@ -18,7 +18,13 @@ A very simple binary mode editor I made for myself. Written in C#.NET. Contains 
 
 This program displays opcode in binary mode and the least significant bit is displayed first.
 
-Usage: Open program. Click Browse, choose file. Click Load. Scroll to the instruction location you want(You need another binary editor to locate the instruction first). If your instruction location has an offset that is a multiple of 4 instead of 8, enter 4 into the num box and click Set Offset. Do editing as you normally would with a binary editor then click Write Back.
+Usage: 
+
+Open program. Click Browse, choose file. Click Load. 
+
+Then scroll to the instruction location you want(You need an elf reader to locate the .text.kernelname section first. Alternatively you could use cuobjdump to find an instruction opcode(the 16 hex digits). Reverse the first 4 bytes and search for that 4 bytes using a hex editor). 
+
+If your instruction location has an offset that is a multiple of 4 instead of 8, enter 4 into the num box and click Set Offset. Do editing as you normally would with a binary editor then click Write Back.
 
 Ctrl+Up = go to the box above
 
