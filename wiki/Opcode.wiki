@@ -48,8 +48,10 @@ Eg.
 											       0x100	        0x1  another mod?
 imme1:.ALU
 imme2:.XLU, cannot be set with imme1
-imme11:constant mem, else re0 to re1
-imme10:16-bit immediate, cannot be set with imme11
+imme10-11:  11: 16-bit immediate
+            10: constant mem
+            01: invalid
+            00: reg to reg
 
 Sometimes it could also contain the third register used by the instruction.
 }}}
