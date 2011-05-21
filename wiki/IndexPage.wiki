@@ -11,8 +11,8 @@ This is a page where all other wiki pages of this project are listed and briefly
 === Home Page ===
   * Brief introduction to the project
   * Current development state
-  * Other trivial information
-[http://code.google.com/p/asfermi/ Link to home page]
+  * Other related information
+See [http://code.google.com/p/asfermi/ Home]
 
 === Project Plan ===
  This page deacribes the planned stages of the project. See [Plan]. 
@@ -20,25 +20,17 @@ This is a page where all other wiki pages of this project are listed and briefly
 ----
 == Stage 1, Assembler ==
 ===Part A: Opcode===
-==== PTX probing priority ====
-The probing of various PTX instruction and their corresponding opcode will be done in stages. This page lists the priority of each PTX instruction in the probing process. See [PTXpriority].
-==== Opcode Information ====
-A page describing the opcode format of the Fermi instructions. See [Opcode].
-==== nanb ====
-A page with instruction names and their identifier bits. [nanb]
-==== Utilities ====
-A page describing the utilities made for the purpose of this project. See [Utilities].
+  * [Opcode]: A page describing the opcode format of the Fermi opcode.
+  * [nanb]: A page with instruction names and their corresponding identifier bits. 
+  * [PTXpriority]: The probing of various PTX instruction and their corresponding opcode will be done in stages. This page lists the priority of each PTX instruction in the probing process.
+  * [Utilities] A page describing the utilities made for the purpose of this project.
+
 === Part B: Assembler ===
-==== Assembler Features ====
-A list of features that are supported/planned to be executed. See [Features].
-==== Assembler Design ====
-This page describes the framework under which the program is planned to be written. See [Design]
-==== Source specification ====
-A specification of the format of source code that can be assembled. See [SourceFormat].
-==== Instructions ====
-A list of instructions that are supported/ to be executed. See [Instructions].
-==== Directives ====
-A list of directives that are supported/to be executed. See [Directives]
+  * [Features]: A list of features that are supported/planned to be executed.
+  * [Design]: This page describes the framework under which the program is planned to be written.
+  * [SourceFormat]: A specification of the format of source code that can be assembled.
+  * [Instructions]: A list of instructions that are supported/ to be supported.
+  * [Directives]: A list of directives that are supported/to be supported.
 ----
 == Stage 2, Microbenchmarking ==
 Currently no documentation has been written for this stage yet.
