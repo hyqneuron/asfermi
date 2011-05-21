@@ -1,25 +1,27 @@
 #summary This page describes the opcode format of fermi
 
-Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate as so far I only experimented with MOV.
-
-The registers below are automatically marked by the wiki as revisions. That's the problem with the wiki.
+Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate.
 
 = Opcode Information =
-Currently 2 types of opcodes found: 4-byte and 8-byte
+Currently 2 types of opcodes found: 4-byte and 8-byte. For instruction names and their identifier bits (na, nb), see [nanb].
 
 ----
 == 8-byte ==
-{{{
 General format:
-LSB                                                                  MSB
+{{{
+LSB                                                                MSB
 xxx0 xxxxxx xxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxx
   na    mod   pr    re1    re0                             imme     nb
+}}}
 The numbering below, such as mod0, start from the MSB
 
-na, nb:
+{{{
+#na, nb:
+Identifier bits.
 These two bit fields specify the instruction name. Invalid bits result in invalid opcode.
 
 #mod:
+Modifier bits
 mod5: 1: .S to mov32i
 mod4: 1: .X to lop32i
 mod3: 0: .AND; 1: .OR; all added to lop32i
@@ -29,6 +31,7 @@ mod1: no effect seen so far
 mod0: 1: ~on second operator of lop32i
 
 #pr:
+Predicate bits
 pr0: 1: negate predicate
 pr1~3: predicate number, 0-6
 pr: 1111: @!pt. what is pt?
@@ -49,34 +52,18 @@ imme11:constant mem, else re0 to re1
 imme10:16-bit immediate, cannot be set with imme11
 
 Sometimes it could also contain the third register used by the instruction.
-
-
-Eg.
-/*0018*/     /*0xfc035de21bffffff*/ 	MOV32I R13, -0x1;
-0100 011110 1110 101100 000000 11111111111111111111111111111111 011000
-
-
-#random info:
-when last 6 bits become:
-	000000: IMAD32I.U32.U32 R0, -R0, -0x1, R0;
-	000100: FFMA32I R0, -R0, -0x1, R0;
-	001000: IMUL32I.U32.U32 R0, R0, -0x1;
-	001100: FMUL32I.FMA2 R0, R0, -0x1;
-	010000: IADD32I R0, -R0, -0x1;
-	010100: FADD32I R0, -R0, -0x1;
-	011000: MOV32I R0, -0x1, 0x0;
-	011100: LOP32I.AND R0, ~R0, -0x1;
-	111100: LOP32I.AND R0.CC, ~R0, -0x1;
-	101000: IMUL32I.U32.U32 R0.CC, R0, -0x1;
 }}}
 
+----
 == 4-byte ==
 General format:
 {{{
+LSB                               MSB
 xxx1xxx xxx xxxx xxxxxx xxxxxx xxxxxx
      na mod   pr    re1    re0   imme
 }}}
 
+----
 ==Some code==
 Previously I was thinking even data type would have an effect on the mov instruction as the normal mov I get is named MOV32I. I thought that 'I' at the end had some thing to do with integers. Apparently I was wrong. Now I think it means 'immediate'.
 {{{
