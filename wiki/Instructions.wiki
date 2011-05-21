@@ -6,6 +6,8 @@ Instruction names currently listed here are pseudo-names as they bear certain sl
 
 For instructions and their corresponding opcode, see [nanb] and [Opcode]. [nanb] also contains a subset of more accurate instruction names.
 
+For better explanation of those instructions, please refer to the cuobjdump.pdf that comes with CUDA toolkit 4.0
+
 == Floating point Instructions ==
   * FFMA
   * FADD
