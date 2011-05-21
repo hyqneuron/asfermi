@@ -21,7 +21,8 @@ Identifier bits.
 These two bit fields specify the instruction name. Invalid bits result in invalid opcode.
 
 #mod:
-Modifier bits
+Modifier bits. Instruction-specific.
+Eg.:
 mod5: 1: .S to mov32i
 mod4: 1: .X to lop32i
 mod3: 0: .AND; 1: .OR; all added to lop32i
@@ -39,7 +40,7 @@ pr: 1110: No predicate used
 
 #re0, re1:
 registers
-
+re1 is often the destination reg.
 
 #imme:
 This field contains immediate value for certain instructions
