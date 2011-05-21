@@ -9,11 +9,10 @@ Currently 2 types of opcodes found: 4-byte and 8-byte
 
 ----
 == 8-byte ==
-
 {{{
-/*0018*/     /*0xfc035de21bffffff*/ 	MOV32I R13, -0x1;
+General format:
 LSB                                                                  MSB
-0100 011110 1110 101100 000000 11111111111111111111111111111111 011000
+xxx0 xxxxxx xxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxx
   na    mod   pr    re1    re0                             imme     nb
 The numbering below, such as mod0, start from the MSB
 
@@ -51,6 +50,12 @@ imme10:16-bit immediate, cannot be set with imme11
 
 Sometimes it could also contain the third register used by the instruction.
 
+
+Eg.
+/*0018*/     /*0xfc035de21bffffff*/ 	MOV32I R13, -0x1;
+0100 011110 1110 101100 000000 11111111111111111111111111111111 011000
+
+
 #random info:
 when last 6 bits become:
 	000000: IMAD32I.U32.U32 R0, -R0, -0x1, R0;
@@ -66,6 +71,11 @@ when last 6 bits become:
 }}}
 
 == 4-byte ==
+General format:
+{{{
+xxx1xxx xxx xxxx xxxxxx xxxxxx xxxxxx
+     na mod   pr    re1    re0   imme
+}}}
 
 ==Some code==
 Previously I was thinking even data type would have an effect on the mov instruction as the normal mov I get is named MOV32I. I thought that 'I' at the end had some thing to do with integers. Apparently I was wrong. Now I think it means 'immediate'.
