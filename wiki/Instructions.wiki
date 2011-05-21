@@ -4,6 +4,7 @@
 
 Instruction names currently listed here are pseudo-names as they bear certain slight differences to the output of cuobjdump. They are directly obtained from cuobjdump.pdf for convenience's sake. The accurate instruction names will be listed at a later time.
 
+For instructions and their corresponding opcode, see [nanb] and [Opcode].
 
 == Floating point Instructions ==
   * FFMA
