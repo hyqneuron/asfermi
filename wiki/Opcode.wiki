@@ -59,8 +59,8 @@ Sometimes it could also contain the third register used by the instruction.
 General format:
 {{{
 LSB                               MSB
-xxx1xxx xxx xxxx xxxxxx xxxxxx xxxxxx
-     na mod   pr    re1    re0   imme
+xxx1xxx   x     xx xxxx xxxxxx xxxxxx xxxxxx
+     na mod  immeb   pr    re1    re0  immea
 }}}
 
 ----
