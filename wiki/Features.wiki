@@ -4,8 +4,9 @@
 This page contains a list of features of the assembler that are supported/to be supported.
 
   * *0*: Already supported
-  * *1*: To be supported
-  * *2*: May be supported
+  * *1*: Priority level 1, top priority.
+  * *2*: Priority level 2
+  * *3*: Priority level 3
   * *5*: Not decided
   * *8*: Unlikely to be supported
   * *9*: Not going to be supported
@@ -18,10 +19,10 @@ For the source code language features, such as the support for directives and in
   * 2: Active Parser
 ----
 == cubin Operations ==
-  * 1: Replace specific instructions inside a cubin
-  * 1: Insert instructions into a cubin
+  * 2: Replace specific instructions inside a cubin
+  * 2: Insert instructions into a cubin
   * 2: Output assembled file as cubin (elf)
-  * 2: Output cubin with symbolic debugging information
+  * 3: Output cubin with symbolic debugging information
 ----
 == Others ==
   * 5: Optimization of instructions (for specific architectures)
