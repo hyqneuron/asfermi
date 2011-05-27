@@ -14,8 +14,6 @@ General rules:
 
 ----
 ==Directives==
-[Features State]: 2
-
 Use:
   * Declare symbols: kernel (parameters), texture symbol, constant memory, shared memory, external symbols
   * Send specific commands to the assembler
@@ -25,11 +23,10 @@ Format:
 {{{
 !directive_name argument1 argument2...
 }}}
-
+[Features State]: 2
 Note: labels are written as directives.
 ----
 ==Instructions==
-State: 1
 For a list of instructions that are supported/to be supported, see [Instructions].
 
 Format:
@@ -43,10 +40,9 @@ General rules:
   * Everything in PTX-like format should be lower-case
   * The assembler does not enforce the use of the semi-colon. It could be used in a line to separate one instruction from another
 
+State: 1
 ----
 ==Comments==
-State: 2
-
 Comments are exactly the same as as in C/C++.
 
 Format:
@@ -57,3 +53,4 @@ Format:
 block comment
 */
 }}}
+State: 1
