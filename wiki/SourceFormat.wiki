@@ -14,6 +14,7 @@ General rules:
 
 ----
 ==Directives==
+[Features State]: 2
 
 Use:
   * Declare symbols: kernel (parameters), texture symbol, constant memory, shared memory, external symbols
@@ -28,6 +29,7 @@ Format:
 Note: labels are written as directives.
 ----
 ==Instructions==
+State: 1
 For a list of instructions that are supported/to be supported, see [Instructions].
 
 Format:
@@ -43,7 +45,7 @@ General rules:
 
 ----
 ==Comments==
-[Features Priority]: 2
+State: 2
 
 Comments are exactly the same as as in C/C++.
 
