@@ -43,7 +43,7 @@ General rules:
 
 ----
 ==Comments==
-State: 1
+[Features Priority]: 2
 
 Comments are exactly the same as as in C/C++.
 
