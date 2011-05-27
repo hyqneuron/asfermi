@@ -7,13 +7,18 @@
 == Organisation ==
 === General structure ===
 {{{
+#define AbortCheck if(Abort) return ReturnValue; //check later part to see what this is for
 int main(int argc, char** args)
 {
     Initialize();
+    AbortCheck
     //==========//
     Preprocess();  //Removes comment, and does other pre-processing
+    AbortCheck
     Process();     //calls the Line Parser
+    AbortCheck
     Postprocess(); //build the cubin, debug information and so on
+    return ReturnValue;
 }
 }}}
 ==== Line Parser ====
@@ -54,8 +59,11 @@ For more details of the directives, see [SourceFormat]
 ----
 ==Basic types and global variables==
 {{{
+//Forgive me if you see syntax error. It's meant to be pseudocode. I'm not a C++ programmer by the way.
 
 //Global states
+bool Abort = false; //instructs the program to abort operation
+int ReturnValue = 0;//return value used, useful when aborting.
 stack<int *(Line line)> pr_lparser;               //Stack of previously used parser
 stack<int *(Instruction instruction)> pr_iparser;
 stack<int *(Directive directive)> pr_dparser;
@@ -86,14 +94,11 @@ int (*cs_dparser)(Directive directive);      //Current directive parser
 under the command of specific directives. For example, directives can indicate 
 whether the following section of code is in cuobjdump format or in PTX-like format.
 
-The default line parser removes unnecessary white-space and identifies whether a 
-line contains directive/comment. If there is a not-yet-closed comment block, it 
-searches for "star/". If not found, the parsing would be over. If found, the
-cs_incomment is set to false. The line parser then removes unnecessary white-space 
-and comment, and checks for the existence of the directive identifier "!" in the
+The default line parser identifies whether a line contains directive/comment. 
+It checks for the existence of the directive identifier "!" in the
 first character. If it is found, the parser will build a Directive object and 
 ask the Directive object to parse itself. If it is not found, the parser looks for 
-instruction delimiter ";" and breaks the filtered string into tokens. It then 
+instruction delimiter ";" and breaks the string into tokens. It then 
 builds up an Instruction object for each token obtained and asks the Instruction 
 object to parse itself.
 
