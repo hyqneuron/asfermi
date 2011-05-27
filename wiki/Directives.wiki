@@ -21,11 +21,11 @@ State: 2
 ----
 == Assembler Commands ==
 ==== Label ====
-State: 2
 Format:
 {{{
 !Label LabelName
 }}}
+State: 2
 ==== Type-checking ====
 State: 3
 ==== Unrolling ====
