@@ -8,34 +8,34 @@ Directives are used to declare symbols and to send specific instructions to the 
 ----
 == Symbol Declarations ==
 ==== Kernel ====
-State: 1
+[Features State]: 2
 ==== Texture Object ====
-State: 1
+State: 2
 ==== Shared Memory Object ====
-State: 1
+State: 2
 ==== Constant Memory Object ====
-State: 1
+State: 2
 ==== External Symbol ====
-State: 1
+State: 2
 
 ----
 == Assembler Commands ==
 ==== Label ====
-State: 1
+State: 2
 Format:
 {{{
-!label labelname
+!Label LabelName
 }}}
 ==== Type-checking ====
-State: 2
+State: 3
 ==== Unrolling ====
-State: 1
+State: 2
 ==== Macro ====
 State: 2
 ==== Set`_`(i/d/l)parser, Set`_`pr`_`(i/d/l)parser ====
 State: 2
 ==== Capitalize ====
-State: 1
+State: 2
 Description: Defines whether the instruction parser should capitalize all letters of the input before it starts parsing. Can be enabled to support lower-case source code.
 
 Format:
