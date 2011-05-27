@@ -6,17 +6,27 @@
 ----
 == Organisation ==
 === General structure ===
+{{{
+int main(int argc, char** args)
+{
+    Initialize();
+    //==========//
+    Preprocess();  //Removes comment, and does other pre-processing
+    Process();     //calls the Line Parser
+    Postprocess(); //build the cubin, debug information and so on
+}
+}}}
 ==== Line Parser ====
 {{{
     //line is the content of the current line
-    line = basic_processing(line);
+    line = basic_processing(line); 
     if(line is directive)
         directive_parser(line);
     else if(line is instruction)
         instruction_parser(line);
 }}}
 
-The *Line parser* picks a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
+The *Line parser* receives a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
   * Asks the *directive parser* to parse the processed part of the line, if the line is a directive, or
   * Asks the *instruction parser* to parse the processed part of the line, if the line is an instruction.
 
