@@ -19,7 +19,7 @@ For the source code language features, such as the support for directives and in
   * 2: Active Parser
 ----
 == cubin Operations ==
-  * 2: Replace specific instructions inside a cubin
+  * 1: Replace specific instructions inside a cubin
   * 2: Insert instructions into a cubin
   * 2: Output assembled file as cubin (elf)
   * 3: Output cubin with symbolic debugging information
