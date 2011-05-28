@@ -2,7 +2,7 @@
 
 Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate.
 
-<wiki:toc>
+<wiki:toc max_depth="3"/>
 
 = Opcode Information =
 Currently 2 types of opcodes found: 4-byte and 8-byte. For instruction names and their identifier bits (na, nb), see [nanb].
