@@ -6,10 +6,15 @@
 This project involves two stages. First is the making of the assembler. Second is the probing of various detailed features of the GF1xx architectures.
 
 ===Assembler===
-  # *Started, 1/3 complete*: Determining the format of assembly source code. Most likely the output format of cuobjdump will be followed so that its output can be directly assembled by the assembler. However, there exists the possibility that a PTX-like format may also be supported.
-  # *Started, 1/5 complete*: Probing Fermi's opcode format
+  # Determining the format of assembly source code. (1/2 complete)
+  # Probing Fermi's opcode (1/4 complete)
+   # Instruction names (Done)
+   # General opcode format (Done)
+   # Specific information for each instruction opcode
+    # MOV, LD, ST, ADD, EXIT
+    # ...
+  # Probing NVIDIA's custom sections in cubins
   # Writing the assembler
-  # Completing the assembler by adding support for directly producing .cubin files, which can then be used by CUDA programmes and nvcc.
 
 ===Microbenchmarking===
 ====Instruction-related====
