@@ -8,6 +8,8 @@ For better explanation of those instructions, please refer to the cuobjdump.pdf 
 
 <wiki:toc>
 ==In Alphabetical Order==
+Instructions that end with _N are 4-byte instructions.
+
 <pre>
 ALD
 ALD_N
