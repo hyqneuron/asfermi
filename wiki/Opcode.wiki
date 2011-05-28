@@ -2,6 +2,8 @@
 
 Note: information here is not organised. Many parts may be unclear and confusing. Information may be inaccurate.
 
+<wiki:toc>
+
 = Opcode Information =
 Currently 2 types of opcodes found: 4-byte and 8-byte. For instruction names and their identifier bits (na, nb), see [nanb].
 
@@ -69,45 +71,15 @@ xxx1xxx   x     xx xxxx xxxxxx xxxxxx xxxxxx
 }}}
 
 ----
-==Some code==
-Previously I was thinking even data type would have an effect on the mov instruction as the normal mov I get is named MOV32I. I thought that 'I' at the end had some thing to do with integers. Apparently I was wrong. Now I think it means 'immediate'.
-{{{
-	.version 2.3
-	.target sm_21
-.global.u32 gu;
-.global.s32 gs;
-.global.f32 gf;
-.entry kernel1()
-{
-	.shared .align 4 .b8 localmem[128];
-	.reg .u32 ru;
-	.reg .s32 rs;
-	.reg .f32 rf;
-	mov.u32 ru, 0xffffffff;
-	mov.s32 rs, 0xfffffffe;
-	mov.f32 rf, 0Ffffffffd;
-	st.shared.u32 [localmem+0], ru;
-	st.shared.s32 [localmem+4], rs;
-	st.shared.f32 [localmem+8], rf;
-	st.global.u32 [gu], ru;
-	st.global.s32 [gs], rs;
-	st.global.f32 [gf], rf;
-	exit;
-}
-
-/*0008*/     /*0x00001de440000000*/ 	NOP CC.T;		0010 011110 1110 000000 000000 00000000000000000000000000000000 000010
-/*0000*/     /*0x00005de428004404*/ 	MOV R1, c [0x1] [0x100];0010 011110 1110 100000 000000 00000000100000001000100000000000 010100
-/*0018*/     /*0x00001de428007800*/ 	MOV R0, c [0xe] [0x0];	0010 011110 1110 000000 000000 00000000000000000111100000000000 010100
-/*0030*/     /*0x10009de428007800*/ 	MOV R2, c [0xe] [0x4];	0010 011110 1110 010000 000000 00100000000000000111100000000000 010100
-/*0040*/     /*0x20001de428007800*/ 	MOV R0, c [0xe] [0x8];	0010 011110 1110 000000 000000 00010000000000000111100000000000 010100
-/*0010*/     /*0xfc00dde21bffffff*/ 	MOV32I R3, -0x1;	0100 011110 1110 110000 000000 11111111111111111111111111111111 011000	mov.u32 ru, 0xffffffff;
-/*0020*/     /*0xf8011de21bffffff*/ 	MOV32I R4, -0x2;	0100 011110 1110 001000 000000 01111111111111111111111111111111 011000	mov.s32 rs, 0xfffffffe;
-/*0038*/     /*0xf4015de21bffffff*/ 	MOV32I R5, -0x3;	0100 011110 1110 101000 000000 10111111111111111111111111111111 011000	mov.f32 rf, 0Ffffffffd;
-/*0048*/     /*0x03f0dc85c9000000*/ 	STS [0x0], R3;		1010 000100 1110 110000 111111 00000000000000000000000000000010 010011	st.shared.u32 [localmem+0], ru;
-/*0058*/     /*0x13f11c85c9000000*/ 	STS [0x4], R4;		1010 000100 1110 001000 111111 00100000000000000000000000000010 010011	st.shared.s32 [localmem+4], rs;
-/*0060*/     /*0x23f15c85c9000000*/ 	STS [0x8], R5;		1010 000100 1110 101000 111111 00010000000000000000000000000010 010011	st.shared.f32 [localmem+8], rf;
-/*0068*/     /*0x00015c8590000000*/ 	ST [R0], R5;		1010 000100 1110 101000 000000 00000000000000000000000000000000 001001	st.global.u32 [gu], ru;
-/*0028*/     /*0x0000dc8590000000*/ 	ST [R0], R3;		1010 000100 1110 110000 000000 00000000000000000000000000000000 001001	st.global.s32 [gs], rs;
-/*0050*/     /*0x00211c8590000000*/ 	ST [R2], R4;		1010 000100 1110 001000 010000 00000000000000000000000000000000 001001	st.global.f32 [gf], rf;
-/*0070*/     /*0x00001de780000000*/ 	EXIT;			1110 011110 1110 000000 000000 00000000000000000000000000000000 000001	exit;
-}}}
+==Specific Instructions==
+To be added soon.
+=== Data Movement Instructions ===
+==== MOV ====
+==== LD ====
+==== ST ====
+=== Execution Control Instructions ===
+==== EXIT ====
+=== Floating Point Instructions ===
+==== FADD ====
+=== Integer Instructions ===
+==== IADD ====
