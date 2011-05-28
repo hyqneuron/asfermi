@@ -26,8 +26,8 @@ See [http://code.google.com/p/asfermi/ Home]
   * [Utilities] A page describing the utilities made for the purpose of this project.
 
 === Part B: Assembler ===
-  * [Features]: A list of features that are supported/planned to be executed.
-  * [Design]: This page describes the framework under which the program is planned to be written.
+  * [Features]: A list of features that are supported/to be supported.
+  * [Design]: This page describes the framework under which the assembler will be written.
   * [SourceFormat]: A specification of the format of source code that can be assembled.
   * [Instructions]: A list of instructions that are supported/ to be supported.
   * [Directives]: A list of directives that are supported/to be supported.
