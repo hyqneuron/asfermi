@@ -1,14 +1,177 @@
 #summary List of instruction names
 
-= Introduction =
+= Instruction =
 
-Instruction names currently listed here are pseudo-names as they bear certain slight differences to the output of cuobjdump. They are directly obtained from cuobjdump.pdf for convenience's sake. 
-
-For instructions and their corresponding opcode, see [nanb] and [Opcode]. [nanb] also contains a subset of more accurate instruction names.
+For instructions and their corresponding opcode, see [nanb] and [Opcode].
 
 For better explanation of those instructions, please refer to the cuobjdump.pdf that comes with CUDA toolkit 4.0
 
-== Floating point Instructions ==
+<wiki:toc>
+==In Alphabetical Order==
+<pre>
+ALD
+ALD_N
+AST
+AST_N
+ATOM
+B2R
+BFE
+BFI
+BPT
+BRA
+BRA_N
+BRK
+BRX
+CAL
+CCTL
+CCTLL
+CONT
+CSET
+CSETP
+DADD
+DFMA
+DMNMX
+DMUL
+DSET
+DSETP
+EXIT
+F2I
+FADD
+FADD_N
+FCCO
+FCMP
+FFMA
+FFMA_N
+FFMA32I
+FLO
+FMNMX
+FMUL
+FMUL32I
+FSET
+FSETP
+FSETP_N
+FSWZ
+I2F
+I2I
+I2I_N
+IADD
+IADD_N
+IADD32I
+ICMP
+IMAD
+IMAD_N
+IMAD32I
+IMNMX
+IMUL
+IMUL_N
+IMUL32I
+IPA
+IPA_N
+ISAD
+ISCADD
+ISCADD32I
+ISET
+ISETP
+ISETP_N
+JCAL
+JMP
+JMX
+KIL
+LD
+LD_LDU
+LD_N
+LDC
+LDC_N
+LDL
+LDL_N
+LDLK
+LDS_LDU
+LDS_N
+LDSLK
+LDU
+LEPC
+LONGJMP
+LOP
+LOP_N
+LOP32I
+MEMBAR
+MOV
+MOV_N
+MOV32I
+MUFU
+NOP
+NOP_N
+OUT
+P2R
+PBK
+PCNT
+PIXLD
+PLONGJMP
+POPC
+PRET
+PRMT
+PSET
+PSETP
+R2P
+RAM
+RED
+RET
+RTT
+S2R
+SAM
+SEL
+SHL
+SHR
+SSY
+ST
+ST_N
+STL
+STL_N
+STP
+STS_N
+STSUL
+STUL
+SULD
+SULEA
+SUQ
+SURED
+SUST
+TEX
+TLD
+TLD4
+TMML
+TXA
+TXD
+TXQ
+VABSDIFF
+VABSDIFF2
+VABSDIFF4
+VADD
+VADD2
+VADD4
+VILD
+VMAD
+VMAD_N
+VMNMX
+VMNMX2
+VMNMX4
+VOTE
+VSEL2
+VSEL4
+VSET
+VSET2
+VSET4
+VSETP
+VSHL
+VSHL2
+VSHL4
+VSHR
+VSHR2
+VSHR4
+
+</pre>
+==By Type==
+=== Floating point Instructions ===
   * FFMA
   * FADD
   * FCMP
@@ -26,7 +189,7 @@ For better explanation of those instructions, please refer to the cuobjdump.pdf 
   * DSET
   * DSETP
 
-== Integer Instructions ==
+=== Integer Instructions ===
   * IMAD
   * IMUL
   * IADD
@@ -45,18 +208,18 @@ For better explanation of those instructions, please refer to the cuobjdump.pdf 
   * ICMP
   * POPC
 
-== Conversion Instructions ==
+=== Conversion Instructions ===
   * F2F
   * F2I
   * I2F
   * I2I
 
-== Movement Instructions ==
+=== Movement Instructions ===
   * MOV
   * SEL
   * PRMT
 
-== Predicate/CC Instructions ==
+=== Predicate/CC Instructions ===
   * P2R
   * R2P
   * CSET
@@ -64,13 +227,13 @@ For better explanation of those instructions, please refer to the cuobjdump.pdf 
   * PSET
   * PSETP
 
-== Texture Instructions ==
+=== Texture Instructions ===
   * TEX
   * TLD
   * TLD4
   * TXO
 
-== LD/ST Instructions ==
+=== LD/ST Instructions ===
   * LDC
   * LD
   * LDU
@@ -91,14 +254,14 @@ For better explanation of those instructions, please refer to the cuobjdump.pdf 
   * CCTLL
   * MEMBAR
 
-== Surface Memory Instructions ==
+=== Surface Memory Instructions ===
   * SULD
   * SULEA
   * SUST
   * SURED
   * SUQ
 
-== Control Instructions ==
+=== Control Instructions ===
   * BRA
   * BRX
   * JMP
@@ -117,7 +280,7 @@ For better explanation of those instructions, please refer to the cuobjdump.pdf 
   * BPT
   * EXIT
 
-== Miscellaneous Instructions ==
+=== Miscellaneous Instructions ===
   * NOP
   * S2R
   * B2R
