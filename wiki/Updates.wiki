@@ -1,0 +1,4 @@
+#A log file of updates
+
+==== 31st of June, 2011 ====
+Created the Google Group [http://groups.google.com/group/asfermi asfermi].
