@@ -4,6 +4,7 @@
   * [http://code.google.com/p/asfermi/ Project Home]
   * [IndexPage]
   * [Plan]
+  * [Updates]
 
 ===Stage 1===
 
