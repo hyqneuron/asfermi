@@ -3,6 +3,8 @@
 = Introduction =
 Instruction names for 8-byte and 4-byte opcode have been probed, though there might exist more instructions as well. Quite a lot of repetitions below because I have messed up some bits in na/nb with modifier bits. May be incorrect.
 
+For the meaning of na, nb, see [Opcode]
+
 ====8-Byte====
 {{{
 name        na      nb
