@@ -58,3 +58,13 @@ This project involves two stages. First is the making of the assembler. Second i
 ===Sidelines===
 ==== Utilities ====
 See [Utilities].
+
+
+<wiki:comment>
+build a utility that permute selected bits. Each instance of permutation gets injected into an individual file. Generate as many files as there are instances of the permutation and test run all the files to confirm the validity of the instructions. Take down the code of the permutation for the cases that are validly executed. Generate a .txt table with all the permuted code and a string to represent their validity. Then sort them according to specific bits to view their validity. Sort them using excel or perhaps build another utility to sort and identify the modifiers.
+1. say 10 bits to be permuted
+2. 1024 cubins, 1024 runs
+3. A file showing the permuted binary digits of all files and their corresponding validity
+4. Sort the file in 3 to find out valid independent and compound modifier bits.
+5. Probe the modifier names using cuobjdump.
+</wiki:comment>
