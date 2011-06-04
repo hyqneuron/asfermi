@@ -72,14 +72,38 @@ xxx1xxx   x     xx xxxx xxxxxx xxxxxx xxxxxx
 
 ----
 ==Specific Instructions==
-To be added soon.
+The following presents the opcode of various instructions. Information may be incorrect. Information for various modifiers is not yet added.
+
 === Data Movement Instructions ===
+
 ==== MOV ====
+{{{
+0010 011110 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 010100
+}}}
+
 ==== LD ====
+{{{
+1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 000001
+}}}
+
 ==== ST ====
+{{{
+1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 001001
+}}}
+
 === Execution Control Instructions ===
 ==== EXIT ====
+{{{
+1110 011110 1110 000000 000000 00000000000000000000000000000000 000001
+}}}
 === Floating Point Instructions ===
 ==== FADD ====
+{{{
+0000 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 001010
+}}}
+
 === Integer Instructions ===
 ==== IADD ====
+{{{
+1100 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 010010
+}}}
