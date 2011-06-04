@@ -72,7 +72,7 @@ xxx1xxx   x     xx xxxx xxxxxx xxxxxx xxxxxx
 
 ----
 ==Specific Instructions==
-The following presents the opcode of various instructions. Information may be incorrect. Information for various modifiers is not yet added.
+The following presents the opcode of various instructions. Information may be incorrect. Information for various modifiers is not yet added. More information will be added tomorrow.
 
 === Data Movement Instructions ===
 
