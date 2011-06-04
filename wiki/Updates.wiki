@@ -1,4 +1,7 @@
 #summary A log file of updates
 
+==== 4th June, 2011 ====
+Exam's over! I'll start coding for asfermi now!
+
 ==== 31st of June, 2011 ====
 Created the Google Group [http://groups.google.com/group/asfermi asfermi].
