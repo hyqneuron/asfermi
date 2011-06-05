@@ -1,5 +1,8 @@
 #summary A log file of updates
 
+==== 5th June, 2011 ====
+I've been having headache since yesterday afternoon. Things may slow down a little.
+
 ==== 4th June, 2011 ====
 Exam's over! I'll start coding for asfermi now!
 
