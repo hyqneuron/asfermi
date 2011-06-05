@@ -3,6 +3,10 @@
 ==== 5th June, 2011 ====
 I've been having headache since yesterday afternoon. Things may slow down a little.
 
+*11pm*: My headache is gone, but progress is rather slow, because I'm learning C++'s various features and coding at the same time. I just reinvented an exception handling mechanism before I realized that C++ does have support for proper exception handling. Also, I wanted to use C#'s naming convention, but soon realized that Visual Studio's Intellisense didn't work as well as I had expected, so the long variable names required by C#'s naming convention would be too much a pain to live with.
+
+Well, maybe the first release, supporting MOV, LD, ST, EXIT, FADD, IADD and capable of only replacing opcodes in existing kernels, will not come until at least 3 days later (after 8th June).
+
 ==== 4th June, 2011 ====
 Exam's over! I'll start coding for asfermi now!
 
