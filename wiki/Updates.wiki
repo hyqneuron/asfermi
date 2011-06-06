@@ -1,7 +1,7 @@
 #summary A log file of updates
 
 ==== 6th June, 2011 ====
-5pm: Spent 5 hours coding today. I think I'll take a break for now. Progress is better than I imagined. I'm now at the stage of writing instruction-specific parsing functions. Also, there are quite a lot of performance issues I could foresee, but I'm not bothered to make any change for now.
+*5pm*: Spent 5 hours coding today. I think I'll take a break for now. Progress is better than I imagined. I'm now at the stage of writing instruction-specific parsing functions. Also, there are quite a lot of performance issues I could foresee, but I'm not bothered to make any change for now.
 
 ==== 5th June, 2011 ====
 I've been having headache since yesterday afternoon. Things may slow down a little.
