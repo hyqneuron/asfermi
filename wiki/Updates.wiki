@@ -1,5 +1,8 @@
 #summary A log file of updates
 
+9th June, 2011
+*7pm*: Finally, asfermi is assembling! Now I'll clean up my code, debug it a bit and then upload it before I go to bed.
+
 ==== 8th June, 2011 ====
 *12am*: Spent the last day debugging and fixing the potential performance issues. The first release should be within 2 days.
 
