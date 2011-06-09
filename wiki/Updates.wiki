@@ -3,7 +3,9 @@
 ==== 9th June, 2011 ====
 *7pm*: Finally, asfermi is assembling! Now I'll clean up my code, debug it a bit and then upload it before I go to bed.
 
-*11pm* Well, due to my inexperience with C++, I got bogged down by quite a lot of things, from file operation, pointer operations to constructor use and many others. Anyway, asfermi now assembles! This version is not even supposed to be a working version, though it does demonstrate a few features. Anyway, I'll just upload the code since at least it worked for the file that I tested. Supported instruction: ST, LD, EXIT. Supported operand types: register(Rxx), global memory( [Rxx + 0x........] ). I'll write a bit documentation tomorrow. Now it's really time for bed.
+*11pm* Well, due to my inexperience with C++, I got bogged down by quite a lot of things, from file operation, pointer operations to constructor use and many others. Anyway, asfermi now assembles! This version is not even supposed to be a working version, though it does demonstrate a few features. Anyway, I'll just upload the code since at least it worked for the file that I tested. Okay, it's uploaded to svn/trunk/ .
+
+Supported instruction: ST, LD, EXIT. Supported operand types: register(Rxx), global memory( `[Rxx + 0x........`] ). I'll write a bit documentation tomorrow. Now it's really time for bed.
 
 ==== 8th June, 2011 ====
 *12am*: Spent the last day debugging and fixing the potential performance issues. The first release should be within 2 days.
