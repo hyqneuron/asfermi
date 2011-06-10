@@ -1,5 +1,12 @@
 #summary A log file of updates
 
+==== 10th June, 2011 ====
+*11am*: Things to do:
+  * add support for modifiers
+  * add proper error handler
+  * debug (memory leaks, especially)
+  * reorganise code (move some functions out of their class...)
+
 ==== 9th June, 2011 ====
 *7pm*: Finally, asfermi is assembling! Now I'll clean up my code, debug it a bit and then upload it before I go to bed.
 
