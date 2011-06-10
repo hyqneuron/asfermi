@@ -12,169 +12,181 @@ For better explanation of those instructions, please refer to the cuobjdump.pdf 
 ==In Alphabetical Order==
 Instructions that end with _N are 4-byte instructions.
 
-<pre>
-ALD
-ALD_N
-AST
-AST_N
-ATOM
-B2R
-BFE
-BFI
-BPT
-BRA
-BRA_N
-BRK
-BRX
-CAL
-CCTL
-CCTLL
-CONT
-CSET
-CSETP
-DADD
-DFMA
-DMNMX
-DMUL
-DSET
-DSETP
-EXIT
-F2I
-FADD
-FADD_N
-FCCO
-FCMP
-FFMA
-FFMA_N
-FFMA32I
-FLO
-FMNMX
-FMUL
-FMUL32I
-FSET
-FSETP
-FSETP_N
-FSWZ
-I2F
-I2I
-I2I_N
-IADD
-IADD_N
-IADD32I
-ICMP
-IMAD
-IMAD_N
-IMAD32I
-IMNMX
-IMUL
-IMUL_N
-IMUL32I
-IPA
-IPA_N
-ISAD
-ISCADD
-ISCADD32I
-ISET
-ISETP
-ISETP_N
-JCAL
-JMP
-JMX
-KIL
-LD
-LD_LDU
-LD_N
-LDC
-LDC_N
-LDL
-LDL_N
-LDLK
-LDS_LDU
-LDS_N
-LDSLK
-LDU
-LEPC
-LONGJMP
-LOP
-LOP_N
-LOP32I
-MEMBAR
-MOV
-MOV_N
-MOV32I
-MUFU
-NOP
-NOP_N
-OUT
-P2R
-PBK
-PCNT
-PIXLD
-PLONGJMP
-POPC
-PRET
-PRMT
-PSET
-PSETP
-R2P
-RAM
-RED
-RET
-RTT
-S2R
-SAM
-SEL
-SHL
-SHR
-SSY
-ST
-ST_N
-STL
-STL_N
-STP
-STS_N
-STSUL
-STUL
-SULD
-SULEA
-SUQ
-SURED
-SUST
-TEX
-TLD
-TLD4
-TMML
-TXA
-TXD
-TXQ
-VABSDIFF
-VABSDIFF2
-VABSDIFF4
-VADD
-VADD2
-VADD4
-VILD
-VMAD
-VMAD_N
-VMNMX
-VMNMX2
-VMNMX4
-VOTE
-VSEL2
-VSEL4
-VSET
-VSET2
-VSET4
-VSETP
-VSHL
-VSHL2
-VSHL4
-VSHR
-VSHR2
-VSHR4
+=== A-C ===
+  * ALD
+  * ALD_N
+  * AST
+  * AST_N
+  * ATOM
+  * B2R
+  * BFE
+  * BFI
+  * BPT
+  * BRA
+  * BRA_N
+  * BRK
+  * BRX
+  * CAL
+  * CCTL
+  * CCTLL
+  * CONT
+  * CSET
+  * CSETP
 
-</pre>
+=== D-F ===
+  * DADD
+  * DFMA
+  * DMNMX
+  * DMUL
+  * DSET
+  * DSETP
+  * EXIT
+  * F2I
+  * FADD
+  * FADD_N
+  * FCCO
+  * FCMP
+  * FFMA
+  * FFMA_N
+  * FFMA32I
+  * FLO
+  * FMNMX
+  * FMUL
+  * FMUL32I
+  * FSET
+  * FSETP
+  * FSETP_N
+  * FSWZ
+
+=== I-K ===
+  * I2F
+  * I2I
+  * I2I_N
+  * IADD
+  * IADD_N
+  * IADD32I
+  * ICMP
+  * IMAD
+  * IMAD_N
+  * IMAD32I
+  * IMNMX
+  * IMUL
+  * IMUL_N
+  * IMUL32I
+  * IPA
+  * IPA_N
+  * ISAD
+  * ISCADD
+  * ISCADD32I
+  * ISET
+  * ISETP
+  * ISETP_N
+  * JCAL
+  * JMP
+  * JMX
+  * KIL
+
+=== L-N ===
+  * LD
+  * LD_LDU
+  * LD_N
+  * LDC
+  * LDC_N
+  * LDL
+  * LDL_N
+  * LDLK
+  * LDS_LDU
+  * LDS_N
+  * LDSLK
+  * LDU
+  * LEPC
+  * LONGJMP
+  * LOP
+  * LOP_N
+  * LOP32I
+  * MEMBAR
+  * MOV
+  * MOV_N
+  * MOV32I
+  * MUFU
+  * NOP
+  * NOP_N
+
+=== O-R ===
+  * OUT
+  * P2R
+  * PBK
+  * PCNT
+  * PIXLD
+  * PLONGJMP
+  * POPC
+  * PRET
+  * PRMT
+  * PSET
+  * PSETP
+  * R2P
+  * RAM
+  * RED
+  * RET
+  * RTT
+
+=== S-T ===
+  * S2R
+  * SAM
+  * SEL
+  * SHL
+  * SHR
+  * SSY
+  * ST
+  * ST_N
+  * STL
+  * STL_N
+  * STP
+  * STS_N
+  * STSUL
+  * STUL
+  * SULD
+  * SULEA
+  * SUQ
+  * SURED
+  * SUST
+  * TEX
+  * TLD
+  * TLD4
+  * TMML
+  * TXA
+  * TXD
+  * TXQ
+
+=== V ===
+  * VABSDIFF
+  * VABSDIFF2
+  * VABSDIFF4
+  * VADD
+  * VADD2
+  * VADD4
+  * VILD
+  * VMAD
+  * VMAD_N
+  * VMNMX
+  * VMNMX2
+  * VMNMX4
+  * VOTE
+  * VSEL2
+  * VSEL4
+  * VSET
+  * VSET2
+  * VSET4
+  * VSETP
+  * VSHL
+  * VSHL2
+  * VSHL4
+  * VSHR
+  * VSHR2
+  * VSHR4
+
 ==By Type==
+Note: the following names are taken from cuobjdump.pdf and are inaccurate.
 === Floating point Instructions ===
   * FFMA
   * FADD
