@@ -4,7 +4,7 @@
 #define GlobalVariablesDefined yes
 
 //---code starts ---
-#include <vld.h>
+
 
 #include <iostream>
 #include <fstream>
