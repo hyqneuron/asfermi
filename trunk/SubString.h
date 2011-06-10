@@ -2,6 +2,7 @@
 #else
 #define SubStringDefined yes
 //-----Start of code
+#include <vld.h>
 
 
 using namespace std;
@@ -89,11 +90,28 @@ struct SubString
 		}
 		return true;
 	}
+	char* ToCharArrayStopOnCR();
 	int ToRegister();
 	unsigned int ToImmediate32FromHex();
 	void ToGlobalMemory(int &register1, unsigned int&memory);
 	
 };
+
+char* SubString::ToCharArrayStopOnCR()
+{
+		char *result = new char[Length + 1];
+		for(int i =0 ; i<Length; i++)
+		{
+			if((int)Start[i]==13) //carriage return
+			{
+				result[i] = (char)0;
+				return result;
+			}
+			result[i] = Start[i];
+		}
+		result[Length] = (char)0;
+		return result;
+}
 int SubString:: ToRegister()
 	{
 		int result;
