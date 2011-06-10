@@ -1,4 +1,4 @@
-#summary A log file of updates
+#summary A development log
 
 ==== 10th June, 2011 ====
 *11am*: Things to do:
