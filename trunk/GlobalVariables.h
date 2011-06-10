@@ -4,10 +4,13 @@
 #define GlobalVariablesDefined yes
 
 //---code starts ---
+#include <vld.h>
+
 #include <iostream>
 #include <fstream>
 #include <list>
 #include "DataTypes.h"
+
 using namespace std;
 
 //All globla variables are prefixed with cs, meaning "current state"
@@ -22,6 +25,8 @@ char *csSource;
 int csMaxReg = 0;
 
 bool csReplaceMode;
+bool csExceptionPrintUsage = false;
+bool csErrorPresent = false;
 int csOutputSectionOffset;
 int csOutputSectionSize;
 int csOutputInstructionOffset;
