@@ -3,16 +3,16 @@
 #define helperDefined yes
 //---code starts ---
 
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <math.h>
+#include <string.h>
+#include <list>
 #include "DataTypes.h"
 #include "GlobalVariables.h"
 #include "SpecificRules.h"
+
 
 
 
@@ -23,45 +23,67 @@ void hpUsage();
 void hpExceptionHandler(int e)		//===
 {
 	char *message;
-	if(e==0) //0: Argument error
-	{
-		puts("Invalid arguments.");
-		hpUsage();
-		return;
-	}
 	switch(e)
 	{
-	case 1:			//1: 
-		message = "Unable to open input file";
+	case 0:		message = "Invalid arguments.";
 		break;
-	case 3:
-		message = "Incorrect kernel offset.";
+	case 1:		message = "Unable to open input file";
 		break;
-	case 4:
-		message = "Cannot open output file";
+	case 3:		message = "Incorrect kernel offset.";
 		break;
-	case 5:
-		message = "Cannot find specified kernel";
+	case 4:		message = "Cannot open output file";
 		break;
-	case 6:
-		message = "File to be modified is invalid.";
+	case 5:		message = "Cannot find specified kernel";
+		break;
+	case 6:		message = "File to be modified is invalid.";
 		break;
 	case 7:		message = "Failed to read cubin";
 		break;
 	case 8:		message = "Cannot find the specified section";
 		break;
-	case 100:		//100
+	case 9:		message = "Specific section not large enough to contain all the assembled opcodes.";
 		break;
-		message = "Not in replace mode.";
+	case 20:	message = "Insufficient number of arguments";
 		break;
-
+	case 99:	message = "Not in replace mode.";
+		break;
+	default:	message = "No error message";
+		break;
 	};
-	printf("Error: %s\n",message);
-	if(csInput.is_open())
-		csInput.close();
-	if(csOutput.is_open())
-		csOutput.close();
-	getchar();
+	cout<<message<<endl;
+	if(csExceptionPrintUsage)
+		hpUsage();
+}
+void hpErrorHandler(int e, Instruction &instruction)
+{
+	csErrorPresent = true;
+	char *message;
+	switch(e)
+	{
+	case 100:	message = "Instruction name is absent following the predicate";
+		break;
+	case 101:	message = "Unsupported modifier.";
+		break;
+	case 102:	message = "Too many operands.";
+		break;
+	case 103:	message = "Insufficient number of operands.";
+		break;
+	case 104:	message = "Incorrect register format.";
+		break;
+	case 105:	message = "Register number too large.";
+		break;
+	case 106:	message = "Incorrect hex value.";
+		break;
+	case 107:	message = "Incorrect global memory format.";
+		break;
+	case 108:	message = "Instruction not supported.";
+		break;
+	default:	message = "Unknown Error";
+		break;
+	};
+	char *line = instruction.InstructionString.ToCharArray();
+	cout<<"Line "<<instruction.LineNumber<<": "<<line<<": "<<message<<endl;
+	delete[] line;
 }
 
 void hpCleanUp() //parsers are created with the new keyword,        =====
@@ -74,7 +96,15 @@ void hpCleanUp() //parsers are created with the new keyword,        =====
 		delete *i;
 	for(list<DirectiveParser*>::iterator i = csDirectiveParserList.begin(); i!=csDirectiveParserList.end(); i++)
 		delete *i;
+
+	delete[] csInstructionRules;
+	delete[] csInstructionRuleIndices;
+
 	delete[] csSource;
+	if(csInput.is_open())
+		csInput.close();
+	if(csOutput.is_open())
+		csOutput.close();
 }
 //-----End of main helper functions
 
@@ -92,24 +122,8 @@ void hpUsage()				//====
 	puts("	-I \"instruction\": This can be used to replace the inputfile. A single line of instruction, surrounded by double quotation marks, will be processed as source input.");
 }
 
-//Macro for converting str to int
-#define mReduce(o)								\
-{												\
-	if(o<58)									\
-	{											\
-		if(o<48)								\
-		{										\
-			throw 3;							\
-		}										\
-		o-=48;									\
-	}											\
-	else										\
-	{											\
-		if(o<97 || o > 102)						\
-			throw 3;							\
-		o-=87;									\
-	}											\
-}
+
+
 int hpHexCharToInt(char* str)			//====
 {
 	int result;
@@ -201,7 +215,7 @@ void hpCheckOutput(char* path, char* kernelname, char* replacepoint)		//===
 	//Going through the section headers to look for the named section
 	bool found = false;
 	char *sectionname;
-	for(int i =0; i<SHcount; i++, fileoffset+=SHsize)
+	for(unsigned int i =0; i<SHcount; i++, fileoffset+=SHsize)
 	{
 		unsigned int SHNameIdx =	*((unsigned int*)  (buffer+fileoffset)); //first 4-byte word in a section header is the name index
 		sectionname = buffer + SHStrOffset + SHNameIdx;
@@ -245,7 +259,7 @@ int b_lineLength;			//length of the instruction string
 
 #define mExtract(startPos,cutPos) instruction.InstructionString.SubStr(startPos, cutPos-startPos)
 
-void hpPPtry(Instruction &instruction)
+void hpBreakInstructionIntoComponents(Instruction &instruction)
 {
 	b_currentPos = 0;
 	b_startPos = 0;
@@ -253,7 +267,7 @@ void hpPPtry(Instruction &instruction)
 	Component component;
 
 	
-PREDSTART:
+//PREDSTART:
 	mSkipBlank;
 	if(instruction.InstructionString[b_currentPos]=='@')
 	{
@@ -416,7 +430,26 @@ int hpFindInstructionRuleArrayIndex(int Index)
 	}
 	return -1;
 }
-
+void hpApplyModifier(Instruction &instruction, Component &component, ModifierRule &rule)
+{
+	if(rule.NeedCustomProcessing)
+	{
+		rule.CustomProcess(instruction, component);
+	}
+	else
+	{
+		if(rule.Apply0)
+		{
+			instruction.OpcodeWord0 &= rule.Mask0;
+			instruction.OpcodeWord0 |= rule.Bits0;
+		}
+		if(instruction.Is8 && rule.Apply1)
+		{
+			instruction.OpcodeWord1 &= rule.Mask1;
+			instruction.OpcodeWord1 |= rule.Bits1;
+		}
+	}
+}
 //-----End of parser helper functions
 
 //9
