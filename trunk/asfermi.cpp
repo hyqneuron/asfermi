@@ -213,7 +213,7 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 				while(lastfoundpos!=-1)
 				{
 					//Build an instruction, parse it and the parser will decide whether to append it to csInstructions or not
-					Instruction instruction(cLine->LineString.SubStr(startPos, lastfoundpos - startPos), csInstructionOffset, cLine->LineNumber);
+					instruction.Reset(cLine->LineString.SubStr(startPos, lastfoundpos - startPos), csInstructionOffset, cLine->LineNumber);
 					csInstructionParser->Parse(instruction);
 					startPos = lastfoundpos + 1; //starting position of next search
 					lastfoundpos = cLine->LineString.Find(';', startPos); //search for ';', starting at startPos
@@ -242,25 +242,7 @@ void DefaultLineParser:: Parse(Line &line)
 void DefaultInstructionParser:: Parse(Instruction &instruction)
 {
 	hpBreakInstructionIntoComponents(instruction);
-	//debug
-	char* line = instruction.InstructionString.ToCharArray();
-	cout<<"--------"<<endl<<"Line "<<instruction.LineNumber<<": "<<line<<endl;
-	delete[] line;
-	for(list<Component>::iterator i = instruction.Components.begin(); i != instruction.Components.end(); i++)
-	{
-		line = i->Content.ToCharArray();
-		cout<<line<<"|| ";
-		delete[]line;
-		for(list<SubString>::iterator imod = i->Modifiers.begin(); imod != i->Modifiers.end(); imod++)
-		{
-			line = imod->ToCharArray();
-			cout<< line<<"|";
-			delete[]line;
-		}
-		cout<<endl;
-	}
 
-	
 	
 	//Start
 	if(instruction.Components.size()==0)
