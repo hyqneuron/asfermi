@@ -1,7 +1,10 @@
 #summary List of instruction names
 
 = Instructions =
-Currently the assembler has not been implemented yet. This page lists all instruction names that are currently known. For instructions and their corresponding opcode, see [nanb] and [Opcode].
+== Currently Supported ==
+LD, ST, EXIT.
+
+The following part of this page lists all instruction names that are currently known. For instructions and their corresponding opcode, see [nanb] and [Opcode].
 
 For better explanation of those instructions, please refer to the cuobjdump.pdf that comes with CUDA toolkit 4.0
 
