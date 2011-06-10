@@ -2,6 +2,7 @@
 #else
 #define helperDefined yes
 //---code starts ---
+#include <vld.h>
 
 
 #include <iostream>
@@ -81,7 +82,7 @@ void hpErrorHandler(int e, Instruction &instruction)
 	default:	message = "Unknown Error";
 		break;
 	};
-	char *line = instruction.InstructionString.ToCharArray();
+	char *line = instruction.InstructionString.ToCharArrayStopOnCR();
 	cout<<"Line "<<instruction.LineNumber<<": "<<line<<": "<<message<<endl;
 	delete[] line;
 }
