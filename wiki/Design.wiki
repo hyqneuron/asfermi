@@ -7,14 +7,14 @@
 == Organisation ==
 === General structure ===
   # Preprocess: process command-line arguments, read input file into Line and check the existing output cubin.
-  # Process: calls the default MasterParser to process the lines.
+  # Process: calls the default Master Parser to process the lines.
   # Postprocess: write assembled opcode into cubin
 ==== Master Parser ====
 The master parser calls the line parser once for each line.
 
 Master parsers are active parsers, which are given a starting line number and are then free to jump between lines and do the necessary processing.
 ==== Line Parser ====
-Note: Currently the default LineParser is implemented inside the default MasterParser itself.
+Note: Currently the default Line Parser is implemented inside the default Master Parser itself.
 {{{
     if(line is directive)
         directive_parser(line);
