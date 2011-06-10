@@ -1,5 +1,6 @@
 #summary A development log
 
+----
 ==== 10th June, 2011 ====
 *11am*: Things to do:
   * add support for modifiers
@@ -9,6 +10,7 @@
 
 *330pm*: Hmm.. looks like memory leaks are not as hard to eliminate as I had imagined. I still have a lot of doubts about how C++ memory management works, but my leak detector already says no leak found, so I'll just go work on something else.
 
+----
 ==== 9th June, 2011 ====
 *7pm*: Finally, asfermi is assembling! Now I'll clean up my code, debug it a bit and then upload it before I go to bed.
 
@@ -16,14 +18,17 @@
 
 Supported instruction: ST, LD, EXIT. Supported operand types: register(Rxx), global memory( `[Rxx + 0x........`] ). I'll write a bit documentation tomorrow. Now it's really time for bed.
 
+----
 ==== 8th June, 2011 ====
 *12am*: Spent the last day debugging and fixing the potential performance issues. The first release should be within 2 days.
 
 *10pm*: cuobjdump seems to be suggesting that even FADD supports 16-bit immediate value. I think it's cuobjdump's bug, but I can't verify now because my laptop is not connected to the graphics card. Yes my laptop uses a desktop card. It needs to be restarted to connect. But restarting has 50% probability of causing the LCD to black out for quite some time (some problem with CMOS, I guess). I'll leave that for tomorrow.
 
+----
 ==== 6th June, 2011 ====
 *5pm*: Spent 5 hours coding today. I think I'll take a break for now. Progress is better than I imagined. I'm now at the stage of writing instruction-specific parsing functions. Also, there are quite a lot of performance issues I could foresee, but I'm not bothered to make any change for now.
 
+----
 ==== 5th June, 2011 ====
 I've been having headache since yesterday afternoon. Things may slow down a little.
 
@@ -31,8 +36,10 @@ I've been having headache since yesterday afternoon. Things may slow down a litt
 
 Well, maybe the first release, supporting MOV, LD, ST, EXIT, FADD, IADD and capable of only replacing opcodes in existing kernels, will not come until at least 3 days later (after 8th June).
 
+----
 ==== 4th June, 2011 ====
 Exam's over! I'll start coding for asfermi now!
 
+----
 ==== 31st of June, 2011 ====
 Created the Google Group [http://groups.google.com/group/asfermi asfermi].
