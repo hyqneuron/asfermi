@@ -7,6 +7,8 @@
   * debug (memory leaks, especially)
   * reorganise code (move some functions out of their class...)
 
+*330pm*: Hmm.. looks like memory leaks are not as hard to eliminate as I had imagined. I still have a lot of doubts about how C++ memory management works, but my leak detector already says no leak found, so I'll just go work on something else.
+
 ==== 9th June, 2011 ====
 *7pm*: Finally, asfermi is assembling! Now I'll clean up my code, debug it a bit and then upload it before I go to bed.
 
