@@ -15,11 +15,11 @@ This page contains a list of features of the assembler that are supported/to be 
 For the source code language features, such as the support for directives and instructions, please view the [SourceFormat] page.
 ----
 == Extensibility ==
-  * 1: Passive Parser, see [Design#Line_Parser]
-  * 2: Active Parser
+  * 0: Passive Parser, see [Design#Line_Parser]
+  * 0: Active Parser
 ----
 == cubin Operations ==
-  * 1: Replace specific instructions inside a cubin
+  * 0: Replace specific instructions inside a cubin
   * 2: Insert instructions into a cubin
   * 2: Output assembled file as cubin (elf)
   * 3: Output cubin with symbolic debugging information
