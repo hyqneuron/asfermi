@@ -2,7 +2,6 @@
 #else
 #define SpecificRulesDefined yes
 //---code starts ---
-#include <vld.h>
 
 
 #include <iostream>
