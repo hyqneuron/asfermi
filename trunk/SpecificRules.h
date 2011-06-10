@@ -2,8 +2,11 @@
 #else
 #define SpecificRulesDefined yes
 //---code starts ---
+#include <vld.h>
+
 
 #include <iostream>
+#include <list>
 #include "DataTypes.h"
 
 
@@ -71,9 +74,8 @@ struct OperandRuleGlobalMemoryWithImmediate32: OperandRule
 //-----Specific Instruction Rules
 struct InstructionRuleLD: InstructionRule
 {
-	InstructionRuleLD()
+	InstructionRuleLD() : InstructionRule("LD", 2, 0, true)
 	{
-		this->Set("LD", 2, 0, true);
 		Operands[0] = &OPRRegister0;
 		Operands[1] = &OPRGlobalMemoryWith32Immediate;
 		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
@@ -82,9 +84,8 @@ struct InstructionRuleLD: InstructionRule
 
 struct InstructionRuleST: InstructionRule
 {
-	InstructionRuleST()
+	InstructionRuleST() : InstructionRule("ST", 2, 0, true)
 	{
-		this->Set("ST", 2, 0, true);
 		Operands[0] = &OPRGlobalMemoryWith32Immediate;
 		Operands[1] = &OPRRegister0;
 		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
@@ -92,9 +93,8 @@ struct InstructionRuleST: InstructionRule
 }IRST;
 struct InstructionRuleEXIT: InstructionRule
 {
-	InstructionRuleEXIT()
+	InstructionRuleEXIT() : InstructionRule("EXIT", 0, 0, true)
 	{
-		this->Set("EXIT", 0, 0, true);
 		InstructionRule::BinaryStringToOpcode8("1110011110111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
 	}
 }IREXIT;
