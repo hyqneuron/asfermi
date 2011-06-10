@@ -6,43 +6,35 @@
 ----
 == Organisation ==
 === General structure ===
-{{{
-#define AbortCheck if(Abort) return ReturnValue; //check later part to see what this is for
-int main(int argc, char** args)
-{
-    Initialize();
-    AbortCheck
-    //==========//
-    Preprocess();  //Removes comment, and does other pre-processing
-    AbortCheck
-    Process();     //calls the Line Parser
-    AbortCheck
-    Postprocess(); //build the cubin, debug information and so on
-    return ReturnValue;
-}
-}}}
+  # Preprocess: process command-line arguments, read input file into Line and check the existing output cubin.
+  # Process: calls the default MasterParser to process the lines.
+  # Postprocess: write assembled opcode into cubin
+==== Master Parser ====
+The master parser calls the line parser once for each line.
+
+Master parsers are active parsers, which are given a starting line number and are then free to jump between lines and do the necessary processing.
 ==== Line Parser ====
+Note: Currently the default LineParser is implemented inside the default MasterParser itself.
 {{{
-    //line is the content of the current line
-    line = basic_processing(line); 
     if(line is directive)
         directive_parser(line);
-    else if(line is instruction)
-        instruction_parser(line);
+    else
+    {
+        break the line into multiple instructions separated by ';'
+        instruction_parser(each instruction);
+    }
 }}}
 
 The *Line parser* receives a line, does certain basic processing, makes a judgement about whether this line is a directive or an instruction, and then
   * Asks the *directive parser* to parse the processed part of the line, if the line is a directive, or
   * Asks the *instruction parser* to parse the processed part of the line, if the line is an instruction.
 
-There could be two types of line parsers: passive and active. Passive parsers parse only one line that is given by the caller. While active parsers are usually only given a starting point and is free to jump between lines.
-
-The default line parser is a passive one and there is another function that is in charge of reading the source file, splitting the source into lines and calling the line parser n (number of lines) times.
+Line parsers are passive parsers, which parse only one line that is given by the caller. 
 
 ==== Instruction Parser ====
 An instruction parser is a passive parser. It receives a single instruction from the caller (line parser), and then analyses the instruction to produce the correct opcode. It then appends the opcode to a list and increase an offset count by the byte length of the opcode.
 
-The default instruction parser, upon receiving the instruction line, would check against a *list of known instructions* names and treat the instruction operators in accordance with the rules specified under the corresponding instruction name.
+The default instruction parser, upon receiving the instruction line, would check against a *list of known instructions* names and treat the instruction operands in accordance with the rules specified under the corresponding instruction name.
 
 For more details of the instructions, see [SourceFormat]
 
@@ -55,134 +47,6 @@ The default directive parser, upon receiving the directive line, would check aga
 
 For more details of the directives, see [SourceFormat]
 
-=== Extensions ===
 ----
-==Basic types and global variables==
-{{{
-//Forgive me if you see syntax error. It's meant to be pseudocode. I'm not a C++ programmer by the way.
-
-//Global states
-bool Abort = false; //instructs the program to abort operation
-int ReturnValue = 0;//return value used, useful when aborting.
-stack<int *(Line line)> pr_lparser;               //Stack of previously used parser
-stack<int *(Instruction instruction)> pr_iparser;
-stack<int *(Directive directive)> pr_dparser;
-
-list<Lparser> lparsers;        //List of parsers loaded at initialization
-list<Iparser> iparsers;
-list<Dparser> dparsers;
-
-//List of known instructions and directives loaded at initialization
-list<InstructionRule>[] known_instructions;
-list<DirectiveRule>[] known_directives;
-//SHOULDN'T USE LIST HERE. WILL MAKE MY OWN DATA STRUCTURE FOR THIS
-
-
-//current states
-int cs_ln;                         //current line number
-int cs_offset;                     //current instruction offset
-list<Directive> cs_directives;     //list of directives encountered so far
-list<int[]> cs_labels;             //list of labels encountered so far
-list<Instruction> cs_instructions; //list of instructions encountered
-bool cs_incomment;                 //whether there is an not-yet-closed comment block
-
-int (*cs_lparser)(Line line);                //Current line parser
-int (*cs_iparser)(Instruction instruction);  //Current instruction parser
-int (*cs_dparser)(Directive directive);      //Current directive parser
-
-/*function pointers are used so that different parsers can be used when needed, 
-under the command of specific directives. For example, directives can indicate 
-whether the following section of code is in cuobjdump format or in PTX-like format.
-
-The default line parser identifies whether a line contains directive/comment. 
-It checks for the existence of the directive identifier "!" in the
-first character. If it is found, the parser will build a Directive object and 
-ask the Directive object to parse itself. If it is not found, the parser looks for 
-instruction delimiter ";" and breaks the string into tokens. It then 
-builds up an Instruction object for each token obtained and asks the Instruction 
-object to parse itself.
-
-However, line parsers can be changed. The general behaviour: The next line is 
-picked. The current line parser is used to parse this line. While default line
-parser often generates Instruction/Directive objects, custom line parsers need not 
-to, meaning that a line could be of a type other than directive/instruction. Thus 
-great flexibility of the source code is provided.
-
-*/
-
-
-struct Line
-{
-    char* line_content;
-    int line_number;
-    void Parse()
-    {
-        cs_lparser(self);
-    }
-};
-struct Directive:: public Line
-{
-    int directive_type;
-    int* directive_content; //array of pointers specific to each directive_type
-    void Parse()
-    {
-        cs_dparser(self);
-    }
-};
-struct Instruction:: public Line
-{
-    char *instruction_string;
-    int instruction_type;
-    char *instruction_bytes;
-    int *instruction_content; //array of pointers to content specific to each instruction_type. 
-                              //Usually include operator1, operator2 or operator3
-    void Parse()
-    {
-        cs_iparser(self);
-    }
-};
-struct Parser
-{
-    char* Name;
-};
-struct Lparser:: public Parser
-{
-    Lparser(){Name = "default_lparser"}
-    int Function(Line line)
-    {
-    }
-};
-struct Iparser:: public Parser
-{
-    Iparser(){Name = "default_iparser"}
-    int Function(Instruction instruction)
-    {
-    }
-};
-struct Dparser:: public Parser
-{
-    Dparser(){Name = "default_dparser"}
-    int Function(Directive directive)
-    {
-    }
-};
-
-
-
-void Set_lparser(char* name) //same goes for i/d parsers
-{
-    pr_lparsers.push();
-    foreach(Lparser p in lparsers)
-    {
-        if(p.Name == name)
-        {
-            cs_lparser=p.Function;
-            break;
-        }
-    }
-}
-void Set_pr_lparser() //Same goes for i/d parsers
-{
-    cs_lparser = pr_lparsers.pop().Function;
-}
-}}}
+== Extensibility ==
+Default master, line and instruction parsers can be replaced by custom parsers under the request of specific directives. See [Directives#Set_current_parsers]
