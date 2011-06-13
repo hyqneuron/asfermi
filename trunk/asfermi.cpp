@@ -1,4 +1,4 @@
-
+#include <vld.h> //Visual Leak Detector. You can just remove this when you compile.
 
 #include <iostream>
 #include <sstream>
@@ -19,7 +19,6 @@ void Initialize();
 //extern void ExternInitialize();
 void WriteToCubin();
 //-----End of forward declarations
-
 
 
 
@@ -49,6 +48,7 @@ int main(int argc, char** args)
 	catch(int e)
 	{
 		hpExceptionHandler(e);
+		hpCleanUp();
 		return -1;
 	}
 
@@ -147,6 +147,10 @@ void OrganiseInstructionRules()
 				csInstructionRules[j+1] = instsaver;
 				csInstructionRuleIndices[j+1] = indexsaver;
 			}
+			else if(csInstructionRuleIndices[j] == csInstructionRuleIndices[j+1])
+			{
+				throw 50; //repeating indices
+			}
 		}
 	}
 
@@ -178,6 +182,9 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back(&IRLD);
 	csInstructionRulePrepList.push_back(&IRST);
 	csInstructionRulePrepList.push_back(&IREXIT);
+	csInstructionRulePrepList.push_back(&IRMOV);
+	csInstructionRulePrepList.push_back(&IRFADD);
+	csInstructionRulePrepList.push_back(&IRIADD);
 	::OrganiseInstructionRules();
 }
 
@@ -188,6 +195,7 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 	
 	
 	int lineLength;
+	Instruction instruction;
 	//Going through all lines
 	for(unsigned int i =startinglinenumber; i<csLines.size(); i++)
 	{
@@ -203,7 +211,6 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 		}
 		else //if it's not directive, it's instruction. Break it if it has ';'
 		{
-			Instruction instruction;
 			try
 			{
 				//look for instruction delimiter ';'
@@ -267,11 +274,7 @@ void DefaultInstructionParser:: Parse(Instruction &instruction)
 	{
 		throw 108; //instruction not supported
 	}
-	if(csInstructionRules[arrayIndex]->NeedCustomProcessing)
-	{
-		csInstructionRules[arrayIndex]->CustomProcess(instruction);
-		goto APPEND;
-	}
+
 	instruction.Is8 = csInstructionRules[arrayIndex]->Is8;
 	instruction.OpcodeWord0 = csInstructionRules[arrayIndex]->OpcodeWord0;
 	csInstructionOffset += 4;
@@ -281,12 +284,21 @@ void DefaultInstructionParser:: Parse(Instruction &instruction)
 		csInstructionOffset += 4;
 	}
 
+	if(instruction.Predicated)
+		hpProcessPredicate(instruction);
+
+	if(csInstructionRules[arrayIndex]->NeedCustomProcessing)
+	{
+		csInstructionRules[arrayIndex]->CustomProcess(instruction);
+		goto APPEND;
+	}
+
 	for(list<SubString>::iterator modifier = component->Modifiers.begin(); modifier!=component->Modifiers.end(); modifier++)
 	{
 		int i;
 		for(i = 0; i< csInstructionRules[arrayIndex]->ModifierCount; i++)
 		{
-			if(modifier->CompareWithCharArrayIgnoreEndingBlank(csInstructionRules[arrayIndex]->ModifierRules[i]->Name, csInstructionRules[arrayIndex]->ModifierRules[i]->Length))
+			if(modifier->CompareWithCharArray(csInstructionRules[arrayIndex]->ModifierRules[i]->Name, csInstructionRules[arrayIndex]->ModifierRules[i]->Length))
 				break;
 		}
 		if(i==csInstructionRules[arrayIndex]->ModifierCount)
