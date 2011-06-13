@@ -2,7 +2,7 @@
 #else
 #define DataTypesDefined yes
 //---code starts ---
-
+#include <vld.h> //remove when you compile
 
 
 
@@ -76,6 +76,8 @@ struct Instruction
 		InstructionString = instructionString;
 		Offset = offset;
 		LineNumber = lineNumber;
+		Components.clear();
+		//not cleared: Is8, OpcodeWord, Predicated
 	}
 };
 struct Directive
@@ -104,7 +106,7 @@ struct Directive
 //-----Structures for instruction analysis: ModifierRule, OperandRule, InstructionRule
 typedef enum OperandType
 {
-	Register, Immediate32, GlobalMemory, ConstantMemory, SharedMemory, Optional, Custom
+	Register, Immediate32, GlobalMemory, ConstantMemory, SharedMemory, MOVStyle, FADDStyle, Optional, Custom
 };
 struct ModifierRule
 {
@@ -121,6 +123,15 @@ struct ModifierRule
 
 	bool NeedCustomProcessing;
 	virtual void CustomProcess(Instruction &instruction,Component &component){}
+	ModifierRule(){}
+	ModifierRule(char* name, int length, bool apply0, bool apply1, bool needCustomProcessing)
+	{
+		Name = name;
+		Length = length;
+		Apply0 = apply0;
+		Apply1 = apply1;
+		NeedCustomProcessing = needCustomProcessing;
+	}
 };
 struct OperandRule
 {
@@ -162,7 +173,7 @@ struct InstructionRule
 		return result;
 	}
 	InstructionRule(){};
-	InstructionRule(char* name, int operandCount, int modifierCount, bool is8)
+	InstructionRule(char* name, int operandCount, int modifierCount, bool is8, bool needCustomProcessing)
 	{
 		Name = name;
 		OperandCount = operandCount;
@@ -172,6 +183,7 @@ struct InstructionRule
 		if(modifierCount>0)
 			ModifierRules = new ModifierRule*[modifierCount];
 		Is8 = is8;
+		NeedCustomProcessing = needCustomProcessing;
 	}
 	~InstructionRule()
 	{
