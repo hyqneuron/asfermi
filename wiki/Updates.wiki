@@ -1,5 +1,9 @@
 #summary A development log
 
+
+==== 14 June, 2011 ====
+Confirmed that FADD and IADD do not take constant memory operators but do take 20-bit immediates.
+
 ----
 ==== 13 June, 2011 ====
 *630pm*: Back on the job! Just added support for predicates and .128, .64 modifiers for LD and ST. Now working on the operand type for constant memory. Haven't uploaded the code yet.
