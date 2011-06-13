@@ -1,6 +1,10 @@
 #summary A development log
 
 ----
+==== 13 June, 2011 ====
+*630pm*: Back on the job! Just added support for predicates and .128, .64 modifiers for LD and ST. Now working on the operand type for constant memory. Haven't uploaded the code yet.
+
+----
 ==== 10th June, 2011 ====
 *11am*: Things to do:
   * add support for modifiers
