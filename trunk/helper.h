@@ -49,7 +49,7 @@ void hpCleanUp() //parsers are created with the new keyword,        =====
 //----- Command-line stage helper functions
 void hpUsage()				//====
 {
-	puts("asfermi Version 0.0.1");
+	puts("asfermi Version 0.1.0");
 	puts("Usage:");
 	puts("asfermi sourcefile [Options [option arguments]]");
 	puts("Source file must be the first command-line option. However, it could be replaced by a -I option specified below.");
