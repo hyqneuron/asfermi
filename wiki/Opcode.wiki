@@ -99,11 +99,18 @@ The following presents the opcode of various instructions. Information may be in
 === Floating Point Instructions ===
 ==== FADD ====
 {{{
+FADD Register, Register, Register/20-bit immediate
+}}}
+The 20-bit immediate value is a single with the last 12 bits truncated.
+{{{
 0000 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 001010
 }}}
 
 === Integer Instructions ===
 ==== IADD ====
+{{{
+IADD Register, Register, Register/20-bit immediate
+}}}
 {{{
 1100 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 010010
 }}}
