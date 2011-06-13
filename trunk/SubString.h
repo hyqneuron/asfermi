@@ -2,7 +2,7 @@
 #else
 #define SubStringDefined yes
 //-----Start of code
-#include <vld.h>
+#include <vld.h> //remove when you compile
 
 
 using namespace std;
@@ -74,7 +74,7 @@ struct SubString
 		result[Length] = (char)0;
 		return result;
 	}
-	bool CompareWithCharArrayIgnoreEndingBlank(char* target, int length) //length is the length of the char
+	bool CompareWithCharArray(char* target, int length) //length is the length of the char
 	{
 		if(length < Length)
 			return false;
@@ -83,17 +83,18 @@ struct SubString
 			if(Start[i]!=target[i])
 				return false;
 		}
-		for(int i = Length; Length < length; i++) //it's fine for the target to end with blanks
-		{
-			if(target[i]>32)
-				return false;
-		}
+//		for(int i = Length; Length < length; i++) //it's fine for the target to end with blanks
+//		{
+//			if(target[i]>32)
+//				return false;
+//		}
 		return true;
 	}
 	char* ToCharArrayStopOnCR();
 	int ToRegister();
 	unsigned int ToImmediate32FromHex();
 	void ToGlobalMemory(int &register1, unsigned int&memory);
+	void ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory);
 	
 };
 
@@ -248,6 +249,36 @@ void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 			memory = SubStr(startPos, Length - startPos).ToImmediate32FromHex();
 		}
 	}
-
+void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory)
+{
+		if(Length<11|| Start[0]!='c')
+			throw 110; //incorrect constant memory format
+		int endPos;
+		for(endPos = 1; endPos<Length; endPos++)
+		{
+			if(Start[endPos]>32)
+				break;
+		}
+		if(endPos==Length || Start[endPos]!='[')
+			throw 110;
+		int startPos = endPos+1;
+		endPos = Find(']', endPos);
+		if(endPos == -1)
+			throw 110;
+		bank = SubStr(startPos, endPos - startPos).ToImmediate32FromHex(); //issue: the error line would be for global mem
+		if(bank > 10)
+			throw 114; //bank number too large
+		endPos++;
+		for(; endPos<Length; endPos++)
+		{
+			if(Start[endPos]>32)
+				break;
+		}
+		if(endPos>=Length || Start[endPos]!='[')
+			throw 110;
+		SubStr(endPos, Length - endPos).ToGlobalMemory(register1, memory);
+		if(memory>0xFFFF) 
+			throw 111; //too large memory address
+}
 
 #endif
