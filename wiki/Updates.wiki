@@ -6,6 +6,8 @@ Confirmed that FADD and IADD do not take constant memory operators but do take 2
 
 Hmm... looks like the first version is ready. asfermi now has support for predicates. Support for instructions is limited to: MOV, ST, LD, FADD and IADD. So far the only supported modifiers are .128 and .64 for both LD and ST. For now only hexadecimal immediate values are accepted. I'll get asfermi to support floating point/integer number immediate values soon. Then I'll add support for operand types used by S2R and SETP instructions. When these things are done, I will just start adding support for a lot more instructions and their modifiers.
 
+Forgot to mention one thing: asfermi doesn't properly support comments yet. Though since asfermi does syntax checking in a very slack manner, comments could actually be inserted into instructions. See [SourceFormat] for information regarding this.
+
 ----
 ==== 13 June, 2011 ====
 *630pm*: Back on the job! Just added support for predicates and .128, .64 modifiers for LD and ST. Now working on the operand type for constant memory. Haven't uploaded the code yet.
