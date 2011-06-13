@@ -1,10 +1,9 @@
-//prevent multiple inclusion
-#if defined GlobalVariablesDefined 
+#if defined GlobalVariablesDefined //prevent multiple inclusion
 #else
 #define GlobalVariablesDefined yes
 
 //---code starts ---
-
+#include <vld.h> //remove when you compile
 
 #include <iostream>
 #include <fstream>
