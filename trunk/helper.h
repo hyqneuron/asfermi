@@ -2,7 +2,7 @@
 #else
 #define helperDefined yes
 //---code starts ---
-#include <vld.h>
+#include <vld.h> //remove when you compile
 
 
 #include <iostream>
@@ -13,6 +13,7 @@
 #include "DataTypes.h"
 #include "GlobalVariables.h"
 #include "SpecificRules.h"
+#include "helperException.h"
 
 
 
@@ -21,71 +22,6 @@ void hpUsage();
 
 //	1
 //-----Main helper functions
-void hpExceptionHandler(int e)		//===
-{
-	char *message;
-	switch(e)
-	{
-	case 0:		message = "Invalid arguments.";
-		break;
-	case 1:		message = "Unable to open input file";
-		break;
-	case 3:		message = "Incorrect kernel offset.";
-		break;
-	case 4:		message = "Cannot open output file";
-		break;
-	case 5:		message = "Cannot find specified kernel";
-		break;
-	case 6:		message = "File to be modified is invalid.";
-		break;
-	case 7:		message = "Failed to read cubin";
-		break;
-	case 8:		message = "Cannot find the specified section";
-		break;
-	case 9:		message = "Specific section not large enough to contain all the assembled opcodes.";
-		break;
-	case 20:	message = "Insufficient number of arguments";
-		break;
-	case 99:	message = "Not in replace mode.";
-		break;
-	default:	message = "No error message";
-		break;
-	};
-	cout<<message<<endl;
-	if(csExceptionPrintUsage)
-		hpUsage();
-}
-void hpErrorHandler(int e, Instruction &instruction)
-{
-	csErrorPresent = true;
-	char *message;
-	switch(e)
-	{
-	case 100:	message = "Instruction name is absent following the predicate";
-		break;
-	case 101:	message = "Unsupported modifier.";
-		break;
-	case 102:	message = "Too many operands.";
-		break;
-	case 103:	message = "Insufficient number of operands.";
-		break;
-	case 104:	message = "Incorrect register format.";
-		break;
-	case 105:	message = "Register number too large.";
-		break;
-	case 106:	message = "Incorrect hex value.";
-		break;
-	case 107:	message = "Incorrect global memory format.";
-		break;
-	case 108:	message = "Instruction not supported.";
-		break;
-	default:	message = "Unknown Error";
-		break;
-	};
-	char *line = instruction.InstructionString.ToCharArrayStopOnCR();
-	cout<<"Line "<<instruction.LineNumber<<": "<<line<<": "<<message<<endl;
-	delete[] line;
-}
 
 void hpCleanUp() //parsers are created with the new keyword,        =====
 {
@@ -244,7 +180,7 @@ int b_currentPos;			//current search position in the instruction string. For the
 int b_lineLength;			//length of the instruction string
 
 //b_startPos = b_currentPos = position of first non-blank character found in [b_currentPos, b_lineLength)
-//When no non-blank character is found, b_startPos is unmodified. b_currentPos = b_lineLength
+//When no non-blank character, it causes hpBreakInstructionIntoComponents to directly return
 #define mSkipBlank																							\
 {																											\
 	for(; b_currentPos < b_lineLength; b_currentPos++)														\
@@ -259,8 +195,10 @@ int b_lineLength;			//length of the instruction string
 }
 
 #define mExtract(startPos,cutPos) instruction.InstructionString.SubStr(startPos, cutPos-startPos)
+#define mExtractPushComponent {	component.Content = mExtract(b_startPos, b_currentPos);	instruction.Components.push_back(component);}
+#define mExtractPushModifier {component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));instruction.Components.push_back(component);}
 
-void hpBreakInstructionIntoComponents(Instruction &instruction)
+void hpBreakInstructionIntoComponents(Instruction &instruction) //===+done checking once
 {
 	b_currentPos = 0;
 	b_startPos = 0;
@@ -276,17 +214,15 @@ PRED:
 		b_currentPos++;
 		if(b_currentPos==b_lineLength)
 		{
-			component.Content = mExtract(b_startPos, b_currentPos);
-			instruction.Components.push_back(component);
+			mExtractPushComponent;
 			return;
 		}
 		if(instruction.InstructionString[b_currentPos] < 33)
 		{
-			component.Content = mExtract(b_startPos, b_currentPos);
-			instruction.Components.push_back(component);
-			b_currentPos++; b_startPos = b_currentPos;
+			mExtractPushComponent;
+//			b_currentPos++; b_startPos = b_currentPos;
 			mSkipBlank;
-			goto INST;
+//			goto INST;
 		}
 		else
 			goto PRED;
@@ -295,14 +231,12 @@ PRED:
 INST:
 	if(b_currentPos==b_lineLength)
 	{
-		component.Content = mExtract(b_startPos, b_currentPos);
-		instruction.Components.push_back(component);
+		mExtractPushComponent;
 		return;
 	}
-	else if( instruction.InstructionString[b_currentPos] < 33 )
+	if( instruction.InstructionString[b_currentPos] < 33 )
 	{
-		component.Content = mExtract(b_startPos, b_currentPos);
-		instruction.Components.push_back(component);
+		mExtractPushComponent;
 		b_currentPos++; b_startPos = b_currentPos;
 		goto OP;
 	}
@@ -313,15 +247,14 @@ INST:
 INSTDOT:
 		if(b_currentPos==b_lineLength)
 		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-			instruction.Components.push_back(component);
+			mExtractPushModifier;
 			return;
 		}
-		else if( instruction.InstructionString[b_currentPos] < 33 )
+		else if( instruction.InstructionString[b_currentPos] < 33 ) //no space allowed in modifiers
 		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-			instruction.Components.push_back(component);
+			mExtractPushModifier;
 			b_currentPos++; b_startPos = b_currentPos;
+			goto OP;
 		}
 		else if(instruction.InstructionString[b_currentPos] == '.')
 		{
@@ -340,61 +273,62 @@ INSTDOT:
 		b_currentPos++;
 		goto INST;
 	}
+
+
 OP:
-	while(true)
+	mSkipBlank;
+	component.Modifiers.clear();
+
+OPNOSKIP:
+	if(b_currentPos==b_lineLength)
 	{
-		mSkipBlank;
-		component.Modifiers.clear();
-OPREAL:
+		mExtractPushComponent;
+		return;
+	}
+	else if( instruction.InstructionString[b_currentPos] == ',' ) //space can exist in operands
+	{
+		mExtractPushComponent;
+		b_currentPos++; b_startPos = b_currentPos;
+		goto OP;
+	}
+	else if(instruction.InstructionString[b_currentPos] == '.') //issue: sub-operands cannot have modifiers
+	{
+		component.Content = mExtract(b_startPos, b_currentPos);
+		b_currentPos++; b_startPos = b_currentPos;
+OPDOT:
 		if(b_currentPos==b_lineLength)
 		{
-			component.Content = mExtract(b_startPos, b_currentPos);
-			instruction.Components.push_back(component);
+			mExtractPushModifier;
 			return;
 		}
 		else if( instruction.InstructionString[b_currentPos] == ',' )
 		{
-			component.Content = mExtract(b_startPos, b_currentPos);
-			instruction.Components.push_back(component);
+			mExtractPushModifier;
 			b_currentPos++; b_startPos = b_currentPos;
 			goto OP;
 		}
-		else if(instruction.InstructionString[b_currentPos] == '.')
+		else if(instruction.InstructionString[b_currentPos] == '.' )
 		{
-			component.Content = mExtract(b_startPos, b_currentPos);
+			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
 			b_currentPos++; b_startPos = b_currentPos;
-OPDOT:
-			if(b_currentPos==b_lineLength)
-			{
-				component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-				instruction.Components.push_back(component);
-				return;
-			}
-			else if( instruction.InstructionString[b_currentPos] == ',' )
-			{
-				component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-				instruction.Components.push_back(component);
-				b_currentPos++; b_startPos = b_currentPos;
-			}
-			else if(instruction.InstructionString[b_currentPos] == '.')
-			{
-				component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-				b_currentPos++; b_startPos = b_currentPos;
-				goto OPDOT;
-			}
-			else
-			{
-				b_currentPos++;
-				goto OPDOT;
-			}
+			goto OPDOT;
+		}
+		else if(instruction.InstructionString[b_currentPos] < 33)
+		{
+			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
+			mSkipBlank;
 		}
 		else
 		{
 			b_currentPos++;
-			goto OPREAL;
+			goto OPDOT; //no blank to skip
 		}
 	}
-
+	else
+	{
+		b_currentPos++;
+		goto OPNOSKIP;
+	}
 }
 
 
@@ -451,6 +385,40 @@ void hpApplyModifier(Instruction &instruction, Component &component, ModifierRul
 		}
 	}
 }
+
+static unsigned int predRef[]={0u, 1<<10, 2<<10, 3<<10, 4<<10, 5<<10, 6<<10, 7<<10};
+static unsigned int predRefNegate = 1<<13;
+static unsigned int predRefMask = 0xFFFFC3FF;
+void hpProcessPredicate(Instruction &instruction)
+{
+	SubString predStr = instruction.Components.begin()->Content;
+	if(predStr.Length < 3)
+		throw 109; //incorrect predicate
+	bool negate = false;
+	int startPos = 1;
+	if(predStr[startPos]=='!')
+	{
+		if(predStr.Length<4)
+			throw 109;
+		negate = true;
+		startPos++;
+	}
+	if(predStr[startPos] != 'P' && predStr[startPos] != 'p')
+		throw 109;
+	int predNumber = (int) predStr[startPos+1];
+	if(predNumber < 48 || predNumber > 55)
+	{
+		if(predNumber != 90 && predNumber != 122)
+			throw 109;
+		predNumber = 7; //pt is seven
+	}
+	else
+		predNumber -= 48;
+
+	instruction.OpcodeWord0 &= predRefMask;
+	instruction.OpcodeWord0 |= predRef[predNumber];
+	if(negate)instruction.OpcodeWord0 |= predRefNegate;
+}
 //-----End of parser helper functions
 
 //9
@@ -483,6 +451,28 @@ void hpPrintDirectives()
 		char * result = i->DirectiveString.ToCharArray();
 		cout<<result<<endl;
 		delete[] result;
+	}
+}
+	
+void hpPrintComponents(Instruction &instruction)
+{
+	char* line = instruction.InstructionString.ToCharArrayStopOnCR();
+	cout<<"-------- Line "<<instruction.LineNumber<<"--------"<<endl;
+	cout<<"Content: "<<line<<endl;
+	delete[] line;
+	int count = 0;
+	for(list<Component>::iterator i = instruction.Components.begin(); i != instruction.Components.end(); i++, count++)
+	{
+		line = i->Content.ToCharArrayStopOnCR();
+		cout<<"Component "<<count<<":"<<line<<"||";
+		delete[]line;
+		for(list<SubString>::iterator imod = i->Modifiers.begin(); imod != i->Modifiers.end(); imod++)
+		{
+			line = imod->ToCharArrayStopOnCR();
+			cout<< line<<"|";
+			delete[]line;
+		}
+		cout<<endl;
 	}
 }
 
