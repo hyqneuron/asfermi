@@ -15,6 +15,13 @@ This project involves two stages. First is the making of the assembler. Second i
     # ...
   # Probing NVIDIA's custom sections in cubins
   # Writing the assembler
+----
+*Time line*
+  * By 16/6/2011: comment, constant operands
+  * By 23/6/2011: produce cubin independently (kernel info section, symbols)
+  * By 25/6/2011: insert opcodes into cubins (directive)
+  * By 15/7/2011: support all 4-byte instructions as well as their 8-byte counterparts. 
+----
 
 ===Microbenchmarking===
 ====Instruction-related====
