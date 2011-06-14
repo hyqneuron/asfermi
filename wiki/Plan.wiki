@@ -17,10 +17,14 @@ This project involves two stages. First is the making of the assembler. Second i
   # Writing the assembler
 ----
 *Time line*
-  * By 16/6/2011: comment, constant operands
-  * By 23/6/2011: produce cubin independently (kernel info section, symbols)
-  * By 25/6/2011: insert opcodes into cubins (directive)
-  * By 15/7/2011: support all 4-byte instructions as well as their 8-byte counterparts. 
+  * By 16/6/2011: in-line comment, constant operands
+  * By 21/6/2011: produce cubin independently (kernel info section, constant symbol, shared memory, device function section, directives to mark kernels)
+  * By 22/6/2011: insert opcodes into cubins (directive)
+  * By 6/7/2011: support all 4-byte instructions as well as their 8-byte counterparts. 
+<wiki:comment>
+  by 10/7/2011: probe instruction latencies for important instructions
+  by 17/7/2011: implement a radix sort algorithm to compare performance with SDK's radix sort.
+</wiki:comment>
 ----
 
 ===Microbenchmarking===
