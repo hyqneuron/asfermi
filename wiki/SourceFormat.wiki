@@ -70,6 +70,21 @@ For now, asfermi only takes hex values and they cannot be more than 32-bit.
 0x12345678
 }}}
 Hex value must start with '0x' or '0X'. Not all eight digits need to be present. For example, 0x001 would be legal. Also, characters after the eighth digit are ignored. For example, 0x123456789 is taken as 0x12345678. Additionally, characters starting from the first non-hexadecimal character will be ignored. For example, 0x10annn is taken as 0x10a.
+
+Floating point numbers and integers are to be supported soon.
+
+Floating point numbers:
+{{{
+32-bit: F123.456
+Higher 32 bits of 64-bit number: FH123.456
+Lower 32 bits of 64-bit number: FL123.456
+}}}
+Integers:
+{{{
+32-bit: 12345
+Higher 32 bits of 64-bit number: H12345
+Lower 32 bits of 64-bit number: L12345
+}}}
 ==== Global Memory ====
 A global memory operand has the following format:
 {{{
