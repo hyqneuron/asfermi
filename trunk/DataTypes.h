@@ -2,13 +2,9 @@
 #else
 #define DataTypesDefined yes
 //---code starts ---
-#include <vld.h> //remove when you compile
+//#include <vld.h> //remove when you compile
 
 
-
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 
 #include <string.h>
 #include <list>
@@ -106,7 +102,9 @@ struct Directive
 //-----Structures for instruction analysis: ModifierRule, OperandRule, InstructionRule
 typedef enum OperandType
 {
-	Register, Immediate32, GlobalMemory, ConstantMemory, SharedMemory, MOVStyle, FADDStyle, Optional, Custom
+	Immediate32HexConstant, Immediate32IntConstant, Immediate32FloatConstant, Immediate32AnyConstant, 
+	Register, GlobalMemoryWithImmediate32, ConstantMemory, SharedMemory, Optional, Custom, 
+	MOVStyle, FADDStyle, IADDStyle
 };
 struct ModifierRule
 {
@@ -122,7 +120,7 @@ struct ModifierRule
 	unsigned int Bits1;
 
 	bool NeedCustomProcessing;
-	virtual void CustomProcess(Instruction &instruction,Component &component){}
+	virtual void CustomProcess(Component &component){}
 	ModifierRule(){}
 	ModifierRule(char* name, int length, bool apply0, bool apply1, bool needCustomProcessing)
 	{
@@ -137,12 +135,21 @@ struct OperandRule
 {
 	OperandType Type;
 	int ModifierCount;
-	ModifierRule* ModifierRules;
+	ModifierRule** ModifierRules;
 
-	virtual void Process(Instruction &instruction, Component &component) = 0;
+	OperandRule(){}
+	OperandRule(OperandType type, int modifierCount)
+	{
+		Type = type;
+		ModifierCount = modifierCount;
+		if(ModifierCount!=0)
+			ModifierRules = new ModifierRule*[ModifierCount];
+	}
+	virtual void Process(Component &component) = 0;
 	~OperandRule()
 	{
-		//delete[] ModifierRules;
+		if(ModifierCount!=0)
+			delete[] ModifierRules;
 	}
 };
 //When an instruction rule is initialized, the ComputeIndex needs to be called. They need to be sorted according to their indices and then placed in csInstructionRules;
@@ -159,7 +166,7 @@ struct InstructionRule
 	unsigned int OpcodeWord1;
 
 	bool NeedCustomProcessing;
-	virtual void CustomProcess(Instruction &instruction){}
+	virtual void CustomProcess(){}
 	int ComputeIndex()
 	{
 		int result = 0;
@@ -239,7 +246,7 @@ struct LineParser: Parser
 };
 struct InstructionParser: Parser
 {
-	virtual void Parse(Instruction &instruction) = 0;
+	virtual void Parse() = 0;
 };
 struct DirectiveParser: Parser
 {
@@ -276,7 +283,7 @@ struct DefaultInstructionParser: InstructionParser
 	{
 		Name = "DefaultInstructionParser";
 	}
-	void Parse(Instruction &instruction);
+	void Parse();
 };
 struct DefaultDirectiveParser: DirectiveParser
 {

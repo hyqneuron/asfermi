@@ -1,4 +1,4 @@
-#include <vld.h> //Visual Leak Detector. You can just remove this when you compile.
+//#include <vld.h> //Visual Leak Detector. You can just remove this when you compile.
 
 #include <iostream>
 #include <sstream>
@@ -99,7 +99,7 @@ void ProcessCommandsAndReadFile(int argc, char** args)
 	}
 	else //progpath inputpath -r target kernelname offset
 	{
-		::hpReadSource(args[1]);	//Call helper function to read input file and create lines
+		hpReadSource(args[1]);	//Call helper function to read input file and create lines
 		currentArg = 2;
 	}
 	//Input is read. Now proceed to output processing
@@ -216,12 +216,14 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 				//look for instruction delimiter ';'
 				
 				int startPos = 0;
+				csCurrentInstruction = & instruction;//set this to avoid constant need to pass instruction around
+
 				int lastfoundpos = cLine->LineString.Find(';', startPos); //search for ';', starting at startPos
 				while(lastfoundpos!=-1)
 				{
 					//Build an instruction, parse it and the parser will decide whether to append it to csInstructions or not
 					instruction.Reset(cLine->LineString.SubStr(startPos, lastfoundpos - startPos), csInstructionOffset, cLine->LineNumber);
-					csInstructionParser->Parse(instruction);
+					csInstructionParser->Parse();
 					startPos = lastfoundpos + 1; //starting position of next search
 					lastfoundpos = cLine->LineString.Find(';', startPos); //search for ';', starting at startPos
 				}
@@ -229,12 +231,12 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 				if(startPos < lineLength)
 				{
 					instruction.Reset(cLine->LineString.SubStr(startPos, lineLength - startPos), csInstructionOffset, cLine->LineNumber);
-					csInstructionParser->Parse(instruction); 
+					csInstructionParser->Parse(); 
 				}
 			}
 			catch(int e)
 			{
-				hpErrorHandler(e, instruction);
+				hpErrorHandler(e);
 			}			
 		}
 		cLine++;
@@ -246,27 +248,27 @@ void DefaultLineParser:: Parse(Line &line)
 }
 
 
-void DefaultInstructionParser:: Parse(Instruction &instruction)
+void DefaultInstructionParser:: Parse()
 {
-	hpBreakInstructionIntoComponents(instruction);
+	hpBreakInstructionIntoComponents();
 
 	
 	//Start
-	if(instruction.Components.size()==0)
+	if(csCurrentInstruction->Components.size()==0)
 		return;
 	int processedComponent = 0;
 	int OPPresent; //number of operands present
-	list<Component>::iterator component = instruction.Components.begin();
+	list<Component>::iterator component = csCurrentInstruction->Components.begin();
 	if(component->Content[0]=='@')
 	{
-		instruction.Predicated = true;
+		csCurrentInstruction->Predicated = true;
 		component++; processedComponent++;		
-		if(component == instruction.Components.end())
+		if(component == csCurrentInstruction->Components.end())
 			throw 100; //no instruction present while predicate is present
 	}
 	else
 	{
-		instruction.Predicated = false;
+		csCurrentInstruction->Predicated = false;
 	}
 	int nameIndex = hpComputeInstructionNameIndex(component->Content);
 	int arrayIndex = hpFindInstructionRuleArrayIndex(nameIndex);
@@ -275,21 +277,21 @@ void DefaultInstructionParser:: Parse(Instruction &instruction)
 		throw 108; //instruction not supported
 	}
 
-	instruction.Is8 = csInstructionRules[arrayIndex]->Is8;
-	instruction.OpcodeWord0 = csInstructionRules[arrayIndex]->OpcodeWord0;
+	csCurrentInstruction->Is8 = csInstructionRules[arrayIndex]->Is8;
+	csCurrentInstruction->OpcodeWord0 = csInstructionRules[arrayIndex]->OpcodeWord0;
 	csInstructionOffset += 4;
-	if(instruction.Is8)
+	if(csCurrentInstruction->Is8)
 	{
-		instruction.OpcodeWord1 = csInstructionRules[arrayIndex]->OpcodeWord1;
+		csCurrentInstruction->OpcodeWord1 = csInstructionRules[arrayIndex]->OpcodeWord1;
 		csInstructionOffset += 4;
 	}
 
-	if(instruction.Predicated)
-		hpProcessPredicate(instruction);
+	if(csCurrentInstruction->Predicated)
+		hpProcessPredicate();
 
 	if(csInstructionRules[arrayIndex]->NeedCustomProcessing)
 	{
-		csInstructionRules[arrayIndex]->CustomProcess(instruction);
+		csInstructionRules[arrayIndex]->CustomProcess();
 		goto APPEND;
 	}
 
@@ -306,12 +308,12 @@ void DefaultInstructionParser:: Parse(Instruction &instruction)
 			throw 101; //unsupported modifier
 			return;
 		}
-		hpApplyModifier(instruction, *component, *csInstructionRules[arrayIndex]->ModifierRules[i]);
+		hpApplyModifier(*component, *csInstructionRules[arrayIndex]->ModifierRules[i]);
 	}
 	component++; processedComponent++;
 
 	//here onwards are operands only. OPPresent is the number of operands that are present
-	OPPresent = instruction.Components.size() - processedComponent;
+	OPPresent = csCurrentInstruction->Components.size() - processedComponent;
 	if(OPPresent > csInstructionRules[arrayIndex]->OperandCount)
 	{
 		throw 102; //too many operands
@@ -320,7 +322,7 @@ void DefaultInstructionParser:: Parse(Instruction &instruction)
 	
 	for(int i=0; i<csInstructionRules[arrayIndex]->OperandCount; i++)
 	{
-		if(component == instruction.Components.end())
+		if(component == csCurrentInstruction->Components.end())
 		{
 			if(csInstructionRules[arrayIndex]->Operands[i]->Type == Optional)
 				continue;
@@ -330,13 +332,13 @@ void DefaultInstructionParser:: Parse(Instruction &instruction)
 			}
 		}
 		//process operand
-		csInstructionRules[arrayIndex]->Operands[i]->Process(instruction, *component);
+		csInstructionRules[arrayIndex]->Operands[i]->Process(*component);
 		component++;
 		//process modifiers
 		//not done yet
 	}
 APPEND:
-	csInstructions.push_back(instruction);
+	csInstructions.push_back(*csCurrentInstruction);
 }
 
 void DefaultDirectiveParser:: Parse(Directive &directive)

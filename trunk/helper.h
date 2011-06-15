@@ -2,7 +2,7 @@
 #else
 #define helperDefined yes
 //---code starts ---
-#include <vld.h> //remove when you compile
+//#include <vld.h> //remove when you compile
 
 
 #include <iostream>
@@ -94,6 +94,20 @@ int hpFileSizeAndSetBegin(fstream &file)		//===
 	file.seekg(0, fstream::beg);
 	return fileSize;
 }
+int hpFindInSource(char target, int startPos, int &length)
+{
+	int currentPos;
+	for(currentPos = startPos; currentPos < csSourceSize; currentPos++)
+	{
+		if(target == csSource[currentPos])
+		{
+			length = currentPos - startPos;
+			return currentPos;
+		}
+	}
+	length = currentPos - startPos;
+	return -1;
+}
 void hpReadSource(char* path)				//===
 {
 	//Open file and check for validity of file
@@ -102,27 +116,61 @@ void hpReadSource(char* path)				//===
 		throw 1; //Unable to open input file
 
 	//Read all of file and close stream
-	int fileSize = ::hpFileSizeAndSetBegin(csInput);
-	csSource = new char[fileSize];
-	csInput.read(csSource, fileSize);		//read all into csSource
+	csSourceSize = hpFileSizeAndSetBegin(csInput);
+	csSource = new char[csSourceSize+1];  //+1 to make space for ToCharArray or the like
+	csInput.read(csSource, csSourceSize);		//read all into csSource
 	csInput.close();
 	
-	SubString entirety(0, fileSize);
+	
+	int lineNumber = 0;
+	bool inBlockComment = false;
+
 	int startPos = 0;
 	int length = 0;
+	int lastLineFeedPos = 0;
 
-	//Look for linefeed, (char)10. Length between startPos and lastLineFeedPos is returned in length
-	int lastLineFeedPos = entirety.FindInSource(10, startPos, length);
-	int lineNumber = 0;
-	while(lastLineFeedPos!=-1)
+
+//Add lines
+	do
 	{
-		csLines.push_back(Line(SubString(startPos, length), lineNumber++)); //Extract the found line and append to csLines
-		startPos = lastLineFeedPos + 1;		//place startPos after the linefeed character
-		lastLineFeedPos = entirety.FindInSource(10, startPos, length);
+		lastLineFeedPos = ::hpFindInSource(10, startPos, length);
+		//comment check
+		for(int i =startPos + 1; i< startPos + length; i++)
+		{
+			if(inBlockComment)
+			{
+				if(csSource[i]=='/' && csSource[i-1]=='*')
+				{
+					inBlockComment = false;
+					startPos = i + 1;
+					length = lastLineFeedPos - startPos;
+					i=startPos;
+					continue;
+				}
+			}
+			else
+			{
+				if(csSource[i]=='/' && csSource[i-1]=='/')
+				{
+					length = i - 1 - startPos;
+					break;
+				}
+				if(csSource[i]=='*' && csSource[i-1]=='/')
+				{
+					inBlockComment = true;
+					csLines.push_back(Line(SubString(startPos, i - 1 - startPos), lineNumber));
+					i++; //jump over a character
+					continue;
+				}
+			}
+		}
+		//comment check end
+		if(!inBlockComment)
+			csLines.push_back(Line(SubString(startPos, length), lineNumber));
+		startPos = lastLineFeedPos + 1;
+		lineNumber++;
 	}
-	//deal with the last line
-	if(startPos < fileSize)
-		csLines.push_back(Line(SubString(startPos, fileSize - startPos), lineNumber++));
+	while(lastLineFeedPos!=-1);
 }
 
 void hpCheckOutput(char* path, char* kernelname, char* replacepoint)		//===
@@ -185,7 +233,7 @@ int b_lineLength;			//length of the instruction string
 {																											\
 	for(; b_currentPos < b_lineLength; b_currentPos++)														\
 	{																										\
-		if((int)instruction.InstructionString[b_currentPos]>32)												\
+		if((int)csCurrentInstruction->InstructionString[b_currentPos]>32)												\
 		{																									\
 			b_startPos = b_currentPos;																		\
 			break;																							\
@@ -194,21 +242,21 @@ int b_lineLength;			//length of the instruction string
 	if(b_currentPos == b_lineLength)return;																									\
 }
 
-#define mExtract(startPos,cutPos) instruction.InstructionString.SubStr(startPos, cutPos-startPos)
-#define mExtractPushComponent {	component.Content = mExtract(b_startPos, b_currentPos);	instruction.Components.push_back(component);}
-#define mExtractPushModifier {component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));instruction.Components.push_back(component);}
+#define mExtract(startPos,cutPos) csCurrentInstruction->InstructionString.SubStr(startPos, cutPos-startPos)
+#define mExtractPushComponent {	component.Content = mExtract(b_startPos, b_currentPos);	csCurrentInstruction->Components.push_back(component);}
+#define mExtractPushModifier {component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));csCurrentInstruction->Components.push_back(component);}
 
-void hpBreakInstructionIntoComponents(Instruction &instruction) //===+done checking once
+void hpBreakInstructionIntoComponents() //===+done checking once
 {
 	b_currentPos = 0;
 	b_startPos = 0;
-	b_lineLength = instruction.InstructionString.Length;
+	b_lineLength = csCurrentInstruction->InstructionString.Length;
 	Component component;
 
 	
 //PREDSTART:
 	mSkipBlank;
-	if(instruction.InstructionString[b_currentPos]=='@')
+	if(csCurrentInstruction->InstructionString[b_currentPos]=='@')
 	{
 PRED:
 		b_currentPos++;
@@ -217,7 +265,7 @@ PRED:
 			mExtractPushComponent;
 			return;
 		}
-		if(instruction.InstructionString[b_currentPos] < 33)
+		if(csCurrentInstruction->InstructionString[b_currentPos] < 33)
 		{
 			mExtractPushComponent;
 //			b_currentPos++; b_startPos = b_currentPos;
@@ -234,13 +282,13 @@ INST:
 		mExtractPushComponent;
 		return;
 	}
-	if( instruction.InstructionString[b_currentPos] < 33 )
+	if( csCurrentInstruction->InstructionString[b_currentPos] < 33 )
 	{
 		mExtractPushComponent;
 		b_currentPos++; b_startPos = b_currentPos;
 		goto OP;
 	}
-	else if(instruction.InstructionString[b_currentPos] == '.')
+	else if(csCurrentInstruction->InstructionString[b_currentPos] == '.')
 	{
 		component.Content = mExtract(b_startPos, b_currentPos);
 		b_currentPos++; b_startPos = b_currentPos;
@@ -250,13 +298,13 @@ INSTDOT:
 			mExtractPushModifier;
 			return;
 		}
-		else if( instruction.InstructionString[b_currentPos] < 33 ) //no space allowed in modifiers
+		else if( csCurrentInstruction->InstructionString[b_currentPos] < 33 ) //no space allowed in modifiers
 		{
 			mExtractPushModifier;
 			b_currentPos++; b_startPos = b_currentPos;
 			goto OP;
 		}
-		else if(instruction.InstructionString[b_currentPos] == '.')
+		else if(csCurrentInstruction->InstructionString[b_currentPos] == '.')
 		{
 			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
 			b_currentPos++; b_startPos = b_currentPos;
@@ -285,13 +333,13 @@ OPNOSKIP:
 		mExtractPushComponent;
 		return;
 	}
-	else if( instruction.InstructionString[b_currentPos] == ',' ) //space can exist in operands
+	else if( csCurrentInstruction->InstructionString[b_currentPos] == ',' ) //space can exist in operands
 	{
 		mExtractPushComponent;
 		b_currentPos++; b_startPos = b_currentPos;
 		goto OP;
 	}
-	else if(instruction.InstructionString[b_currentPos] == '.') //issue: sub-operands cannot have modifiers
+	else if(csCurrentInstruction->InstructionString[b_currentPos] == '.') //issue: sub-operands cannot have modifiers
 	{
 		component.Content = mExtract(b_startPos, b_currentPos);
 		b_currentPos++; b_startPos = b_currentPos;
@@ -301,19 +349,19 @@ OPDOT:
 			mExtractPushModifier;
 			return;
 		}
-		else if( instruction.InstructionString[b_currentPos] == ',' )
+		else if( csCurrentInstruction->InstructionString[b_currentPos] == ',' )
 		{
 			mExtractPushModifier;
 			b_currentPos++; b_startPos = b_currentPos;
 			goto OP;
 		}
-		else if(instruction.InstructionString[b_currentPos] == '.' )
+		else if(csCurrentInstruction->InstructionString[b_currentPos] == '.' )
 		{
 			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
 			b_currentPos++; b_startPos = b_currentPos;
 			goto OPDOT;
 		}
-		else if(instruction.InstructionString[b_currentPos] < 33)
+		else if(csCurrentInstruction->InstructionString[b_currentPos] < 33)
 		{
 			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
 			mSkipBlank;
@@ -365,23 +413,23 @@ int hpFindInstructionRuleArrayIndex(int Index)
 	}
 	return -1;
 }
-void hpApplyModifier(Instruction &instruction, Component &component, ModifierRule &rule)
+void hpApplyModifier(Component &component, ModifierRule &rule)
 {
 	if(rule.NeedCustomProcessing)
 	{
-		rule.CustomProcess(instruction, component);
+		rule.CustomProcess(component);
 	}
 	else
 	{
 		if(rule.Apply0)
 		{
-			instruction.OpcodeWord0 &= rule.Mask0;
-			instruction.OpcodeWord0 |= rule.Bits0;
+			csCurrentInstruction->OpcodeWord0 &= rule.Mask0;
+			csCurrentInstruction->OpcodeWord0 |= rule.Bits0;
 		}
-		if(instruction.Is8 && rule.Apply1)
+		if(csCurrentInstruction->Is8 && rule.Apply1)
 		{
-			instruction.OpcodeWord1 &= rule.Mask1;
-			instruction.OpcodeWord1 |= rule.Bits1;
+			csCurrentInstruction->OpcodeWord1 &= rule.Mask1;
+			csCurrentInstruction->OpcodeWord1 |= rule.Bits1;
 		}
 	}
 }
@@ -389,9 +437,9 @@ void hpApplyModifier(Instruction &instruction, Component &component, ModifierRul
 static unsigned int predRef[]={0u, 1<<10, 2<<10, 3<<10, 4<<10, 5<<10, 6<<10, 7<<10};
 static unsigned int predRefNegate = 1<<13;
 static unsigned int predRefMask = 0xFFFFC3FF;
-void hpProcessPredicate(Instruction &instruction)
+void hpProcessPredicate()
 {
-	SubString predStr = instruction.Components.begin()->Content;
+	SubString predStr = csCurrentInstruction->Components.begin()->Content;
 	if(predStr.Length < 3)
 		throw 109; //incorrect predicate
 	bool negate = false;
@@ -415,9 +463,9 @@ void hpProcessPredicate(Instruction &instruction)
 	else
 		predNumber -= 48;
 
-	instruction.OpcodeWord0 &= predRefMask;
-	instruction.OpcodeWord0 |= predRef[predNumber];
-	if(negate)instruction.OpcodeWord0 |= predRefNegate;
+	csCurrentInstruction->OpcodeWord0 &= predRefMask;
+	csCurrentInstruction->OpcodeWord0 |= predRef[predNumber];
+	if(negate)csCurrentInstruction->OpcodeWord0 |= predRefNegate;
 }
 //-----End of parser helper functions
 

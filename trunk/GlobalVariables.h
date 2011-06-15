@@ -3,7 +3,7 @@
 #define GlobalVariablesDefined yes
 
 //---code starts ---
-#include <vld.h> //remove when you compile
+//#include <vld.h> //remove when you compile
 
 #include <iostream>
 #include <fstream>
@@ -17,10 +17,12 @@ using namespace std;
 
 int csLineNumber = 0;
 int csInstructionOffset;
+Instruction* csCurrentInstruction;
 
 fstream csInput;
 fstream csOutput;
 char *csSource;
+int csSourceSize;
 int csMaxReg = 0;
 
 bool csReplaceMode;

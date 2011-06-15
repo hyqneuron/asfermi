@@ -2,7 +2,7 @@
 #else
 #define helperExceptionDefined yes
 //---code starts ---
-#include <vld.h> //remove when you compile
+//#include <vld.h> //remove when you compile
 
 
 #include "DataTypes.h"
@@ -47,7 +47,7 @@ void hpExceptionHandler(int e)		//===
 	if(csExceptionPrintUsage)
 		hpUsage();
 }
-void hpErrorHandler(int e, Instruction &instruction)
+void hpErrorHandler(int e)
 {
 	csErrorPresent = true;
 	char *message;
@@ -77,19 +77,47 @@ void hpErrorHandler(int e, Instruction &instruction)
 		break;
 	case 111:	message = "Memory address for constant memory too large.";
 		break;
-	case 112:	message = "Register cannot be used in MOV-style constant address.";
+	case 112:	message = "Register cannot be used in MOV-style constant address. Consider using LDC instead.";
 		break;
-	case 113:	message = "The immediate value is limited to 16-bit.";
+	case 113:	message = "The immediate value is limited to 20-bit.";
 		break;
 	case 114:	message = "Constant memory bank number too large.";
 		break;
 	case 115:	message = "Immediate value is limited to 20-bit.";
 		break;
+	case 116:	message = "Invalid operand.";
+		break;
+	case 117:	message = "Incorrect floating number.";
+		break;
+	case 118:	message = "20-bit immediate value cannot contain 64-bit number.";
+		break;
+	case 119:	message = "Register cannot be used in FADD-style constant address.";
+		break;
+	case 120:	message = "Only constants can be negative for MOV-style operand.";
+		break;
+	case 121:	message = "Incorrect floating point number format.";
+		break;
 	default:	message = "Unknown Error";
 		break;
 	};
-	char *line = instruction.InstructionString.ToCharArrayStopOnCR();
-	cout<<"Line "<<instruction.LineNumber<<": "<<line<<": "<<message<<endl;
+	char *line = csCurrentInstruction->InstructionString.ToCharArrayStopOnCR();
+	cout<<"Error Line "<<csCurrentInstruction->LineNumber<<": "<<line<<": "<<message<<endl;
+	delete[] line;
+}
+void hpWarning(int e)
+{
+	char* message;
+	switch(e)
+	{
+	case 10:	message = "Evaluation of constant returned zero. Consider using RZ if value of zero is intended.";
+		break;
+	case 11:	message = "Evaluation of constant overflowed.";
+		break;
+	default:	message = "No warning message available.";
+		break;
+	}
+	char *line = csCurrentInstruction->InstructionString.ToCharArrayStopOnCR();
+	cout<<"Warning Line "<<csCurrentInstruction->LineNumber<<": "<<line<<": "<<message<<endl;
 	delete[] line;
 }
 
