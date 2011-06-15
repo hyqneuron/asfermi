@@ -1,7 +1,10 @@
 #summary A development log
 
 ==== 15 June, 2011 ====
-Floating number and integer constants are now supported. Block and in-line comments are supported as well. Uploading code soon.
+Floating number and integer constants are now supported. Block and in-line comments are supported as well. Code uploaded.
+
+
+Tomorrow I'll start looking into nvidia's custom sections in cubins and start working on the support for producing cubins independently.
 
 ----
 ==== 14 June, 2011 ====
