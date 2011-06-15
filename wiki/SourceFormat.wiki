@@ -65,26 +65,32 @@ I may write a GUI editor to facilitate coding using this feature when asfermi is
 ==== Registers ====
 Basically, registers can range between R0 to R62. RZ represents a constant value of 0. It is okay to put non-numeric characters after the register name. If the register is greater than or equal to R10, even numeric characters can directly follow the register name (eg. R3000 is taken as R30).
 ==== Immediate Value ====
-For now, asfermi only takes hex values and they cannot be more than 32-bit.
+For now, asfermi accepts hexadecimal, floating point or integer number expressions as immediate values.
+Hexadecimal value:
 {{{
 0x12345678
 }}}
 Hex value must start with '0x' or '0X'. Not all eight digits need to be present. For example, 0x001 would be legal. Also, characters after the eighth digit are ignored. For example, 0x123456789 is taken as 0x12345678. Additionally, characters starting from the first non-hexadecimal character will be ignored. For example, 0x10annn is taken as 0x10a.
 
-Floating point numbers and integers are to be supported soon.
-
 Floating point numbers:
 {{{
-32-bit: F123.456
-Higher 32 bits of 64-bit number: FH123.456
+32-bit: F123.456 or F-123.345;
+Higher 32 bits of 64-bit number: FH123.456 or FH-333.2;
 Lower 32 bits of 64-bit number: FL123.456
 }}}
 Integers:
 {{{
-32-bit: 12345
+32-bit: 12345 or -234;
 Higher 32 bits of 64-bit number: H12345
 Lower 32 bits of 64-bit number: L12345
 }}}
+Note: 
+
+asfermi uses C++'s library functions, [http://www.cplusplus.com/reference/clibrary/cstdlib/atoi/ atoi], [http://www.cplusplus.com/reference/clibrary/cstdlib/atol/ atol] and [http://www.cplusplus.com/reference/clibrary/cstdlib/atof/ atof], to convert numerical constant expressions. For for information about the conversion, please visit the three links given.
+
+Not all instructions that accept immediate operands support all the three types above. For example, FADD32I accepts only hex values and floating point numbers, while IADD32I accepts hex values and integer numbers. Additionally, some instructions, such as FADD and IADD, accept only 20-bit immediate values. 20-bit floating point immediate is a 32-bit floaitng point number with the last 12 bits truncated.
+
+Also, while integer and floating point numbers can have negative signs, hexadecimal values cannot. Furthermore, a number and its negative sign should not be separated by spaces.
 ==== Global Memory ====
 A global memory operand has the following format:
 {{{
@@ -95,6 +101,12 @@ Both register and the hex address can be present, and at least one of them shoul
 The register and immediate value format follow the exact format described in sections above. While the opening square bracket is needed, the closing bracket is not.
 
 State: 0
+==== Constant Memory ====
+Format:
+{{{
+c[0xaa][Rxx+0xbb]
+}}}
+0xaa is the constant memory bank number. It can range from 0x0 to 0xa. Rxx+0xbb is the constant memory address inside the specified bank. Note that 0xbb cannot be larger than 0xFFFF. For instructions that do not specifically operate on constant memory, such as MOV and FADD, the register should not be present.
 ----
 ==Comments==
 Comments are exactly the same as as in C/C++.
@@ -107,4 +119,4 @@ Format:
 block comment
 */
 }}}
-State: 1
+State: 0

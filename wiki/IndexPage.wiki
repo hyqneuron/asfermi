@@ -15,7 +15,7 @@ This is a page where all other wiki pages of this project are listed and briefly
 See [http://code.google.com/p/asfermi/ Home]
 
 === Project Plan ===
- This page deacribes the planned stages of the project. See [Plan].
+ This page deacribes the planned stages of the project. It also includes a timeline of the short-term objectives. See [Plan].
 
 === Updates ===
 I know a few people are checking this site regularly, so I created this [Updates] page so that you can know if anything new has been added or if there's any modification to the content on this site.

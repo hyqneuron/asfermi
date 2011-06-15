@@ -77,40 +77,69 @@ The following presents the opcode of various instructions. Information may be in
 === Data Movement Instructions ===
 
 ==== MOV ====
+No modifiers supported so far.
+{{{
+MOV Rxx, Rxx/c[0xa][0xb]/0xabcd;
+}}}
+If a hex number is used as the second operand, it cannot be longer than 20 bits.
+
+Template opcode:
 {{{
 0010 011110 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 010100
 }}}
 
 ==== LD ====
+Supported modifiers: .64, .128
+{{{
+LD(.64/.128) Rxx, [Rxx+0xabcd];
+}}}
+Template opcode:
 {{{
 1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 000001
 }}}
 
 ==== ST ====
+Supported modifiers: .64, .128
+{{{
+ST(.64/.128) Rxx, [Rxx+0xabcd];
+}}}
+Template opcode:
 {{{
 1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 001001
 }}}
 
 === Execution Control Instructions ===
 ==== EXIT ====
+No modifiers supported so far.
+{{{
+EXIT;
+}}}
+Template opcode:
 {{{
 1110 011110 1110 000000 000000 00000000000000000000000000000000 000001
 }}}
 === Floating Point Instructions ===
 ==== FADD ====
+No modifiers supported so far.
 {{{
-FADD Register, Register, Register/20-bit immediate
+FADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/F(-)123.123/0xabcd;
 }}}
-The 20-bit immediate value is a single with the last 12 bits truncated.
+If the third operand is a floating point number, it will be a 32-bit floaitng point number with the last 12 bits truncated.
+
+Template opcode:
 {{{
 0000 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 001010
 }}}
 
 === Integer Instructions ===
 ==== IADD ====
+No modifiers supported so far.
 {{{
-IADD Register, Register, Register/20-bit immediate
+IADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/(-)123/0xabcd;
 }}}
+If the third operand is an immediate value, it cannot be longer than 20 bits.
+
+Template opcode:
 {{{
 1100 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 010010
 }}}
