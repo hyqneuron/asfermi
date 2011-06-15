@@ -1,6 +1,9 @@
 #summary A development log
 
+==== 15 June, 2011 ====
+Floating number and integer constants are now supported. Block and in-line comments are supported as well. Uploading code soon.
 
+----
 ==== 14 June, 2011 ====
 Confirmed that FADD and IADD do not take constant memory operators but do take 20-bit immediates.
 
