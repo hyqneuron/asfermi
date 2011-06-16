@@ -8,7 +8,7 @@ Tomorrow I'll start looking into nvidia's custom sections in cubins and start wo
 
 ----
 ==== 14 June, 2011 ====
-Confirmed that FADD and IADD do not take constant memory operators but do take 20-bit immediates.
+Confirmed that FADD and IADD do take 20-bit immediates.
 
 Hmm... looks like the first version is ready. asfermi now has support for predicates. Support for instructions is limited to: MOV, ST, LD, FADD and IADD. So far the only supported modifiers are .128 and .64 for both LD and ST. For now only hexadecimal immediate values are accepted. I'll get asfermi to support floating point/integer number immediate values soon. Then I'll add support for operand types used by S2R and SETP instructions. When these things are done, I will just start adding support for a lot more instructions and their modifiers.
 
