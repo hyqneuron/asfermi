@@ -66,5 +66,5 @@ Well, maybe the first release, supporting MOV, LD, ST, EXIT, FADD, IADD and capa
 Exam's over! I'll start coding for asfermi now!
 
 ----
-==== 31st of June, 2011 ====
+==== 31st of May, 2011 ====
 Created the Google Group [http://groups.google.com/group/asfermi asfermi].
