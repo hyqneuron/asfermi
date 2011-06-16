@@ -1,5 +1,10 @@
 #summary A development log
 
+==== 16 June, 2011 ====
+Experimented quite a bit with cubins today. Still not clear how the content of these sections work: .nv.info.kernelname and .nv.info. I have some clues, but still haven't figured out the strict rules by which those .info sections are built.
+
+The other sections and segments of the cubins seem pretty eazy. I'm not going to deal with texture symbols in the short term, though. 
+----
 ==== 15 June, 2011 ====
 Floating number and integer constants are now supported. Block and in-line comments are supported as well. Code uploaded.
 
