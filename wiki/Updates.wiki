@@ -1,5 +1,8 @@
 #summary A development log
 
+==== 19 June, 2011 ====
+Was in some trouble and did not do anything during the past two days. Everything getting pushed back.
+
 ==== 16 June, 2011 ====
 Experimented quite a bit with cubins today. Still not clear how the content of these sections work: .nv.info.kernelname and .nv.info. I have some clues, but still haven't figured out the strict rules by which those .info sections are built.
 
