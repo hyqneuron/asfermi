@@ -1,23 +1,27 @@
 #summary A development log
 
-==== 19 June, 2011 ====
+==== 20th June, 2011 ====
+Just broke my Win7 while trying to fix a friend's HDD. If I can't fix my Win7 in half an hour there will be more delays because my card doesn't run on Linux :(
+
+----
+==== 19th June, 2011 ====
 Was in some trouble and did not do anything during the past two days. Everything getting pushed back.
 
 5pm: Okay, most of the things I need are more or less already known at this point. I might be able to start coding tomorrow.
 
-==== 16 June, 2011 ====
+==== 16th June, 2011 ====
 Experimented quite a bit with cubins today. Still not clear how the content of these sections work: .nv.info.kernelname and .nv.info. I have some clues, but still haven't figured out the strict rules by which those .info sections are built.
 
 The other sections and segments of the cubins seem pretty eazy. I'm not going to deal with texture symbols in the short term, though. 
 ----
-==== 15 June, 2011 ====
+==== 15th June, 2011 ====
 Floating number and integer constants are now supported. Block and in-line comments are supported as well. Code uploaded.
 
 
 Tomorrow I'll start looking into nvidia's custom sections in cubins and start working on the support for producing cubins independently.
 
 ----
-==== 14 June, 2011 ====
+==== 14th June, 2011 ====
 Confirmed that FADD and IADD do take 20-bit immediates.
 
 Hmm... looks like the first version is ready. asfermi now has support for predicates. Support for instructions is limited to: MOV, ST, LD, FADD and IADD. So far the only supported modifiers are .128 and .64 for both LD and ST. For now only hexadecimal immediate values are accepted. I'll get asfermi to support floating point/integer number immediate values soon. Then I'll add support for operand types used by S2R and SETP instructions. When these things are done, I will just start adding support for a lot more instructions and their modifiers.
@@ -25,7 +29,7 @@ Hmm... looks like the first version is ready. asfermi now has support for predic
 Forgot to mention one thing: asfermi doesn't properly support comments yet. Though since asfermi does syntax checking in a very slack manner, comments could actually be inserted into instructions. See [SourceFormat] for information regarding this.
 
 ----
-==== 13 June, 2011 ====
+==== 13th June, 2011 ====
 *630pm*: Back on the job! Just added support for predicates and .128, .64 modifiers for LD and ST. Now working on the operand type for constant memory. Haven't uploaded the code yet.
 
 ----
