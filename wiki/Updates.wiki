@@ -3,6 +3,7 @@
 ==== 28th June, 2011 ====
 Just finished another exam. School has started again. How much time I could have for asfermi during the next few months is uncertain. I'll try to get direct cubin output to work over the weekend.
 
+----
 ==== 20th June, 2011 ====
 Just broke my Win7 while trying to fix a friend's HDD. If I can't fix my Win7 in half an hour there will be more delays because my card doesn't run on Linux :(
 
