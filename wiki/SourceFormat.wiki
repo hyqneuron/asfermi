@@ -33,7 +33,7 @@ For a list of instructions that are supported/to be supported, see [Instructions
 Format:
 {{{
 //Instead of square brackets, round brackets are used to represent
-'optional' so as to avoid confusion with memory operands.
+//'optional' so as to avoid confusion with memory operands.
 (@Px) NAME OP1 (,OP2 (,OP3))
 
 NAME.MOD1.MOD2 OP1(.MOD3) (, OP2(,OP3))
