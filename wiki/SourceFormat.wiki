@@ -25,7 +25,7 @@ Format:
 }}}
 Note: labels are written as directives.
 
-[Features State]: 2
+[Features State]: 0
 ----
 ==Instructions==
 For a list of instructions that are supported/to be supported, see [Instructions].
