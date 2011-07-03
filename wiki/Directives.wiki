@@ -8,15 +8,22 @@ Directives are used to declare symbols and to send specific instructions to the 
 ----
 == Symbol Declarations ==
 ==== Kernel ====
-[Features State]: 2
+Format:
+{{{
+!Kernel kernelname
+!Param 4// one parameter sized at 4 bytes
+!Param 4 2// another 2 parameters sized at 4 bytes each
+... //instructions
+!EndKernel
+}}}
+[Features State]: 0
 ==== Texture Object ====
-State: 2
+State: 3
 ==== Shared Memory Object ====
 State: 2
 ==== Constant Memory Object ====
 State: 2
-==== External Symbol ====
-State: 2
+
 
 ----
 == Assembler Commands ==
@@ -28,10 +35,10 @@ Format:
 State: 2
 ==== Type-checking ====
 State: 3
-==== Unrolling ====
+==== Unroll ====
 State: 2
 ==== Macro ====
-State: 2
+State: 3
 ==== Set current parsers ====
 Format:
 {{{
