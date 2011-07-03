@@ -7,6 +7,8 @@ Okay did another test with passing parameter. Worked as expected. I'll upload th
 
 Currently support 3 directives: !Kernel kernelname, !EndKernel, !Param paramsize `[count of params with the same size`]
 
+Code's been uploaded. Next week I'll be adding support for more instructions.
+
 ----
 ==== 2nd July, 2011 ====
 Just finished coding for direct cubin output. May take some time to debug, though. Hope I can upload the code tomorrow.
