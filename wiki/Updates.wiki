@@ -5,7 +5,7 @@ Just got an "asfermied" cubin kernel to run on my device! I'm surprised by how f
 
 Okay did another test with passing parameter. Worked as expected. I'll upload the code when I get some stable Internet.
 
-Currently support 3 directives: !Kernel kernelname, !EndKernel, !Param paramsize [count of params with the same size]
+Currently support 3 directives: !Kernel kernelname, !EndKernel, !Param paramsize `[count of params with the same size`]
 
 ----
 ==== 2nd July, 2011 ====
