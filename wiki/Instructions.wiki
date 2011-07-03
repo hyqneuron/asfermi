@@ -2,7 +2,7 @@
 
 = Instructions =
 == Currently Supported ==
-MOV, LD, ST, EXIT, FADD, IADD.
+MOV, LD, ST, EXIT, FADD, IADD, NOP.
 
 The following part of this page lists all instruction names that are currently known. For instructions and their corresponding opcode, see [nanb] and [Opcode].
 
