@@ -1,5 +1,9 @@
 #summary A development log
 
+==== 3rd July, 2011 ====
+Just got an "asfermied" cubin kernel to run on my device! I'm surprised by how few mistakes I've made :)  I'll do a few more tests before I upload the code.
+
+----
 ==== 2nd July, 2011 ====
 Just finished coding for direct cubin output. May take some time to debug, though. Hope I can upload the code tomorrow.
 
