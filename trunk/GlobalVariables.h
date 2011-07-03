@@ -1,23 +1,19 @@
-#if defined GlobalVariablesDefined //prevent multiple inclusion
-#else
-#define GlobalVariablesDefined yes
+/*
+This file contains global variables used throughout the assembler.
+All globla variables are prefixed with 'cs', meaning "current state"
+*/
 
+#ifndef GlobalVariablesDefined //prevent multiple inclusion
 //---code starts ---
-//#include <vld.h> //remove when you compile
 
-#include <iostream>
-#include <fstream>
-#include <list>
-#include "DataTypes.h"
 
 using namespace std;
 
-//All globla variables are prefixed with cs, meaning "current state"
-//-----Global variables
 
 int csLineNumber = 0;
 int csInstructionOffset;
-Instruction* csCurrentInstruction;
+Instruction csCurrentInstruction;
+Directive   csCurrentDirective;
 
 fstream csInput;
 fstream csOutput;
@@ -25,9 +21,14 @@ char *csSource;
 int csSourceSize;
 int csMaxReg = 0;
 
-bool csReplaceMode;
+enum OperationMode{Replace, Insert, DirectOutput, Undefined };
+OperationMode csOperationMode = Undefined;
+char* csSourceFilePath;
+
 bool csExceptionPrintUsage = false;
 bool csErrorPresent = false;
+
+//the following 3 variables are for Replace mode.
 int csOutputSectionOffset;
 int csOutputSectionSize;
 int csOutputInstructionOffset;
@@ -43,6 +44,11 @@ int* csInstructionRuleIndices; //Instruction name index of the corresponding ele
 int csInstructionRuleCount;
 list<InstructionRule*>  csInstructionRulePrepList; //used for preperation
 
+DirectiveRule** csDirectiveRules; //sorted array
+int* csDirectiveRuleIndices; //Directive name index of the corresponding element in csDirectiveRules
+int csDirectiveRuleCount;
+list<DirectiveRule*>  csDirectiveRulePrepList; //used for preperation
+
 MasterParser*		csMasterParser;  //curent Master Parser
 LineParser*			csLineParser;
 InstructionParser*	csInstructionParser;
@@ -54,6 +60,44 @@ list<Directive> csDirectives;
 list<LabelRequest> csLabelRequests;
 list<Label> csLabels;
 
-//-----End of global variables
+//=================
 
+ELFSection cubinSectionEmpty, cubinSectionSHStrTab, cubinSectionStrTab, cubinSectionSymTab;
+ELFSection cubinSectionConstant2, cubinSectionNVInfo;
+ELFSegmentHeader cubinSegmentHeaderPHTSelf;
+//ELFSegmentHeader cubinSegmentConstant2;
+//ELFSection cubinSectionNVConstant0
+
+unsigned int cubinCurrentSectionIndex = 0;
+unsigned int cubinCurrentOffsetFromFirst = 0; //from the end of the end of .symtab
+unsigned int cubinCurrentSHStrTabOffset = 0;
+unsigned int cubinCurrentStrTabOffset = 0;
+unsigned int cubinTotalSectionCount =0;
+unsigned int cubinPHTOffset = 0;
+unsigned int cubinPHCount;
+
+
+
+char *cubin_str_empty = "";
+char *cubin_str_shstrtab =	".shstrtab";
+char *cubin_str_strtab =	".strtab";
+char *cubin_str_symtab =	".symtab";
+char *cubin_str_extra1 =	".nv.global.init";
+char *cubin_str_extra2 =	".nv.global";
+char *cubin_str_text   =	".text.";
+char *cubin_str_constant0=	".nv.constant0.";
+char *cubin_str_info   =	".nv.info.";
+char *cubin_str_shared =	".nv.shared.";
+char *cubin_str_local  =	".nv.local.";
+char *cubin_str_constant2=	".nv.constant2";
+char *cubin_str_nvinfo =	".nv.info";
+
+
+bool csCurrentKernelOpened = false;
+Kernel	csCurrentKernel;
+list<Kernel> csKernelList;
+
+
+#else
+#define GlobalVariablesDefined
 #endif

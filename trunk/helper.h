@@ -1,21 +1,16 @@
-#if defined helperDefined //prevent multiple inclusion
-#else
-#define helperDefined yes
+/*
+This file contains various helper functions used by the assembler (during the preprocess stage)
+
+1: Main helper functions
+2: Commandline stage helper functions
+9: Debugging helper functions
+
+all functions are prefixed with 'hp'
+
+*/
+
+#ifndef helperDefined //prevent multiple inclusion
 //---code starts ---
-//#include <vld.h> //remove when you compile
-
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string.h>
-#include <list>
-#include "DataTypes.h"
-#include "GlobalVariables.h"
-#include "SpecificRules.h"
-#include "helperException.h"
-
-
 
 
 void hpUsage();
@@ -45,18 +40,37 @@ void hpCleanUp() //parsers are created with the new keyword,        =====
 }
 //-----End of main helper functions
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //	2
 //----- Command-line stage helper functions
 void hpUsage()				//====
 {
-	puts("asfermi Version 0.1.0");
+	puts("asfermi Version 0.2.0");
 	puts("Usage:");
 	puts("asfermi sourcefile [Options [option arguments]]");
 	puts("Source file must be the first command-line option. However, it could be replaced by a -I option specified below.");
 	puts("Options:");
-	//puts("	-o outputfile: Output to the specified file. Not supported in this version.");
+	puts("	-I \"instruction\": This can be used to replace the inputfile. \
+		 A single line of instruction, surrounded by double quotation marks, will be processed as source input. Note that comment is not supported in this mode.");
+	puts("	-o outputfile: Output cubin to the specified file.");
 	puts("	-r target_cubin kernel_name offset: Replace the opcodes in specified location of a kernel in a specified cubin file with the assembled opcodes.");
-	puts("	-I \"instruction\": This can be used to replace the inputfile. A single line of instruction, surrounded by double quotation marks, will be processed as source input.");
 }
 
 
@@ -173,7 +187,7 @@ void hpReadSource(char* path)				//===
 	while(lastLineFeedPos!=-1);
 }
 
-void hpCheckOutput(char* path, char* kernelname, char* replacepoint)		//===
+void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint)		//===
 {
 	//open and check file
 	csOutput.open(path, fstream::in | fstream::out | fstream::binary);
@@ -220,254 +234,19 @@ void hpCheckOutput(char* path, char* kernelname, char* replacepoint)		//===
 //-----End of command-line helper functions
 
 
-//	3
-//-----Parsing stage helper functions
-
-int b_startPos;				//starting Position of a non-blank character in the instruction string
-int b_currentPos;			//current search position in the instruction string. For the macros, this is the position of dot
-int b_lineLength;			//length of the instruction string
-
-//b_startPos = b_currentPos = position of first non-blank character found in [b_currentPos, b_lineLength)
-//When no non-blank character, it causes hpBreakInstructionIntoComponents to directly return
-#define mSkipBlank																							\
-{																											\
-	for(; b_currentPos < b_lineLength; b_currentPos++)														\
-	{																										\
-		if((int)csCurrentInstruction->InstructionString[b_currentPos]>32)												\
-		{																									\
-			b_startPos = b_currentPos;																		\
-			break;																							\
-		}																									\
-	}																										\
-	if(b_currentPos == b_lineLength)return;																									\
-}
-
-#define mExtract(startPos,cutPos) csCurrentInstruction->InstructionString.SubStr(startPos, cutPos-startPos)
-#define mExtractPushComponent {	component.Content = mExtract(b_startPos, b_currentPos);	csCurrentInstruction->Components.push_back(component);}
-#define mExtractPushModifier {component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));csCurrentInstruction->Components.push_back(component);}
-
-void hpBreakInstructionIntoComponents() //===+done checking once
-{
-	b_currentPos = 0;
-	b_startPos = 0;
-	b_lineLength = csCurrentInstruction->InstructionString.Length;
-	Component component;
-
-	
-//PREDSTART:
-	mSkipBlank;
-	if(csCurrentInstruction->InstructionString[b_currentPos]=='@')
-	{
-PRED:
-		b_currentPos++;
-		if(b_currentPos==b_lineLength)
-		{
-			mExtractPushComponent;
-			return;
-		}
-		if(csCurrentInstruction->InstructionString[b_currentPos] < 33)
-		{
-			mExtractPushComponent;
-//			b_currentPos++; b_startPos = b_currentPos;
-			mSkipBlank;
-//			goto INST;
-		}
-		else
-			goto PRED;
-	}
-
-INST:
-	if(b_currentPos==b_lineLength)
-	{
-		mExtractPushComponent;
-		return;
-	}
-	if( csCurrentInstruction->InstructionString[b_currentPos] < 33 )
-	{
-		mExtractPushComponent;
-		b_currentPos++; b_startPos = b_currentPos;
-		goto OP;
-	}
-	else if(csCurrentInstruction->InstructionString[b_currentPos] == '.')
-	{
-		component.Content = mExtract(b_startPos, b_currentPos);
-		b_currentPos++; b_startPos = b_currentPos;
-INSTDOT:
-		if(b_currentPos==b_lineLength)
-		{
-			mExtractPushModifier;
-			return;
-		}
-		else if( csCurrentInstruction->InstructionString[b_currentPos] < 33 ) //no space allowed in modifiers
-		{
-			mExtractPushModifier;
-			b_currentPos++; b_startPos = b_currentPos;
-			goto OP;
-		}
-		else if(csCurrentInstruction->InstructionString[b_currentPos] == '.')
-		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-			b_currentPos++; b_startPos = b_currentPos;
-			goto INSTDOT;
-		}
-		else
-		{
-			b_currentPos++;
-			goto INSTDOT;
-		}
-	}
-	else
-	{
-		b_currentPos++;
-		goto INST;
-	}
 
 
-OP:
-	mSkipBlank;
-	component.Modifiers.clear();
-
-OPNOSKIP:
-	if(b_currentPos==b_lineLength)
-	{
-		mExtractPushComponent;
-		return;
-	}
-	else if( csCurrentInstruction->InstructionString[b_currentPos] == ',' ) //space can exist in operands
-	{
-		mExtractPushComponent;
-		b_currentPos++; b_startPos = b_currentPos;
-		goto OP;
-	}
-	else if(csCurrentInstruction->InstructionString[b_currentPos] == '.') //issue: sub-operands cannot have modifiers
-	{
-		component.Content = mExtract(b_startPos, b_currentPos);
-		b_currentPos++; b_startPos = b_currentPos;
-OPDOT:
-		if(b_currentPos==b_lineLength)
-		{
-			mExtractPushModifier;
-			return;
-		}
-		else if( csCurrentInstruction->InstructionString[b_currentPos] == ',' )
-		{
-			mExtractPushModifier;
-			b_currentPos++; b_startPos = b_currentPos;
-			goto OP;
-		}
-		else if(csCurrentInstruction->InstructionString[b_currentPos] == '.' )
-		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-			b_currentPos++; b_startPos = b_currentPos;
-			goto OPDOT;
-		}
-		else if(csCurrentInstruction->InstructionString[b_currentPos] < 33)
-		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-			mSkipBlank;
-		}
-		else
-		{
-			b_currentPos++;
-			goto OPDOT; //no blank to skip
-		}
-	}
-	else
-	{
-		b_currentPos++;
-		goto OPNOSKIP;
-	}
-}
 
 
-int hpComputeInstructionNameIndex(SubString &name)
-{
-	int len = name.Length;
-	int index = 0;
-	if(len>0)
-	{
-		index += (int)name[0] * 2851;
-		if(len>1)
-		{
-			index += (int)name[1] * 349;
-			for(int i =2; i<len; i++)
-				index += (int)name[i];
-		}
-	}
-	return index;
-}
-int hpFindInstructionRuleArrayIndex(int Index)
-{
-	int start = 0; //inclusive
-	int end = csInstructionRuleCount; //exclusive
-	int mid;
-	while(start<end) //still got unchecked numbers
-	{
-		mid = (start+end)/2;
-		if(Index > csInstructionRuleIndices[mid])
-			start = mid + 1;
-		else if(Index < csInstructionRuleIndices[mid])
-			end = mid;
-		else
-			return mid;
-	}
-	return -1;
-}
-void hpApplyModifier(Component &component, ModifierRule &rule)
-{
-	if(rule.NeedCustomProcessing)
-	{
-		rule.CustomProcess(component);
-	}
-	else
-	{
-		if(rule.Apply0)
-		{
-			csCurrentInstruction->OpcodeWord0 &= rule.Mask0;
-			csCurrentInstruction->OpcodeWord0 |= rule.Bits0;
-		}
-		if(csCurrentInstruction->Is8 && rule.Apply1)
-		{
-			csCurrentInstruction->OpcodeWord1 &= rule.Mask1;
-			csCurrentInstruction->OpcodeWord1 |= rule.Bits1;
-		}
-	}
-}
 
-static unsigned int predRef[]={0u, 1<<10, 2<<10, 3<<10, 4<<10, 5<<10, 6<<10, 7<<10};
-static unsigned int predRefNegate = 1<<13;
-static unsigned int predRefMask = 0xFFFFC3FF;
-void hpProcessPredicate()
-{
-	SubString predStr = csCurrentInstruction->Components.begin()->Content;
-	if(predStr.Length < 3)
-		throw 109; //incorrect predicate
-	bool negate = false;
-	int startPos = 1;
-	if(predStr[startPos]=='!')
-	{
-		if(predStr.Length<4)
-			throw 109;
-		negate = true;
-		startPos++;
-	}
-	if(predStr[startPos] != 'P' && predStr[startPos] != 'p')
-		throw 109;
-	int predNumber = (int) predStr[startPos+1];
-	if(predNumber < 48 || predNumber > 55)
-	{
-		if(predNumber != 90 && predNumber != 122)
-			throw 109;
-		predNumber = 7; //pt is seven
-	}
-	else
-		predNumber -= 48;
 
-	csCurrentInstruction->OpcodeWord0 &= predRefMask;
-	csCurrentInstruction->OpcodeWord0 |= predRef[predNumber];
-	if(negate)csCurrentInstruction->OpcodeWord0 |= predRefNegate;
-}
-//-----End of parser helper functions
+
+
+
+
+
+
+
 
 //9
 //-----Debugging functions
@@ -544,4 +323,6 @@ void hpPrintBinary8(unsigned int word0, unsigned int word1)
 }
 //-----End of debugging functions
 
+#else
+#define helperDefined
 #endif

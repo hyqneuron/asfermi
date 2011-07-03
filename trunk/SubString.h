@@ -1,17 +1,16 @@
-#if defined SubStringDefined //prevent multiple inclusion
-#else
-#define SubStringDefined yes
-//-----Start of code
-//#include <vld.h> //remove when you compile
-#include <math.h>
+/*
+This file contains the most fundamental type of data structure for string processing
+used in the assembler - SubString. SubString also has member functions that parse 
+(*this) to produce the desired information for a few operand types
+*/
 
+#ifndef SubStringDefined //prevent multiple inclusion
+//-----Start of code
 
 using namespace std;
 
 extern char* csSource;
 extern void hpWarning(int e);
-
-int d_currentPos; //used by various functions in SubString
 
 struct SubString
 {
@@ -27,25 +26,30 @@ struct SubString
 		if(length<0)
 			throw exception();
 	}
+	SubString(char* target)
+	{
+		Start = target;
+		Length = strlen(target);
+	}
 	char operator [] (int position)
 	{
 		return Start[position];
 	}
 	int Find(char target, int startPos) //startPos is the position in this string
 	{
-		for(d_currentPos = startPos; d_currentPos < Length; d_currentPos++)
+		for(int currentPos = startPos; currentPos < Length; currentPos++)
 		{
-			if(target == Start[d_currentPos])
-				return d_currentPos;
+			if(target == Start[currentPos])
+				return currentPos;
 		}
 		return -1;
 	}
 	int FindBlank(int startPos)
 	{
-		for(d_currentPos = startPos; d_currentPos < Length; d_currentPos++)
+		for(int currentPos = startPos; currentPos < Length; currentPos++)
 		{
-			if(Start[d_currentPos] < 33)
-				return d_currentPos;
+			if(Start[currentPos] < 33)
+				return currentPos;
 		}
 		return -1;
 	}
@@ -378,4 +382,6 @@ char* SubString::ToCharArrayStopOnCR()
 		return result;
 }
 
+#else
+#define SubStringDefined
 #endif

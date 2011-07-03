@@ -1,13 +1,11 @@
-#if defined helperExceptionDefined //prevent multiple inclusion
-#else
-#define helperExceptionDefined yes
+/*
+This file contains the error/warning handling code.
+*/
+
+#ifndef helperExceptionDefined //prevent multiple inclusion
 //---code starts ---
-//#include <vld.h> //remove when you compile
 
 
-#include "DataTypes.h"
-#include "GlobalVariables.h"
-#include "SpecificRules.h"
 
 extern void hpUsage();
 
@@ -34,11 +32,21 @@ void hpExceptionHandler(int e)		//===
 		break;
 	case 9:		message = "Specific section not large enough to contain all the assembled opcodes.";
 		break;
+	case 10:	message = "Single-line mode only supported in Replace Mode.";
+		break;
 	case 20:	message = "Insufficient number of arguments";
 		break;
-	case 50:	message = "Initialization error. Repeating instruction indices.";
+	case 50:	message = "Initialization error. Repeating rule indices. Please debug to find out the exact repeating entry.";
 		break;
-	case 99:	message = "Not in replace mode.";
+	case 97:	message = "Operation mode not supported.";
+		break;
+	case 98:	message = "Cannot proceed due to errors.";
+		break;
+	case 99:	message = "Command-line argument used is not supported.";
+		break;
+	case 100:	message = "Last kernel is not ended with EndKernel directive.";
+		break;
+	case 101:	message = "No valid kernel is found in file.";
 		break;
 	default:	message = "No error message";
 		break;
@@ -46,9 +54,11 @@ void hpExceptionHandler(int e)		//===
 	cout<<message<<endl;
 	if(csExceptionPrintUsage)
 		hpUsage();
+	getchar();
 }
-void hpErrorHandler(int e)
+void hpInstructionErrorHandler(int e)
 {
+	throw exception();
 	csErrorPresent = true;
 	char *message;
 	switch(e)
@@ -97,15 +107,54 @@ void hpErrorHandler(int e)
 		break;
 	case 121:	message = "Incorrect floating point number format.";
 		break;
-	default:	message = "Unknown Error";
+	default:	message = "Unknown Error.";
 		break;
 	};
-	char *line = csCurrentInstruction->InstructionString.ToCharArrayStopOnCR();
-	cout<<"Error Line "<<csCurrentInstruction->LineNumber<<": "<<line<<": "<<message<<endl;
+	char *line = csCurrentInstruction.InstructionString.ToCharArrayStopOnCR();
+	cout<<"Error Line "<<csCurrentInstruction.LineNumber<<": "<<line<<": "<<message<<endl;
 	delete[] line;
 }
+void hpDirectiveErrorHandler(int e)
+{
+	throw exception();
+	csErrorPresent = true;
+	char *message;
+	switch(e)
+	{
+	case 1000:	message = "Empty Instruction.";
+		break;
+	case 1001:	message = "Unsupported directive.";
+		break;
+	case 1002:	message = "Incorrect number of directive arguments.";
+		break;
+	case 1003:	message = "Kernel directive can only be used in DirectOutput Mode.";
+		break;
+	case 1004:	message = "Without an EndKernel directive, instructions in the previous kernel will be ignored.";
+		break;
+	case 1005:	message = "Corresponding Kernel directive not found.";
+		break;
+	case 1006:	message = "Parameters can only be defined within kernel sections.";
+		break;
+	case 1007:	message = "Size of parameter must be multiples of 4.";
+		break;
+	case 1008:	message = "Size of parameters cannot exceed 256 bytes.";
+		break;
+	case 1009:	message = "Parameter count too large.";
+		break;
+	case 1010:	message = "Incorrect number of kernel arguments.";
+		break;
+	default:	message = "Unknown error.";
+		break;
+	};
+	
+	char *line = csCurrentDirective.DirectiveString.ToCharArrayStopOnCR();
+	cout<<"Error Line "<<csCurrentDirective.LineNumber<<": "<<line<<": "<<message<<endl;
+	delete[] line;
+}
+
 void hpWarning(int e)
 {
+	throw exception();
 	char* message;
 	switch(e)
 	{
@@ -113,13 +162,16 @@ void hpWarning(int e)
 		break;
 	case 11:	message = "Evaluation of constant overflowed.";
 		break;
+	case 12:	message = "Some instructions before the kernel section are not included in any kernel.";
+		break;
 	default:	message = "No warning message available.";
 		break;
 	}
-	char *line = csCurrentInstruction->InstructionString.ToCharArrayStopOnCR();
-	cout<<"Warning Line "<<csCurrentInstruction->LineNumber<<": "<<line<<": "<<message<<endl;
+	char *line = csCurrentInstruction.InstructionString.ToCharArrayStopOnCR();
+	cout<<"Warning Line "<<csCurrentInstruction.LineNumber<<": "<<line<<": "<<message<<endl;
 	delete[] line;
 }
 
-
+#else
+#define helperExceptionDefined
 #endif

@@ -1,28 +1,23 @@
-#if defined SpecificRulesDefined //prevent multiple inclusion
-#else
-#define SpecificRulesDefined yes
+/*
+This file contains the specific rules for various modifiers, operands and instructions
+*/
+
+#ifndef SpecificRulesDefined //prevent multiple inclusion
 //---code starts ---
-//#include <vld.h> //remove when you compile
 
-
-#include <iostream>
-#include <list>
-#include "DataTypes.h"
-
-extern void hpPrintBinary8(unsigned int word0, unsigned int word1);
 
 inline void WriteToImmediate32(unsigned int content)
 {
-	csCurrentInstruction->OpcodeWord0 |= content <<26;
-	csCurrentInstruction->OpcodeWord1 |= content >> 6;
+	csCurrentInstruction.OpcodeWord0 |= content <<26;
+	csCurrentInstruction.OpcodeWord1 |= content >> 6;
 }
 inline void MarkConstantMemoryForImmediate32()
 {
-	csCurrentInstruction->OpcodeWord1 |= 1<<14; //constant memory flag
+	csCurrentInstruction.OpcodeWord1 |= 1<<14; //constant memory flag
 }
 inline void MarkImmediate20ForImmediate32()
 {
-	csCurrentInstruction->OpcodeWord1 |= 3<<14; //20-bit immediate flag
+	csCurrentInstruction.OpcodeWord1 |= 3<<14; //20-bit immediate flag
 }
 inline void MarkRegisterForImmediate32()
 {
@@ -147,7 +142,7 @@ struct OperandRuleRegister: OperandRule
 		int result = component.Content.ToRegister();
 		csMaxReg = (result > csMaxReg)? result: csMaxReg;
 		result = result<<Offset;
-		csCurrentInstruction->OpcodeWord0 |= result;
+		csCurrentInstruction.OpcodeWord0 |= result;
 	}
 };
 OperandRuleRegister OPRRegister0(14), OPRRegister1(20), OPRRegister2(26);
@@ -161,7 +156,7 @@ struct OperandRuleGlobalMemoryWithImmediate32: OperandRule
 		component.Content.ToGlobalMemory(register1, memory);
 		csMaxReg = (register1 > csMaxReg)? register1: csMaxReg;
 
-		csCurrentInstruction->OpcodeWord0 |= register1<<20; //RE1
+		csCurrentInstruction.OpcodeWord0 |= register1<<20; //RE1
 		WriteToImmediate32(memory);
 	}
 }OPRGlobalMemoryWithImmediate32;
@@ -176,12 +171,21 @@ struct OperandRuleConstantMemory: OperandRule
 		component.Content.ToConstantMemory(bank, register1, memory);
 		csMaxReg = (register1 > csMaxReg)? register1: csMaxReg;
 
-		csCurrentInstruction->OpcodeWord0 |= register1<<20; //RE1
-		csCurrentInstruction->OpcodeWord1 |= bank<<10;
+		csCurrentInstruction.OpcodeWord0 |= register1<<20; //RE1
+		csCurrentInstruction.OpcodeWord1 |= bank<<10;
 		WriteToImmediate32(memory);
 		//no need to do the marking for constant memory
 	}
 }OPRConstantMemory;
+
+struct OperandRuleIgnored: OperandRule
+{
+	OperandRuleIgnored() : OperandRule(OperandType::Optional, 0){}
+	virtual void Process(Component &component)
+	{
+		//do nothing
+	}
+}OPRIgnored;
 //---End of core operands
 
 
@@ -218,7 +222,7 @@ struct OperandRuleMOVStyle: OperandRule
 			component.Content.ToConstantMemory(bank, register1, memory);
 			if(register1 != 63)
 				throw 112; //register cannot be used in MOV-style constant address
-			csCurrentInstruction->OpcodeWord1 |= bank<<10;
+			csCurrentInstruction.OpcodeWord1 |= bank<<10;
 			WriteToImmediate32(memory);
 			MarkConstantMemoryForImmediate32();
 		}
@@ -251,7 +255,7 @@ struct OperandRuleFADDStyle: OperandRule
 		if(component.Content[0] == '-')
 		{
 			negate = true;
-			csCurrentInstruction->OpcodeWord0 |= 1<<8; //negate modifier bit
+			csCurrentInstruction.OpcodeWord0 |= 1<<8; //negate modifier bit
 			component.Content.Start++;
 			component.Content.Length--;
 			if(component.Content.Length<1) //R0, c[xx][xx], 0, still allows the SubString functions to assume length >=1
@@ -262,7 +266,7 @@ struct OperandRuleFADDStyle: OperandRule
 		{
 			int register2 = component.Content.ToRegister();
 			csMaxReg = (register2 > csMaxReg)? register2: csMaxReg;
-			csCurrentInstruction->OpcodeWord0 |= register2 << 20; //RE2
+			csCurrentInstruction.OpcodeWord0 |= register2 << 20; //RE2
 			MarkRegisterForImmediate32();
 		}		
 		else if(component.Content[0]=='c' || component.Content[0] == 'C') //constant memory
@@ -272,7 +276,7 @@ struct OperandRuleFADDStyle: OperandRule
 			component.Content.ToConstantMemory(bank, register1, memory);
 			if(register1 != 63)
 				throw 112; //register cannot be used in FADD-style constant address
-			csCurrentInstruction->OpcodeWord1 |= bank<<10;
+			csCurrentInstruction.OpcodeWord1 |= bank<<10;
 			WriteToImmediate32(memory);
 			MarkConstantMemoryForImmediate32();
 		}
@@ -314,7 +318,7 @@ struct OperandRuleIADDStyle: OperandRule
 		if(component.Content[0] == '-')
 		{
 			negate = true;
-			csCurrentInstruction->OpcodeWord0 |= 1<<8; //negate modifier bit
+			csCurrentInstruction.OpcodeWord0 |= 1<<8; //negate modifier bit
 			component.Content.Start++;
 			component.Content.Length--;
 			if(component.Content.Length<1) //R0, c[xx][xx], 0, still allows the SubString functions to assume length >=1
@@ -325,7 +329,7 @@ struct OperandRuleIADDStyle: OperandRule
 		{
 			int register2 = component.Content.ToRegister();
 			csMaxReg = (register2 > csMaxReg)? register2: csMaxReg;
-			csCurrentInstruction->OpcodeWord0 |= register2 << 20; //RE2
+			csCurrentInstruction.OpcodeWord0 |= register2 << 20; //RE2
 			MarkRegisterForImmediate32();
 		}		
 		else if(component.Content[0]=='c' || component.Content[0] == 'C') //constant memory
@@ -335,7 +339,7 @@ struct OperandRuleIADDStyle: OperandRule
 			component.Content.ToConstantMemory(bank, register1, memory);
 			if(register1 != 63)
 				throw 112; //register cannot be used in FADD-style constant address
-			csCurrentInstruction->OpcodeWord1 |= bank<<10;
+			csCurrentInstruction.OpcodeWord1 |= bank<<10;
 			WriteToImmediate32(memory);
 			MarkConstantMemoryForImmediate32();
 		}
@@ -423,10 +427,20 @@ struct InstructionRuleIADD: InstructionRule
 		Operands[2] = &OPRIADDStyle;
 	}
 }IRIADD;
+struct INstructionRuleNOP: InstructionRule
+{
+	INstructionRuleNOP(): InstructionRule("NOP",1 , 0, true, false)
+	{
+		Operands[0] = &OPRIgnored;
+		InstructionRule::BinaryStringToOpcode8("0010011110111000000000000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
+	}
+}IRNOP;
 //-----End of specific instruction rules
 
 //	7
 //------Specific Modifier Rules
 //------End of specific modifier rules
 
+#else
+#define SpecificRulesDefineds
 #endif

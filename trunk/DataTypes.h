@@ -1,31 +1,28 @@
-#if defined DataTypesDefined //prevent multiple inclusion
-#else
-#define DataTypesDefined yes
+/*
+This file contains basic data types used in asfermi.
+0: SubString, defined in SubString.h
+1: Basic structures used by the assembler: Component, Line, Instruction, Directive
+2: Structures for line analysis: ModifierRule, OperandRule, InstructionRule
+3: Abstract parser structures: Parser, MasterParser, LineParser, InstructionParser, DirectiveParser
+*/
+
+#ifndef DataTypesDefined //prevent multiple inclusion
 //---code starts ---
-//#include <vld.h> //remove when you compile
 
 
 
-#include <string.h>
-#include <list>
-#include "SubString.h"
+
 
 using namespace std;
 
-//-----Forward, extern declarations
-struct Instruction;
-struct Directive;
-struct InstructionParser;
-struct DirectiveParser;
-extern list<Instruction> csInstructions;
-extern list<Directive> csDirectives;
-extern InstructionParser *csInstructionParser;
-extern DirectiveParser *csDirectiveParser;
+//-----Extern declarations
 extern char* csSource;
 extern int csMaxReg;
-//-----End of forward declaration
+extern int hpParseComputeInstructionNameIndex(SubString &name);
+extern int hpParseComputeDirectiveNameIndex(SubString &name);
+//-----End of extern declaration
 
-//	1.0
+//	1
 //-----Basic structures used by the assembler: Component, Line, Instruction, Directive
 
 struct Component //Component can be either an instruction name or an operand
@@ -80,6 +77,7 @@ struct Directive
 {
 	SubString DirectiveString;
 	int LineNumber;
+	list<SubString> Parts;
 	Directive(){}
 	Directive(SubString directiveString, int lineNumber)
 	{
@@ -90,6 +88,7 @@ struct Directive
 	{
 		DirectiveString = directiveString;
 		LineNumber = lineNumber;
+		Parts.clear();
 	}
 };
 //-----End of basic types
@@ -98,8 +97,8 @@ struct Directive
 
 
 
-//	2.0
-//-----Structures for instruction analysis: ModifierRule, OperandRule, InstructionRule
+//	2
+//-----Structures for line analysis: ModifierRule, OperandRule, InstructionRule, DirectiveRule
 typedef enum OperandType
 {
 	Immediate32HexConstant, Immediate32IntConstant, Immediate32FloatConstant, Immediate32AnyConstant, 
@@ -171,12 +170,10 @@ struct InstructionRule
 	{
 		int result = 0;
 		int len = strlen(Name);
-		if(len<1)return 0;
-		result += (int)Name[0] * 2851;
-		if(len<2) return result;
-		result += (int)Name[1] * 349;
-		for(int i =2; i<len; i++)
-			result += (int)Name[i];
+		SubString nameString;
+		nameString.Start = Name;
+		nameString.Length = len;
+		result = hpParseComputeInstructionNameIndex(nameString);
 		return result;
 	}
 	InstructionRule(){};
@@ -223,14 +220,31 @@ struct InstructionRule
 		}
 	}
 };
-//-----End of structures for instruction analysis
+
+struct DirectiveRule
+{
+	char* Name;
+
+	virtual void Process() = 0;
+	int ComputeIndex()
+	{
+		int result = 0;
+		int len = strlen(Name);
+		SubString nameString;
+		nameString.Start = Name;
+		nameString.Length = len;
+		result = hpParseComputeDirectiveNameIndex(nameString);
+		return result;
+	}
+};
+//-----End of structures for line analysis
 
 
 
 
 
 
-//	3.0
+//	3
 //-----Abstract parser structures: Parser, MasterParser, LineParser, InstructionParser, DirectiveParser
 struct Parser
 {
@@ -250,7 +264,7 @@ struct InstructionParser: Parser
 };
 struct DirectiveParser: Parser
 {
-	virtual void Parse(Directive &directive) = 0;
+	virtual void Parse() = 0;
 };
 //-----End of abstract parser structures
 
@@ -258,42 +272,7 @@ struct DirectiveParser: Parser
 
 
 
-//	4.0
-//-----Default parsers
-//Implementation of the various parse functions are in asfermi.cpp
-struct DefaultMasterParser: MasterParser
-{
-	DefaultMasterParser()
-	{
-		Name = "DefaultMasterParser";
-	}
-	void Parse(unsigned int startinglinenumber);
-};
-struct DefaultLineParser : LineParser
-{
-	DefaultLineParser()
-	{
-		Name = "DefaultLineParser";
-	}
-	void Parse(Line &line);
-};
-struct DefaultInstructionParser: InstructionParser
-{
-	DefaultInstructionParser()
-	{
-		Name = "DefaultInstructionParser";
-	}
-	void Parse();
-};
-struct DefaultDirectiveParser: DirectiveParser
-{
-	DefaultDirectiveParser()
-	{
-		Name = "DefaultDirectiveParser";
-	}
-	void Parse(Directive &directive);
-};
-//-----End of default parsers
+
 
 
 //	9.0
@@ -309,6 +288,6 @@ struct LabelRequest
 	string RequestedLabelName;
 };
 //-----End of Label structures
-
-
+#else
+#define DataTypesDefined
 #endif
