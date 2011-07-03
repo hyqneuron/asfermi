@@ -1,0 +1,17 @@
+#summary A few examples of how the source files look like
+
+
+Here's an input file I used as a test
+{{{
+!Kernel kernel1
+!Param 4
+
+MOV R1, c [0x1] [0x100];
+NOP CC.T; //for sm_21
+MOV R0, c [0x0] [0x20];
+MOV R2, 0xff;
+ST  [R0], R2;
+EXIT;
+
+!EndKernel
+}}}
