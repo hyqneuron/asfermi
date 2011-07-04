@@ -2,26 +2,26 @@
 
 
   * [http://code.google.com/p/asfermi/ Project Home]
-  * [IndexPage]
+  * [IndexPage Documentation Index]
   * [Plan]
   * [Updates]
 
 ===Stage 1===
 
-====Opcode====
-  * [Opcode]
-  * [nanb]
-  * [PTXpriority]
-  * [Utilities]
-
-====Assembler====
+====Using asfermi====
   * [Features]
-  * [Design]
   * [Usage]
   * [SourceFormat]
   * [CodeExample]
   * [Instructions]
   * [Directives]
+
+====Development related====
+  * [Design]
+  * [Opcode]
+  * [nanb]
+  * [PTXpriority]
+  * [Utilities]
 
 ===Stage 2===
 No documentation yet
