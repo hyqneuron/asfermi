@@ -1,6 +1,7 @@
 #summary Opcodes for the data movement instructions
 
 === Data Movement Instructions ===
+<wiki:toc/>
 
 ==== MOV ====
 Template opcode:
