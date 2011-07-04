@@ -33,5 +33,5 @@ LD R3, [R0];
 }}}
 It is assembled with the following command line:
 {{{
-asfermi test.txt -r target.cubin targetkernek 0x10 //replaces opcodes at 0x10 and 0x18
+asfermi test.txt -r target.cubin targetkernelname 0x10 //replaces opcodes of targetkernelname at 0x10 and 0x18
 }}}
