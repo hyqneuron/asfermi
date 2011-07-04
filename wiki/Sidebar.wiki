@@ -11,14 +11,11 @@
     * [CodeExample]
     * [Instructions]
     * [Directives]
-*Development Related*
-  * [Design]
-  * [PTXpriority]
-  * [Utilities]
-
-
-  * [Opcode]
-  * [nanb]
-
-===Stage 2===
-No documentation yet
+  * Development Related
+    * [Design]
+    * [PTXpriority]
+    * [Utilities]
+  * Fermi ISA
+    * [Opcode]
+    * [nanb]
+  * Stage 2
