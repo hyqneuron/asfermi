@@ -3,21 +3,21 @@
   * [IndexPage Documentation Index]
   * [Plan]
   * [Updates]
- * [Features]
- * [Usage]
- * [SourceFormat]
- * [CodeExample]
- * [Instructions]
- * [Directives]
+  * [Features]
+  * [Usage]
+  * [SourceFormat]
+  * [CodeExample]
+  * [Instructions]
+  * [Directives]
 
 
- * [Design]
- * [PTXpriority]
- * [Utilities]
+  * [Design]
+  * [PTXpriority]
+  * [Utilities]
 
 
- * [Opcode]
- * [nanb]
+  * [Opcode]
+  * [nanb]
 
 ===Stage 2===
 No documentation yet
