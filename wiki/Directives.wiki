@@ -7,7 +7,9 @@ This page provides a list of directives that are supported/to be supported, as w
 Directives are used to declare symbols and to send specific instructions to the assembler.
 ----
 == Symbol Declarations ==
-==== Kernel ====
+==== [Features#State_Numbers 0]: Kernel ====
+Description: the "Kernel" directive declares the start of a kernel, and it should always be used with another `"EndKernel"` directive. In between the region defined by the "Kernel" and `"EndKernel"` pair, the directive Param can be present to declare parameters.
+
 Format:
 {{{
 !Kernel kernelname
@@ -16,41 +18,46 @@ Format:
 ... //instructions
 !EndKernel
 }}}
-[Features State]: 0
-==== Texture Object ====
-State: 3
-==== Shared Memory Object ====
-State: 2
-==== Constant Memory Object ====
-State: 2
-
+==== [Features#State_Numbers 2]: Shared Memory Object ====
+==== [Features#State_Numbers 2]: Constant Memory Object ====
+==== [Features#State_Numbers 3]: Texture Object ====
 
 ----
 == Assembler Commands ==
-==== Label ====
+==== [Features#State_Numbers 2]: Label ====
+Description: the "Label" directive is used to mark the offset of a specific instruction so that the CAL instruction can refer to this label directly instead of to an offset value given by the programmer which may require some calculation and which may change when the source code is modified.
 Format:
 {{{
 !Label LabelName
 }}}
-State: 2
-==== Type-checking ====
-State: 3
-==== Unroll ====
-State: 2
-==== Macro ====
-State: 3
-==== Set current parsers ====
+==== [Features#State_Numbers 2]: Unroll ====
+Description: the "Unroll" directive can be used to the same instruction for many times. Note that the "Unroll" directive only operates on the first instruction that follows. Even if multiple instructions appear on the same line, only the first instruction will be repeated. `"BeginUnroll"` and `"EndUnroll"` can be used to repeat the instructions defined within this pair many times.
+
+Format:
+{{{
+!Unroll 5 // 5 is the number of times of unrolling
+...... //the single instruction that will be repeated
+
+!Unroll 5 SearchTarget x y
+... SearchTarget ... //SearchTarget will be replaced by a number x. x is incremented by y at every iteration.
+
+!BeginUnroll 5 SearchTarget x y
+...
+...
+!EndUnroll
+}}}
+==== [Features#State_Numbers 2]: Set current parsers ====
 Format:
 {{{
 !SetMasterParser Name
 !SetInstructionParser Name
 }}}
-State: 2
-==== Capitalize ====
+==== [Features#State_Numbers 3]: Type-checking ====
+==== [Features#State_Numbers 3]: Macro ====
+==== [Features#State_Numbers 3]: Capitalize ====
 Description: Defines whether the instruction parser should capitalize all letters of the input before it starts parsing. Can be enabled to support lower-case source code.
 
 Format:
 {{{
 !Capitalie (on/off)
 }}}
-State: 2
