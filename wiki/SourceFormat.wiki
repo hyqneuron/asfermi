@@ -4,6 +4,8 @@
 
 This file specifies the format that should be taken by the source assembly code. For some sample code, please see [CodeExample].
 
+<wiki:toc/>
+
 General rules:
   * The source file sent to the assembler should only contain 3 types of lines:
     * Directive
