@@ -28,6 +28,10 @@ This is a page where all other wiki pages of this project are listed and briefly
 === Fermi ISA ===
   * [Opcode]: A page describing the opcode format of the Fermi opcode.
   * [nanb]: A page with instruction names and their corresponding identifier bits. 
+  * [OpcodeExecution]: Opcode and instruction description for execution control instructions.
+  * [OpcodeDataMovement]: Opcode and instruction description for data movement instructions.
+  * [OpcodeFloat]: Opcode and instruction description for floating point number operation instructions.
+  * [OpcodeInteger]: Opcode and instruction description for integer operation instructions.
 
 ----
 == Stage 2, Microbenchmarking ==
