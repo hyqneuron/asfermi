@@ -1,14 +1,16 @@
 #summary Sidebar for all wiki pages
-  * [http://code.google.com/p/asfermi/ Project Home]
-  * [IndexPage Documentation Index]
-  * [Plan]
-  * [Updates]
-  * [Features]
-  * [Usage]
-  * [SourceFormat]
-  * [CodeExample]
-  * [Instructions]
-  * [Directives]
+  * Overview
+    * [http://code.google.com/p/asfermi/ Project Home]
+    * [IndexPage Documentation Index]
+    * [Plan]
+    * [Updates]
+  * Using asfermi
+    * [Features]
+    * [Usage]
+    * [SourceFormat]
+    * [CodeExample]
+    * [Instructions]
+    * [Directives]
 *Development Related*
   * [Design]
   * [PTXpriority]
