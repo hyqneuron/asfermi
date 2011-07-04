@@ -18,4 +18,8 @@
   * Fermi ISA
     * [Opcode]
     * [nanb]
+    * [OpcodeExecution]
+    * [OpcodeDataMovement]
+    * [OpcodeFloat]
+    * [OpcodeInteger]
   * Stage 2
