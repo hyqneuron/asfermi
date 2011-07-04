@@ -1,6 +1,6 @@
 #summary Sidebar for all wiki pages
   * [http://code.google.com/p/asfermi/ Project Home]
-  * [IndexPage]
+  * [IndexPage Documentation Index]
   * [Plan]
   * [Updates]
 
@@ -14,7 +14,7 @@
   * [Instructions]
   * [Directives]
 
-====Development====
+====Development Related====
   * [Design]
   * [Opcode]
   * [nanb]
