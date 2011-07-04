@@ -11,8 +11,9 @@ This page contains a list of features of the assembler that are supported/to be 
   * *8*: Unlikely to be supported
   * *9*: Not going to be supported
 ----
-== Source code format ==
-For the source code language features, such as the support for directives and instructions, please view the [SourceFormat] page.
+== Features in the source code ==
+Please refer to [SourceFormat] for more information.
+
 ----
 == Extensibility ==
   * 0: Passive Parser, see [Design#Line_Parser]
