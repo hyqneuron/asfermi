@@ -3,9 +3,9 @@
 = Features =
 This page contains a list of features that are supported/to be supported. For the meaning of the state numbers (at the beginning of each feature), see [Features#State_Numbers]. For features that can be enabled through the use of directives, please refer to [Directives].
 
-  * 0: Replace specific instructions inside a cubin
-  * 0: Output assembled file as cubin (elf)
-  * 2: Insert instructions into a cubin
+  * 0: Replace opcodes at specified location in a specified kernel of a cubin.
+  * 0: Output assembled opcodes directly as a cubin
+  * 2: Insert instructions into a specified kernel of a cubin
   * 3: Output cubin with symbolic debugging information
   * 5: Optimization of instructions (for specific architectures)
 
