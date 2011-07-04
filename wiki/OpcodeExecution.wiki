@@ -1,0 +1,19 @@
+#summary opcodes for execution control instructions
+
+=== Execution Control Instructions ===
+==== EXIT ====
+No modifiers supported so far.
+{{{
+EXIT;
+}}}
+Template opcode:
+{{{
+1110 011110 1110 000000 000000 00000000000000000000000000000000 000001
+}}}
+
+----
+==== NOP ====
+Template opcode:
+{{{
+0010 011110 1110 000000 000000 00000000000000000000000000000000 000010
+}}}
