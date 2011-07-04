@@ -2,7 +2,7 @@
 
 = Source Code Format =
 
-This file specifies the format that should be taken by the source assembly code
+This file specifies the format that should be taken by the source assembly code. For some sample code, please see [CodeExample].
 
 General rules:
   * The source file sent to the assembler should only contain 3 types of lines:
@@ -28,7 +28,7 @@ Note: labels are written as directives.
 [Features State]: 0
 ----
 ==Instructions==
-For a list of instructions that are supported/to be supported, see [Instructions].
+Instructions take the same format as the output of cuobjdump. For a list of instructions that are supported/to be supported, see [Instructions].
 
 Format:
 {{{
