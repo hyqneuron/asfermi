@@ -8,34 +8,28 @@ This is a page where all other wiki pages of this project are listed and briefly
 
 ----
 == Overview ==
-=== Home Page ===
-  * Brief introduction to the project
-  * Current development state
-  * Other related information
-See [http://code.google.com/p/asfermi/ Home]
+  * [http://code.google.com/p/asfermi/ Home]: Brief introduction to the project, current development state and Other related information.
 
-=== Project Plan ===
- This page deacribes the planned stages of the project. It also includes a timeline of the short-term objectives. See [Plan].
+  * [Plan]: This page deacribes the planned stages of the project. It also includes a timeline of the short-term objectives.
 
-=== Updates ===
-I know a few people are checking this site regularly, so I created this [Updates] page so that you can know if anything new has been added or if there's any modification to the content on this site.
+  * [Updates]: I know a few people are checking this site regularly, so I created this page so that you can know if anything has happened.
 
 ----
 == Stage 1, Assembler ==
-===Part A: Opcode===
-  * [Opcode]: A page describing the opcode format of the Fermi opcode.
-  * [nanb]: A page with instruction names and their corresponding identifier bits. 
-  * [PTXpriority]: The probing of various PTX instruction and their corresponding opcode will be done in stages. This page lists the priority of each PTX instruction in the probing process.
-  * [Utilities] A page describing the utilities made for the purpose of this project.
-
-=== Part B: Assembler ===
-  * [Features]: A list of features that are supported/to be supported.
-  * [Design]: This page describes the framework under which the assembler will be written.
+=== Using asfermi ===
+  * [Features]: A list of features that are supported/to be supported. The meaning of various state numbers are also explained here.
   * [Usage]: A page describing the command-line usage of asfermi.
   * [SourceFormat]: A specification of the format of source code that can be assembled.
   * [CodeExample]: A page with some examples showing how the input file of asfermi would look like.
   * [Instructions]: A list of instructions that are supported/ to be supported.
   * [Directives]: A list of directives that are supported/to be supported.
+
+=== Development related ===
+  * [Design]: This page describes the framework under which the assembler is written.
+  * [Opcode]: A page describing the opcode format of the Fermi opcode.
+  * [nanb]: A page with instruction names and their corresponding identifier bits. 
+  * [PTXpriority]: The probing of various PTX instruction and their corresponding opcode will be done in stages. This page lists the priority of each PTX instruction in the probing process.
+  * [Utilities] A page describing the utilities made for the purpose of this project.
 ----
 == Stage 2, Microbenchmarking ==
 Currently no documentation has been written for this stage yet.
