@@ -3,21 +3,19 @@
   * [IndexPage Documentation Index]
   * [Plan]
   * [Updates]
-
-===Stage1===
-
-====Using asfermi====
  * [Features]
  * [Usage]
  * [SourceFormat]
  * [CodeExample]
  * [Instructions]
  * [Directives]
-====Development Related====
+
+
  * [Design]
  * [PTXpriority]
  * [Utilities]
-====Fermi ISA====
+
+
  * [Opcode]
  * [nanb]
 
