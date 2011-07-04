@@ -1,0 +1,12 @@
+#summary using asfermi
+
+Usage:
+{{{
+asfermi sourcefile [Options [option arguments]]
+}}}
+Source file must be the first command-line option. However, it could be replaced by a -I option specified below.
+
+Options:
+  * <pre>-I "instruction"</pre>This can be used to replace the inputfile. A single line of instruction, surrounded by double quotation marks, will be processed as source input. Note that comments and directives are not supported in this mode.
+  * <pre>-o outputfile</pre>Output cubin to the specified file.
+  * <pre>-r target_cubin kernel_name kernel_offset</pre>Replace the opcodes in specified location of a kernel in a specified cubin file with the assembled opcodes.
