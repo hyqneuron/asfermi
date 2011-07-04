@@ -1,0 +1,15 @@
+#summary opcodes for integer operation instructions
+
+
+=== Integer Instructions ===
+==== IADD ====
+No modifiers supported so far.
+{{{
+IADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/(-)123/0xabcd;
+}}}
+If the third operand is an immediate value, it cannot be longer than 20 bits.
+
+Template opcode:
+{{{
+1100 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 010010
+}}}
