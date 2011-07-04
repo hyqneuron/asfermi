@@ -16,7 +16,7 @@
   * [Instructions]
   * [Directives]
 
-====Development related====
+====Development====
   * [Design]
   * [Opcode]
   * [nanb]
