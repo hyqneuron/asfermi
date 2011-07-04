@@ -1,6 +1,10 @@
 #summary A few examples of how the source files look like
 
+Instructions follow the exact format of the output of cuobjdump. For more information please refer to [SourceFormat].
 
+<wiki:toc/>
+
+== Direct Output Mode ==
 Here's an example source file used for the "direct output mode" of asfermi.
 {{{
 !Kernel kernel1
@@ -21,6 +25,7 @@ asfermi test.txt -o test.cubin
 }}}
 
 ----
+== Replace Mode ==
 Here's an example of the source file used for the "replace mode" of asfermi.
 {{{
 MOV R2, 0x20;
