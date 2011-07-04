@@ -18,6 +18,7 @@
   * [Features]
   * [Design]
   * [SourceFormat]
+  * [CodeExample]
   * [Instructions]
   * [Directives]
 
