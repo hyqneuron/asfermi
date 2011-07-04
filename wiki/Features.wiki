@@ -3,13 +3,14 @@
 = Features =
 This page contains a list of features of the assembler that are supported/to be supported.
 
-  * *0*: Already supported
-  * *1*: Priority level 1, top priority.
-  * *2*: Priority level 2
-  * *3*: Priority level 3
-  * *5*: Not decided
-  * *8*: Unlikely to be supported
-  * *9*: Not going to be supported
+For the meaning of the state numbers, see [Features#Stage_Numbers]
+
+----
+== cubin Operations ==
+  * 0: Replace specific instructions inside a cubin
+  * 0: Output assembled file as cubin (elf)
+  * 2: Insert instructions into a cubin
+  * 3: Output cubin with symbolic debugging information
 ----
 == Features in the source code ==
 Please refer to [SourceFormat] for more information.
@@ -19,11 +20,14 @@ Please refer to [SourceFormat] for more information.
   * 0: Passive Parser, see [Design#Line_Parser]
   * 0: Active Parser
 ----
-== cubin Operations ==
-  * 0: Replace specific instructions inside a cubin
-  * 2: Insert instructions into a cubin
-  * 0: Output assembled file as cubin (elf)
-  * 3: Output cubin with symbolic debugging information
-----
 == Others ==
   * 5: Optimization of instructions (for specific architectures)
+
+== Stage Numbers ==
+  * *0*: Already supported
+  * *1*: Priority level 1, top priority.
+  * *2*: Priority level 2
+  * *3*: Priority level 3
+  * *5*: Not decided
+  * *8*: Unlikely to be supported
+  * *9*: Not going to be supported
