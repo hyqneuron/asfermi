@@ -15,10 +15,11 @@
  * [Directives]
 ====Development Related====
  * [Design]
- * [Opcode]
- * [nanb]
  * [PTXpriority]
  * [Utilities]
+====Fermi ISA====
+ * [Opcode]
+ * [nanb]
 
 ===Stage 2===
 No documentation yet
