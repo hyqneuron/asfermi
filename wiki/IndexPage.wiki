@@ -7,9 +7,7 @@ This is a page where all other wiki pages of this project are listed and briefly
 ----
 == Overview ==
   * [http://code.google.com/p/asfermi/ Home]: Brief introduction to the project, current development state and Other related information.
-
   * [Plan]: This page deacribes the planned stages of the project. It also includes a timeline of the short-term objectives.
-
   * [Updates]: I know a few people are checking this site regularly, so I created this page so that you can know if anything has happened.
 
 ----
