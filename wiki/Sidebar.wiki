@@ -2,7 +2,7 @@
 
 
   * [http://code.google.com/p/asfermi/ Project Home]
-  * [IndexPage Documentation Index]
+  * [IndexPage Doc Index]
   * [Plan]
   * [Updates]
 
