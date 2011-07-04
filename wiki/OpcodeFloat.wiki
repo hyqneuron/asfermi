@@ -1,0 +1,14 @@
+#summary opcodes for floaitng point instructions
+
+=== Floating Point Instructions ===
+==== FADD ====
+No modifiers supported so far.
+{{{
+FADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/F(-)123.123/0xabcd;
+}}}
+If the third operand is a floating point number, it will be a 32-bit floaitng point number with the last 12 bits truncated.
+
+Template opcode:
+{{{
+0000 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 001010
+}}}
