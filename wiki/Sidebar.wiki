@@ -1,6 +1,6 @@
 #summary Sidebar for all wiki pages
   * [http://code.google.com/p/asfermi/ Project Home]
-  * [IndexPage Doc Index]
+  * [IndexPage]
   * [Plan]
   * [Updates]
 
