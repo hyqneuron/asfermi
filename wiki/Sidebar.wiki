@@ -4,21 +4,21 @@
   * [Plan]
   * [Updates]
 
-Stage1
- * Using asfermi
- * [Features]
- * [Usage]
- * [SourceFormat]
- * [CodeExample]
- * [Instructions]
- * [Directives]
+===Stage1===
 
+====Using asfermi====
+* [Features]
+* [Usage]
+* [SourceFormat]
+* [CodeExample]
+* [Instructions]
+* [Directives]
 ====Development Related====
-  * [Design]
-  * [Opcode]
-  * [nanb]
-  * [PTXpriority]
-  * [Utilities]
+ * [Design]
+ * [Opcode]
+ * [nanb]
+ * [PTXpriority]
+ * [Utilities]
 
 ===Stage 2===
 No documentation yet
