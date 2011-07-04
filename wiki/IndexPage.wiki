@@ -1,7 +1,5 @@
 #summary Index page of the documentation
 
-=Index=
-
 This is a page where all other wiki pages of this project are listed and briefly described.
 
 <wiki:toc>
