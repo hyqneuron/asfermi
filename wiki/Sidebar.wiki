@@ -17,6 +17,7 @@
 ====Assembler====
   * [Features]
   * [Design]
+  * [Usage]
   * [SourceFormat]
   * [CodeExample]
   * [Instructions]
