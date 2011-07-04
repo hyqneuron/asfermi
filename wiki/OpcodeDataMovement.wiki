@@ -14,6 +14,7 @@ Template opcode:
 0010 011110 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 010100
 }}}
 
+----
 ==== LD ====
 Supported modifiers: .64, .128
 {{{
@@ -23,7 +24,7 @@ Template opcode:
 {{{
 1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 000001
 }}}
-
+----
 ==== ST ====
 Supported modifiers: .64, .128
 {{{
