@@ -1,29 +1,21 @@
 #summary Features of the assembler that are supported/to be supported.
 
 = Features =
-This page contains a list of features of the assembler that are supported/to be supported.
+This page contains a list of features that are supported/to be supported. For the meaning of the state numbers (at the beginning of each feature), see [Features#State_Numbers]
 
-For the meaning of the state numbers, see [Features#Stage_Numbers]
-
-----
-== cubin Operations ==
   * 0: Replace specific instructions inside a cubin
   * 0: Output assembled file as cubin (elf)
   * 2: Insert instructions into a cubin
   * 3: Output cubin with symbolic debugging information
-----
-== Features in the source code ==
-Please refer to [SourceFormat] for more information.
+  * 5: Optimization of instructions (for specific architectures)
 
 ----
 == Extensibility ==
   * 0: Passive Parser, see [Design#Line_Parser]
   * 0: Active Parser
-----
-== Others ==
-  * 5: Optimization of instructions (for specific architectures)
 
-== Stage Numbers ==
+----
+== State Numbers ==
   * *0*: Already supported
   * *1*: Priority level 1, top priority.
   * *2*: Priority level 2
