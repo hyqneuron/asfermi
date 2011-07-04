@@ -5,13 +5,13 @@
   * [Updates]
 
 Stage1
-  * Using asfermi
-   * [Features]
-   * [Usage]
-   * [SourceFormat]
-   * [CodeExample]
-   * [Instructions]
-   * [Directives]
+ * Using asfermi
+ * [Features]
+ * [Usage]
+ * [SourceFormat]
+ * [CodeExample]
+ * [Instructions]
+ * [Directives]
 
 ====Development Related====
   * [Design]
