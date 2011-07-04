@@ -1,0 +1,35 @@
+#summary Opcodes for the data movement instructions
+
+=== Data Movement Instructions ===
+
+==== MOV ====
+No modifiers supported so far.
+{{{
+MOV Rxx, Rxx/c[0xa][0xb]/0xabcd;
+}}}
+If a hex number is used as the second operand, it cannot be longer than 20 bits.
+
+Template opcode:
+{{{
+0010 011110 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 010100
+}}}
+
+==== LD ====
+Supported modifiers: .64, .128
+{{{
+LD(.64/.128) Rxx, [Rxx+0xabcd];
+}}}
+Template opcode:
+{{{
+1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 000001
+}}}
+
+==== ST ====
+Supported modifiers: .64, .128
+{{{
+ST(.64/.128) Rxx, [Rxx+0xabcd];
+}}}
+Template opcode:
+{{{
+1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 001001
+}}}
