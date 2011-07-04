@@ -7,12 +7,12 @@
 ===Stage1===
 
 ====Using asfermi====
-* [Features]
-* [Usage]
-* [SourceFormat]
-* [CodeExample]
-* [Instructions]
-* [Directives]
+ * [Features]
+ * [Usage]
+ * [SourceFormat]
+ * [CodeExample]
+ * [Instructions]
+ * [Directives]
 ====Development Related====
  * [Design]
  * [Opcode]
