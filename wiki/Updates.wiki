@@ -3,6 +3,8 @@
 ==== 5th July, 2011 ====
 Added support for the -sm_20 an -sm_21 command-line arguments and the Arch directive.
 
+Quite a lot of little yet important things are not done. For one, asfermi still doesn't support 64-bit cubin.
+
 ----
 ==== 3rd July, 2011 ====
 Just got an "asfermied" cubin kernel to run on my device! I'm surprised by how few mistakes I've made :)  I'll do a few more tests before I upload the code.
