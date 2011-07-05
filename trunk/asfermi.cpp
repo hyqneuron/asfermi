@@ -2,6 +2,7 @@
 */
 
 //#include <vld.h> //Visual Leak Detector. You can just remove this when you compile.
+//#define DebugMode //used when debugging. Cause all the errors/warnings to throw unhandled exception
 
 #include <iostream>
 #include <sstream>
@@ -175,37 +176,45 @@ void ProcessCommandsAndReadSource(int argc, char** args)
 		currentArg = 2;
 	}
 
-	//Check operation mode
-	if(strcmp(args[currentArg], "-r")==0)	//replace mode
+	//Check options
+	while(currentArg<argc)
 	{
-		if(argc - currentArg < 4)
+		if(strcmp(args[currentArg], "-r")==0)	//replace mode
 		{
-			csExceptionPrintUsage = true;
-			throw 20; // invalid arguments
+			if(argc - currentArg < 4)
+			{
+				csExceptionPrintUsage = true;
+				throw 20; // invalid arguments
+			}
+			csOperationMode = Replace;
+			hpCheckOutputForReplace(args[currentArg+1], args[currentArg+2], args[currentArg+3]); //Use helper function to check validity of input arguments
+							//csOutput is opened without closing 
+			currentArg += 4;
 		}
-		csOperationMode = Replace;
-		hpCheckOutputForReplace(args[currentArg+1], args[currentArg+2], args[currentArg+3]); //Use helper function to check validity of input arguments
-						//csOutput is opened without closing 
-		currentArg += 4;
-	}
-	else if(strcmp(args[currentArg], "-o")==0) //direct output mode
-	{
-		if(argc - currentArg < 2)
+		else if(strcmp(args[currentArg], "-o")==0) //direct output mode
 		{
-			csExceptionPrintUsage = true;
-			throw 20; // invalid arguments
+			if(argc - currentArg < 2)
+			{
+				csExceptionPrintUsage = true;
+				throw 20; // invalid arguments
+			}
+			csOperationMode = DirectOutput;
+			csOutput.open(args[currentArg + 1], fstream::out | fstream::binary |fstream::trunc);
+			if(!csOutput.is_open() || !csOutput.good())
+				throw 4; //failed to open output file
+			currentArg += 2;
+			//note that csOutput is not closed
 		}
-		csOperationMode = DirectOutput;
-		csOutput.open(args[currentArg + 1], fstream::out | fstream::binary |fstream::trunc);
-		if(!csOutput.is_open() || !csOutput.good())
-			throw 4; //failed to open output file
-		currentArg += 2;
-		//note that csOutput is not closed
-	}
-	else	//other things
-	{
-		csOperationMode = Undefined;
-		throw 99; //Not supported
+		else if(strcmp(args[currentArg], "-sm_20")==0)
+		{
+			cubinArchitecture = sm_20;
+			currentArg += 1;
+		}
+		else if(strcmp(args[currentArg], "-sm_21")==0)
+		{
+			cubinArchitecture = sm_21;
+			currentArg += 1;
+		}
 	}
 
 }

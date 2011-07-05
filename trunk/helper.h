@@ -71,6 +71,8 @@ void hpUsage()				//====
 		 A single line of instruction, surrounded by double quotation marks, will be processed as source input. Note that comment is not supported in this mode.");
 	puts("	-o outputfile: Output cubin to the specified file.");
 	puts("	-r target_cubin kernel_name offset: Replace the opcodes in specified location of a kernel in a specified cubin file with the assembled opcodes.");
+	puts("  -sm_20: output cubin for architecture sm_20. This is the default architecture assumed by asfermi.");
+	puts("  -sm_20: output cubin for architecture sm_21");
 }
 
 

@@ -95,6 +95,33 @@ struct DirectiveRuleParam: DirectiveRule //!Param Size Count
 	}
 }DRParam;
 
+struct DirectiveRuleArch: DirectiveRule
+{
+	DirectiveRuleArch()
+	{
+		Name = "Arch";
+	}
+	virtual void Process()
+	{
+		if(csCurrentDirective.Parts.size()!=2)
+			throw 1002;
+		list<SubString>::iterator part = csCurrentDirective.Parts.begin();
+		part++;
+		char zeroSaver = part->Start[part->Length];
+		part->Start[part->Length] = 0;
+		if(strcmp("sm_20", part->Start)==0)
+		{
+			cubinArchitecture = sm_20;
+		}
+		else if(strcmp("sm_21", part->Start)==0)
+		{
+			cubinArchitecture = sm_21;
+		}
+		else
+			throw 0;// unsupported argument
+	}
+}DRArch;
+
 #else
 #define SpecificDirectiveRulesDefined yes
 #endif

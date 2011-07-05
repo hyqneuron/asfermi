@@ -521,6 +521,10 @@ void hpCubinStage6()
 	ELFHeader32.PHTOffset = cubinPHTOffset;
 	ELFHeader32.PHCount = cubinPHCount;
 	ELFHeader32.SHCount = cubinCurrentSectionIndex;
+	if(cubinArchitecture == sm_20)
+		ELFHeader32.Flags = ELFFlagsForsm_20;
+	else //issue: supports only sm_20 and sm_21
+		ELFHeader32.Flags = ELFFlagsForsm_21;
 }
 
 //Stage7: Write to cubin

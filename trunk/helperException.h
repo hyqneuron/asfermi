@@ -58,7 +58,9 @@ void hpExceptionHandler(int e)		//===
 }
 void hpInstructionErrorHandler(int e)
 {
+#ifndef DebugMode
 	throw exception();
+#endif
 	csErrorPresent = true;
 	char *message;
 	switch(e)
@@ -116,7 +118,9 @@ void hpInstructionErrorHandler(int e)
 }
 void hpDirectiveErrorHandler(int e)
 {
+#ifndef DebugMode
 	throw exception();
+#endif
 	csErrorPresent = true;
 	char *message;
 	switch(e)
@@ -143,6 +147,7 @@ void hpDirectiveErrorHandler(int e)
 		break;
 	case 1010:	message = "Incorrect number of kernel arguments.";
 		break;
+	case 1011:	message = "Unsupported architecture. Please use only sm_20 or sm_21"; //issue: architecture support may increase in future
 	default:	message = "Unknown error.";
 		break;
 	};
@@ -154,7 +159,9 @@ void hpDirectiveErrorHandler(int e)
 
 void hpWarning(int e)
 {
+#ifndef DebugMode
 	throw exception();
+#endif
 	char* message;
 	switch(e)
 	{

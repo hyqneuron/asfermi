@@ -5,6 +5,8 @@ This file contains structures used for cubin output: ELFHeader, ELFSectionHeader
 //---code starts ---
 
 
+const unsigned int ELFFlagsForsm_20 = 0x00140114;
+const unsigned int ELFFlagsForsm_21 = 0x00140115;
 struct ELFHeader
 {
 	unsigned char Byte0, Byte1, Byte2, Byte3, FileClass, Encoding, FileVersion, Padding[9];

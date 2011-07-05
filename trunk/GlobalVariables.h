@@ -75,6 +75,8 @@ unsigned int cubinCurrentStrTabOffset = 0;
 unsigned int cubinTotalSectionCount =0;
 unsigned int cubinPHTOffset = 0;
 unsigned int cubinPHCount;
+enum Architecture{sm_20, sm_21};
+Architecture cubinArchitecture = sm_20; //default architecture is sm_20
 
 
 
