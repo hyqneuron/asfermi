@@ -12,3 +12,5 @@ Options:
   * <pre>-I "instruction"</pre>This can be used to replace the inputfile. A single line of instruction, surrounded by double quotation marks, will be processed as source input. Note that comments and directives are not supported in this mode.
   * <pre>-o outputfile</pre>Output cubin to the specified file.
   * <pre>-r target_cubin kernel_name kernel_offset</pre>Replace the opcodes in specified location of a kernel in a specified cubin file with the assembled opcodes.
+  * <pre>-sm_20</pre>output cubin for architecture sm_20. This is the default architecture assumed by asfermi.
+  * <pre>-sm_21</pre>output cubin for architecture sm_21.
