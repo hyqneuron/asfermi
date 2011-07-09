@@ -29,7 +29,7 @@ Modifier bits. Instruction-specific.
 Predicate bits
 pr0: 1: negate predicate
 pr1~3: predicate number, 0-6
-pr: 1111: @!pt. what is pt?
+pr: 1111: @!pt. pt probably means predicate true.
 pr: 1110: No predicate used
 
 #re0, re1:
