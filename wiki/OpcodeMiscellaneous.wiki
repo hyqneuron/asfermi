@@ -7,10 +7,12 @@ Store special register to general-purpose register.
 
 Template opcode:
 {{{
-0010 000000 1110 xxxxxx 000000 aaaaaa00 00000000 00000000 00000000 110100
+0010 000000 1110 xxxxxx 000000 aaaaaaaa 00000000 00000000 00000000 110100
 xxxxxx: destination reg
-aaaaaa: 011001: SR_CTAid_Y;
-	101001: SR_CTAid_X;
-	100001: SR_Tid_X;
-	010001: SR_Tid_Y;
+aaaaaa: 01100100: SR_CTAid_Y;
+	10100100: SR_CTAid_X;
+	10000100: SR_Tid_X;
+	01000100: SR_Tid_Y;
+	10001010: SR_Clock_Hi;
+	00001010: SR_Clock_Lo;
 }}}
