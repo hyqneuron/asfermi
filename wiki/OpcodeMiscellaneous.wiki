@@ -1,0 +1,16 @@
+#summary Opcodes for miscellaneous instructions
+
+=== Miscellaneous Instructions ===
+
+==== S2R ====
+Store special register to general-purpose register.
+
+Template opcode:
+{{{
+0010 000000 1110 xxxxxx 000000 aaaaaa00 00000000 00000000 00000000 110100
+xxxxxx: destination reg
+aaaaaa: 011001: SR_CTAid_Y;
+	101001: SR_CTAid_X;
+	100001: SR_Tid_X;
+	010001: SR_Tid_Y;
+}}}
