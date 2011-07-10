@@ -20,7 +20,7 @@ struct DefaultMasterParser: MasterParser
 		Name = "DefaultMasterParser";
 	}
 	void Parse(unsigned int startinglinenumber);
-};
+}DMP;
 struct DefaultLineParser : LineParser
 {
 	DefaultLineParser()
@@ -28,7 +28,7 @@ struct DefaultLineParser : LineParser
 		Name = "DefaultLineParser";
 	}
 	void Parse(Line &line);
-};
+}DLP;
 struct DefaultInstructionParser: InstructionParser
 {
 	DefaultInstructionParser()
@@ -36,7 +36,7 @@ struct DefaultInstructionParser: InstructionParser
 		Name = "DefaultInstructionParser";
 	}
 	void Parse();
-};
+}DIP;
 struct DefaultDirectiveParser: DirectiveParser
 {
 	DefaultDirectiveParser()
@@ -44,7 +44,7 @@ struct DefaultDirectiveParser: DirectiveParser
 		Name = "DefaultDirectiveParser";
 	}
 	void Parse();
-};
+}DDP;
 //-----End of default parser declarations
 
 
@@ -52,14 +52,13 @@ struct DefaultDirectiveParser: DirectiveParser
 //-----Implementation of the parse() functions for parsers declared in 1.
 void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 {
-	list<Line>::iterator cLine = csLines.begin(); //current line
-	
+	list<Line>::iterator cLine = csLines.begin(); //current line	
 	
 	int lineLength;
-
 	//Going through all lines
-	for(unsigned int i =startinglinenumber; i<csLines.size(); i++)
+	for(unsigned int i =startinglinenumber; i<csLines.size(); i++, cLine++)
 	{
+		cLine->LineString.RemoveBlankAtBeginning();
 		lineLength = cLine->LineString.Length;
 		//Jump to next line if there's nothing in this line
 		if(lineLength==0)
@@ -81,10 +80,8 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 		{
 			try
 			{
-				//look for instruction delimiter ';'
-				
+				//look for instruction delimiter ';'				
 				int startPos = 0;
-
 				int lastfoundpos = cLine->LineString.Find(';', startPos); //search for ';', starting at startPos
 				while(lastfoundpos!=-1)
 				{
@@ -106,7 +103,6 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 				hpInstructionErrorHandler(e);
 			}			
 		}
-		cLine++;
 	}
 }
 
@@ -122,23 +118,26 @@ void DefaultInstructionParser:: Parse()
 
 	
 	//Start
+
 	if(csCurrentInstruction.Components.size()==0)
 		return;
+
 	int processedComponent = 0;
 	int OPPresent; //number of operands present
-	list<Component>::iterator component = csCurrentInstruction.Components.begin();
-	if(component->Content[0]=='@')
+	list<SubString>::iterator component = csCurrentInstruction.Components.begin();
+	list<SubString>::iterator modifier = csCurrentInstruction.Modifiers.begin();
+	
+	//---predicate
+	if(csCurrentInstruction.Predicated)
 	{
-		csCurrentInstruction.Predicated = true;
+		hpParseProcessPredicate();
 		component++; processedComponent++;		
-		if(component == csCurrentInstruction.Components.end())
-			throw 100; //no instruction present while predicate is present
 	}
-	else
-	{
-		csCurrentInstruction.Predicated = false;
-	}
-	int nameIndex = hpParseComputeInstructionNameIndex(component->Content);
+
+	//---instruction name
+	if(component == csCurrentInstruction.Components.end())
+			throw 100; //no instruction name present
+	int nameIndex = hpParseComputeInstructionNameIndex(*component);
 	int arrayIndex = hpParseFindInstructionRuleArrayIndex(nameIndex);
 	if(arrayIndex == -1)
 	{
@@ -154,34 +153,56 @@ void DefaultInstructionParser:: Parse()
 		csInstructionOffset += 4;
 	}
 
-	if(csCurrentInstruction.Predicated)
-		hpParseProcessPredicate();
-
 	if(csInstructionRules[arrayIndex]->NeedCustomProcessing)
 	{
 		csInstructionRules[arrayIndex]->CustomProcess();
 		goto APPEND;
 	}
 
-	for(list<SubString>::iterator modifier = component->Modifiers.begin(); modifier!=component->Modifiers.end(); modifier++)
+	
+
+
+
+
+	//---instruction modifiers
+	if(csCurrentInstruction.Modifiers.size()>csInstructionRules[arrayIndex]->ModifierGroupCount)
+		throw 122;//too many modifiers.
+	for(int modGroupIndex = 0; modGroupIndex < csInstructionRules[arrayIndex]->ModifierGroupCount; modGroupIndex++)
 	{
-		int i;
-		for(i = 0; i< csInstructionRules[arrayIndex]->ModifierCount; i++)
+		if(modifier==csCurrentInstruction.Modifiers.end())
 		{
-			if(modifier->CompareWithCharArray(csInstructionRules[arrayIndex]->ModifierRules[i]->Name, csInstructionRules[arrayIndex]->ModifierRules[i]->Length))
+			//ignore if all the following groups are optional
+			if(csInstructionRules[arrayIndex]->ModifierGroups[modGroupIndex].Optional)
+				continue;
+			else
+				throw 127; //insufficient number of modifiers
+		}
+		int i = 0;
+		for( ; i < csInstructionRules[arrayIndex]->ModifierGroups[modGroupIndex].ModifierCount; i++)
+		{
+			if(modifier->Compare(csInstructionRules[arrayIndex]->ModifierGroups[modGroupIndex].ModifierRules[i]->Name))
 				break;
 		}
-		if(i==csInstructionRules[arrayIndex]->ModifierCount)
+		//modifier name not found in this group
+		if(i==csInstructionRules[arrayIndex]->ModifierGroups[modGroupIndex].ModifierCount)
 		{
-			throw 101; //unsupported modifier
-			return;
+			//Can ignore this modGroup if it is optional
+			if(csInstructionRules[arrayIndex]->ModifierGroups[modGroupIndex].Optional)
+				continue;
+			else
+				throw 101; //unsupported modifier
 		}
-		hpParseApplyModifier(*component, *csInstructionRules[arrayIndex]->ModifierRules[i]);
-	}
+		hpParseApplyModifier(*csInstructionRules[arrayIndex]->ModifierGroups[modGroupIndex].ModifierRules[i]);
+		modifier++;
+	}	
+	if(modifier!=csCurrentInstruction.Modifiers.end())
+		throw 101; //issue: the error line should be something else
 	component++; processedComponent++;
 
-	//here onwards are operands only. OPPresent is the number of operands that are present
-	OPPresent = csCurrentInstruction.Components.size() - processedComponent;
+
+
+	//---Operands
+	OPPresent = csCurrentInstruction.Components.size() - processedComponent; //OPPresent is the number of operands that are present
 	if(OPPresent > csInstructionRules[arrayIndex]->OperandCount)
 	{
 		throw 102; //too many operands
@@ -195,9 +216,7 @@ void DefaultInstructionParser:: Parse()
 			if(csInstructionRules[arrayIndex]->Operands[i]->Type == Optional)
 				continue;
 			else
-			{
 				throw 103; //insufficient operands.
-			}
 		}
 		//process operand
 		csInstructionRules[arrayIndex]->Operands[i]->Process(*component);

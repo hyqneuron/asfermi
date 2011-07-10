@@ -1,8 +1,8 @@
 /*
-This file contains specific rules for various directives.
+This file contains rules for various directives.
 */
 
-#ifndef SpecificDirectiveRulesDefined //prevent multiple inclusion
+#ifndef RulesDirectiveDefined //prevent multiple inclusion
 //---code starts ---
 
 
@@ -95,6 +95,7 @@ struct DirectiveRuleParam: DirectiveRule //!Param Size Count
 	}
 }DRParam;
 
+
 struct DirectiveRuleArch: DirectiveRule
 {
 	DirectiveRuleArch()
@@ -122,6 +123,34 @@ struct DirectiveRuleArch: DirectiveRule
 	}
 }DRArch;
 
+
+struct DirectiveRuleSelfDebug: DirectiveRule
+{
+	DirectiveRuleSelfDebug()
+	{
+		Name = "SelfDebug";
+	}
+	virtual void Process()
+	{
+		if(csCurrentDirective.Parts.size()!=2)
+			throw 1002;
+		list<SubString>::iterator part = csCurrentDirective.Parts.begin();
+		part++;
+		char zeroSaver = part->Start[part->Length];
+		part->Start[part->Length] = 0;
+		if(strcmp("On", part->Start)==0)
+		{
+			csSelfDebug = true;
+		}
+		else if(strcmp("Off", part->Start)==0)
+		{
+			csSelfDebug = false;
+		}
+		else
+			throw 0;// unsupported argument
+	}
+}DRSelfDebug;
+
 #else
-#define SpecificDirectiveRulesDefined yes
+#define RulesDirectiveDefined
 #endif

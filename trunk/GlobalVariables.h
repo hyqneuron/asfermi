@@ -9,6 +9,7 @@ All globla variables are prefixed with 'cs', meaning "current state"
 
 using namespace std;
 
+bool csSelfDebug = false;
 
 int csLineNumber = 0;
 int csInstructionOffset;
@@ -77,6 +78,7 @@ unsigned int cubinPHTOffset = 0;
 unsigned int cubinPHCount;
 enum Architecture{sm_20, sm_21};
 Architecture cubinArchitecture = sm_20; //default architecture is sm_20
+bool cubin64Bit = false;
 
 
 

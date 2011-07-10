@@ -25,6 +25,7 @@ extern int hpParseComputeDirectiveNameIndex(SubString &name);
 //	1
 //-----Basic structures used by the assembler: Component, Line, Instruction, Directive
 
+/*
 struct Component //Component can be either an instruction name or an operand
 {
 	SubString Content; //instruction name or operand name, without modifier
@@ -35,6 +36,7 @@ struct Component //Component can be either an instruction name or an operand
 		Content = content;
 	}
 };
+*/
 struct Line
 {
 	SubString LineString;
@@ -50,7 +52,8 @@ struct Instruction
 {
 	SubString InstructionString;
 	int LineNumber;
-	list<Component> Components;	//eg: LDS.128 R0, [0x0]; has 3 components: LDS.128, R0 and [0x0]. The first component has 1 Modifier: 128. The first component would be the instruction name
+	list<SubString> Modifiers;
+	list<SubString> Components; //predicate is the first optional component. Then instruction name (without modifier), then operands(unprocesed, may contain modifier)
 	bool Is8;	//true: OpcodeWord1 is used as well
 	unsigned int OpcodeWord0;
 	unsigned int OpcodeWord1;
@@ -70,7 +73,10 @@ struct Instruction
 		Offset = offset;
 		LineNumber = lineNumber;
 		Components.clear();
-		//not cleared: Is8, OpcodeWord, Predicated
+		Is8 = true;
+		OpcodeWord0 = 0;
+		OpcodeWord1 = 0;
+		Predicated = false;
 	}
 };
 struct Directive
@@ -101,14 +107,14 @@ struct Directive
 //-----Structures for line analysis: ModifierRule, OperandRule, InstructionRule, DirectiveRule
 typedef enum OperandType
 {
-	Immediate32HexConstant, Immediate32IntConstant, Immediate32FloatConstant, Immediate32AnyConstant, 
-	Register, GlobalMemoryWithImmediate32, ConstantMemory, SharedMemory, Optional, Custom, 
+	Register, Immediate32HexConstant, Predicate,
+	Immediate32IntConstant, Immediate32FloatConstant, Immediate32AnyConstant, 
+	GlobalMemoryWithImmediate32, ConstantMemory, SharedMemory, Optional, Custom, 
 	MOVStyle, FADDStyle, IADDStyle
 };
 struct ModifierRule
 {
-	char* Name;
-	int Length; //Length of name string
+	SubString Name;
 
 	bool Apply0; //apply on OpcodeWord0?
 	unsigned int Mask0; // Does an AND operation with opcode first
@@ -119,37 +125,57 @@ struct ModifierRule
 	unsigned int Bits1;
 
 	bool NeedCustomProcessing;
-	virtual void CustomProcess(Component &component){}
+	virtual void CustomProcess(){}
 	ModifierRule(){}
-	ModifierRule(char* name, int length, bool apply0, bool apply1, bool needCustomProcessing)
+	ModifierRule(char* name, bool apply0, bool apply1, bool needCustomProcessing)
 	{
 		Name = name;
-		Length = length;
 		Apply0 = apply0;
 		Apply1 = apply1;
 		NeedCustomProcessing = needCustomProcessing;
 	}
 };
+struct ModifierGroup
+{
+	int ModifierCount;
+	ModifierRule**  ModifierRules;
+	bool Optional;
+	~ModifierGroup()
+	{
+		if(ModifierCount)
+			delete[] ModifierRules;
+	}
+	void Initialize(bool optional, int modifierCount, ...)
+	{
+		Optional = optional;
+		va_list modifierRules;
+		va_start (modifierRules, modifierCount);
+		ModifierCount = modifierCount;
+		ModifierRules = new ModifierRule*[modifierCount];
+		for(int i =0; i<modifierCount; i++)
+			ModifierRules[i] = va_arg(modifierRules, ModifierRule*);
+		va_end(modifierRules);
+
+	}
+};
 struct OperandRule
 {
 	OperandType Type;
-	int ModifierCount;
-	ModifierRule** ModifierRules;
 
 	OperandRule(){}
-	OperandRule(OperandType type, int modifierCount)
+	OperandRule(OperandType type) //, int modifierCount)
 	{
 		Type = type;
-		ModifierCount = modifierCount;
-		if(ModifierCount!=0)
-			ModifierRules = new ModifierRule*[ModifierCount];
+//		ModifierCount = modifierCount;
+//		if(ModifierCount!=0)
+//			ModifierRules = new ModifierRule*[ModifierCount];
 	}
-	virtual void Process(Component &component) = 0;
-	~OperandRule()
-	{
-		if(ModifierCount!=0)
-			delete[] ModifierRules;
-	}
+	virtual void Process(SubString &component) = 0;
+//	~OperandRule()
+//	{
+//		if(ModifierCount!=0)
+//			delete[] ModifierRules;
+//	}
 };
 //When an instruction rule is initialized, the ComputeIndex needs to be called. They need to be sorted according to their indices and then placed in csInstructionRules;
 struct InstructionRule
@@ -157,8 +183,10 @@ struct InstructionRule
 	char* Name;
 	int OperandCount;
 	OperandRule** Operands;
-	int ModifierCount;
-	ModifierRule** ModifierRules;
+
+	int ModifierGroupCount;
+	ModifierGroup *ModifierGroups;
+	
 
 	bool Is8;
 	unsigned int OpcodeWord0;
@@ -177,24 +205,34 @@ struct InstructionRule
 		return result;
 	}
 	InstructionRule(){};
-	InstructionRule(char* name, int operandCount, int modifierCount, bool is8, bool needCustomProcessing)
+	InstructionRule(char* name, int modifierGroupCount, bool is8, bool needCustomProcessing)
 	{
 		Name = name;
-		OperandCount = operandCount;
-		ModifierCount = modifierCount;
-		if(operandCount>0)
-			Operands = new OperandRule*[operandCount];
-		if(modifierCount>0)
-			ModifierRules = new ModifierRule*[modifierCount];
+		OperandCount = 0;
+		ModifierGroupCount = modifierGroupCount;
+		if(modifierGroupCount>0)
+			ModifierGroups = new ModifierGroup[modifierGroupCount];
 		Is8 = is8;
 		NeedCustomProcessing = needCustomProcessing;
+	}
+	void SetOperands(int operandCount, ...)
+	{
+		OperandCount = operandCount;
+		Operands = new OperandRule*[operandCount];
+		va_list operandRules;
+		va_start (operandRules, operandCount);
+		for(int i =0; i<operandCount; i++)
+			Operands[i] = va_arg(operandRules, OperandRule*);
+		va_end(operandRules);
+
 	}
 	~InstructionRule()
 	{
 		if(OperandCount>0)
 			delete[] Operands;
-		if(ModifierCount>0)
-			delete[] ModifierRules;
+		if(ModifierGroupCount>0)
+			delete[] ModifierGroups;
+		
 	}
 	static void BinaryStringToOpcode4(char* string, unsigned int &word0) //little endian
 	{

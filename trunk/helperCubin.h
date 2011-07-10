@@ -412,7 +412,7 @@ void hpCubinSetELFSectionHeader1(ELFSection &section, unsigned int type, unsigne
 //Stage4: Setup all section headers
 void hpCubinStage4()
 {
-	unsigned int fileOffset = 0x34 + 0x28 * cubinCurrentSectionIndex; //start of the shstrtab section content
+	unsigned int fileOffset = (cubin64Bit?0x40:0x34) + 0x28 * cubinCurrentSectionIndex; //start of the shstrtab section content
 
 	//---head sections
 	//empty
@@ -518,20 +518,36 @@ void hpCubinStage5()
 //Stage6: Setup ELF header
 void hpCubinStage6()
 {
-	ELFHeader32.PHTOffset = cubinPHTOffset;
-	ELFHeader32.PHCount = cubinPHCount;
-	ELFHeader32.SHCount = cubinCurrentSectionIndex;
-	if(cubinArchitecture == sm_20)
-		ELFHeader32.Flags = ELFFlagsForsm_20;
-	else //issue: supports only sm_20 and sm_21
-		ELFHeader32.Flags = ELFFlagsForsm_21;
+	if(!cubin64Bit)
+	{
+		ELFH32.PHTOffset = cubinPHTOffset;
+		ELFH32.PHCount = cubinPHCount;
+		ELFH32.SHCount = cubinCurrentSectionIndex;
+		if(cubinArchitecture == sm_20)
+			ELFH32.Flags = ELFFlagsForsm_20;
+		else //issue: supports only sm_20 and sm_21
+			ELFH32.Flags = ELFFlagsForsm_21;
+	}
+	else
+	{
+		ELFH64.PHTOffset = cubinPHTOffset;
+		ELFH64.PHCount = cubinPHCount;
+		ELFH64.SHCount = cubinCurrentSectionIndex;
+		if(cubinArchitecture == sm_20)
+			ELFH64.Flags = ELFFlagsForsm_20;
+		else //issue: supports only sm_20 and sm_21
+			ELFH64.Flags = ELFFlagsForsm_21;
+	}
 }
 
 //Stage7: Write to cubin
 void hpCubinStage7()
 {
 	//---Header
-	csOutput.write((char*)&ELFHeader32, sizeof(ELFHeader));
+	if(!cubin64Bit)
+		csOutput.write((char*)&ELFH32, sizeof(ELFH32));
+	else
+		csOutput.write((char*)&ELFH64, sizeof(ELFH64));
 
 	//---SHT
 	//head

@@ -14,17 +14,17 @@ extern void hpWarning(int e);
 
 struct SubString
 {
-	int Offset;	//global offset in csSource
 	int Length;
 	char* Start;
 	SubString(){}
 	SubString(int offset, int length)
 	{
-		Offset = offset;
 		Length = length;
 		Start = csSource + offset;
+#ifdef DebugMode
 		if(length<0)
 			throw exception();
+#endif
 	}
 	SubString(char* target)
 	{
@@ -55,10 +55,21 @@ struct SubString
 	}
 	SubString SubStr(int startPos, int length)
 	{
-		SubString result(startPos + Offset, length);
+		SubString result(startPos + Start - csSource , length);
 		if(length<0)
 			throw exception();
 		return result;
+	}
+	void RemoveBlankAtBeginning()
+	{
+		int i =0;
+		for(; i<Length; i++)
+		{
+			if(Start[i]>32)
+				break;
+		}
+		Start += i;
+		Length -= i;
 	}
 	char* ToCharArray()
 	{
@@ -67,6 +78,17 @@ struct SubString
 			result[i] = Start[i];
 		result[Length] = (char)0;
 		return result;
+	}
+	bool Compare(SubString subString)
+	{
+		if(subString.Length != Length)
+			return false;
+		for(int i =0; i<Length; i++)
+		{
+			if(Start[i]!= subString[i])
+				return false;
+		}
+		return true;
 	}
 	bool CompareWithCharArray(char* target, int length) //length is the length of the char
 	{
@@ -80,26 +102,28 @@ struct SubString
 		return true;
 	}
 
+//Parsing functions
+
 //syntax checking are done in primary  substring functions as well as in composite operand processors
 //but not in 20-bit functions
 	
-	unsigned int ToImmediate32FromHexConstant(); //check
-	unsigned int ToImmediate32FromFloat32(int modLength); //check
-	unsigned int ToImmediate32FromFloat64(int modLength); //check
+	unsigned int ToImmediate32FromHexConstant(bool acceptNegative); //check
+	unsigned int ToImmediate32FromFloat32(); //check
+	unsigned int ToImmediate32FromFloat64(); //check
 	unsigned int ToImmediate32FromInt32(); //check
 	unsigned int ToImmediate32FromInt64(); //check
 
 	unsigned int ToImmediate32FromIntConstant(); //check
-	unsigned int ToImmediate32FromFloatConstant(int modLength); //check
+	unsigned int ToImmediate32FromFloatConstant(); //check
 
 	void ToGlobalMemory(int &register1, unsigned int&memory);
 	void ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory);
 	int ToRegister();
 
 	
-	unsigned int ToImmediate20FromHexConstant()
+	unsigned int ToImmediate20FromHexConstant(bool acceptNegative)
 	{
-		unsigned int result = ToImmediate32FromHexConstant();
+		unsigned int result = ToImmediate32FromHexConstant(acceptNegative);
 		if(result>0xFFFFF)
 			throw 113;
 		return result;
@@ -115,14 +139,14 @@ struct SubString
 		return result;
 	}
 
-	unsigned int ToImmediate20FromFloatConstant(int modLength)
+	unsigned int ToImmediate20FromFloatConstant()
 	{
 		if(Length<2 || Start[0] != 'F') //need to check this to ensure access to Start[1] doesn't yield error
 			throw 117; //Incorrect floating number
 		if(Start[1] == 'H' || Start[1] == 'L')
 			throw 118; //20-bit cannot contain 64-bit
 		else
-			return ToImmediate32FromFloat32(modLength) >> 12; //issue: no warning regarding loss of precision
+			return ToImmediate32FromFloat32() >> 12; //issue: no warning regarding loss of precision
 	}
 	
 	char* ToCharArrayStopOnCR();	
@@ -133,16 +157,27 @@ struct SubString
 
 
 static const unsigned int op_HexRef[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-unsigned int SubString::ToImmediate32FromHexConstant()
+unsigned int SubString::ToImmediate32FromHexConstant(bool acceptNegative)
 {
-	if(Length<3 || Start[0]!='0' || (Start[1]!='x'&& Start[1] != 'X') )
+	if(Length<=2)
 		throw 106; //incorrect hex
+	int startPos = 0;
+	bool negate = false;
+	if(acceptNegative && Start[0]=='-')
+	{
+		if(Length<=3)
+			throw 106;
+		negate = true;
+		startPos = 1;
+	}
+	if(Start[startPos]!='0' || (Start[startPos+1]!='x'&& Start[startPos+1] != 'X'))
+		throw 106;
 	unsigned int  result = 0;
 	int maxlength = (Length<10)? Length:10;
 
 	int digit;
 	int i;
-	for(i =2; i<maxlength; i++)
+	for(i = startPos + 2; i<maxlength; i++)
 	{
 		digit = (int) Start[i];
 		
@@ -167,19 +202,25 @@ unsigned int SubString::ToImmediate32FromHexConstant()
 		result <<=4;
 		result |= op_HexRef[digit];
 	}
-	if(i==2)
+	if(i==startPos + 2) //i has not been incremented, meaning the first character encountered is not hexadecimal digit
 		throw 106;
+	if(negate) //negate could only be true when acceptNegative is already true
+	{
+		if(result > 0x7FFFFFFF)
+			throw 106;
+		result ^= 0xFFFFFFFF;
+		result += 1;
+		result &= 0xFFFFFFFF;
+	}
 	return result;
 }
-float ti32_PINF = 1000000000000000000000000000000000000000000000000000000000000000000000.0;
-float ti32_NINF = -1000000000000000000000000000000000000000000000000000000000000000000000.0;
-unsigned int SubString::ToImmediate32FromFloat32(int modLength)
+float ti32_PINF = 1000000000000000000000000000000000000000000000000000000000000000000000000000000000.0;
+float ti32_NINF = -1000000000000000000000000000000000000000000000000000000000000000000000000000000000.0;
+unsigned int SubString::ToImmediate32FromFloat32()
 {
 	if(Length<2 || Start[0]!='F') //At least F0
 		throw 121; //incorrect floating point number format
-	int zeroPos = Length + modLength;
-	if(modLength!=0)
-		zeroPos++;
+	int zeroPos = Length;
 	char zeroSaver = Start[zeroPos];
 	Start[zeroPos] = (char)0;
 
@@ -193,14 +234,12 @@ unsigned int SubString::ToImmediate32FromFloat32(int modLength)
 }
 
 
-unsigned int SubString::ToImmediate32FromFloat64(int modLength)
+unsigned int SubString::ToImmediate32FromFloat64()
 {
 	if(Length<3 || Start[0]!='F' || (Start[1]!='H' && Start[1]!='L') ) //At least FH0/FL0
 		throw 121; //incorrect floating point number format
 
-	int zeroPos = Length + modLength;
-	if(modLength!=0)
-		zeroPos++;
+	int zeroPos = Length;
 	char zeroSaver = Start[zeroPos];
 	Start[zeroPos] = (char)0;
 
@@ -258,14 +297,14 @@ unsigned int SubString::ToImmediate32FromIntConstant()
 		return ToImmediate32FromInt32();
 	}
 }
-unsigned int SubString::ToImmediate32FromFloatConstant(int modLength)
+unsigned int SubString::ToImmediate32FromFloatConstant()
 {
 	if(Length<2) //F0, ToImmediate32FromDouble assumes length 2 or above
 		throw 117; //Incorrect floating number
 	if(Start[1] == 'H' || Start[1] == 'L')
-		return ToImmediate32FromFloat64(modLength);
+		return ToImmediate32FromFloat64();
 	else
-		return ToImmediate32FromFloat32(modLength);
+		return ToImmediate32FromFloat32();
 }
 
 
@@ -294,13 +333,14 @@ int SubString:: ToRegister()
 
 void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 {
-	register1 = 63; //RZ
-	memory = 0;
 	if(Length < 3 || Start[0]!='[') //[0]
 	{
 		throw 107; //incorrect global mem
 		//return;
-	}
+	}	
+	register1 = 63; //default RZ
+	memory = 0; //default 0
+
 	int startPos = 1;
 	while(startPos<Length)
 	{
@@ -308,13 +348,13 @@ void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 			break;
 		startPos++;
 	}
-	int plusPos = Find('+', 0);
+	int plusPos = Find('+', startPos);
 	if(plusPos==-1)
 	{
 		if(Start[startPos]=='R')
 			register1 = (SubStr(startPos, Length -startPos)).ToRegister();
 		else //Issue: what about integer values?
-			memory = SubStr(startPos, Length -startPos ).ToImmediate32FromHexConstant();
+			memory = SubStr(startPos, Length -startPos ).ToImmediate32FromHexConstant(true);
 	}
 	else
 	{
@@ -326,7 +366,7 @@ void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 				break;
 			startPos++;
 		}
-		memory = SubStr(startPos, Length - startPos).ToImmediate32FromHexConstant();
+		memory = SubStr(startPos, Length - startPos).ToImmediate32FromHexConstant(true);
 	}
 }
 void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory)
@@ -345,7 +385,7 @@ void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned in
 	int endPos = Find(']', startPos);
 	if(endPos == -1)
 		throw 110;
-	bank = SubStr(startPos, endPos - startPos).ToImmediate32FromHexConstant(); //issue: the error line would be for global mem
+	bank = SubStr(startPos, endPos - startPos).ToImmediate32FromHexConstant(false); //issue: the error line would be for global mem
 	if(bank > 10)
 		throw 114; //bank number too large
 	startPos = endPos + 1;

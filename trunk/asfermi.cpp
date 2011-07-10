@@ -2,8 +2,8 @@
 */
 
 //#include <vld.h> //Visual Leak Detector. You can just remove this when you compile.
-//#define DebugMode //used when debugging. Cause all the errors/warnings to throw unhandled exception
 
+#include <stdarg.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -19,8 +19,10 @@
 #include "helperCubin.h"
 #include "helperException.h"
 #include "SpecificParsers.h"
-#include "SpecificRules.h"
-#include "SpecificDirectiveRules.h"
+#include "RulesModifier.h"
+#include "RulesOperand.h"
+#include "RulesInstruction.h"
+#include "RulesDirective.h"
 //#include "ExternRules.h" //this file can be used for adding custom rules
 
 
@@ -215,6 +217,28 @@ void ProcessCommandsAndReadSource(int argc, char** args)
 			cubinArchitecture = sm_21;
 			currentArg += 1;
 		}
+		/*
+		else if(strcmp(args[currentArg], "-32")==0)
+		{
+			cubin64Bit = false;
+			currentArg += 1;
+		}
+		else if(strcmp(args[currentArg], "-64")==0)
+		{
+			cubin64Bit = true;
+			currentArg += 1;
+		}
+		*/
+		else if(strcmp(args[currentArg], "-SelfDebug")==0)
+		{
+			csSelfDebug = true;
+			currentArg += 1;
+		}
+		else
+		{
+			csExceptionPrintUsage = true;
+			throw 0; //invalid argument
+		}
 	}
 
 }
@@ -297,25 +321,16 @@ void OrganiseRules()
 }
 void Initialize() //set up the various lists
 {
-	//Set default master parser
-	DefaultMasterParser *dmp = new DefaultMasterParser();
-	csMasterParserList.push_back(dmp);
-	csMasterParser = dmp;
-	
-	//Set default line parser
-	DefaultLineParser *dlp = new DefaultLineParser();
-	csLineParserList.push_back(dlp);
-	csLineParser = dlp;
+	//Set default parsers
+	csMasterParserList.push_back(&DMP);
+	csLineParserList.push_back(&DLP);
+	csInstructionParserList.push_back(&DIP);
+	csDirectiveParserList.push_back(&DDP);
 
-	//Set default instruction parser
-	DefaultInstructionParser *dip = new DefaultInstructionParser();
-	csInstructionParserList.push_back(dip);
-	csInstructionParser = dip;
-
-	//Set default directive parser
-	DefaultDirectiveParser *ddp = new DefaultDirectiveParser();
-	csDirectiveParserList.push_back(ddp);
-	csDirectiveParser = ddp;
+	csMasterParser = &DMP;
+	csLineParser = &DLP;
+	csInstructionParser = &DIP;
+	csDirectiveParser = &DDP;
 	
 	//Load instruction rules
 	csInstructionRulePrepList.push_back(&IRLD);
@@ -325,9 +340,14 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back(&IRFADD);
 	csInstructionRulePrepList.push_back(&IRIADD);
 	csInstructionRulePrepList.push_back(&IRNOP);
+	csInstructionRulePrepList.push_back(&IRISETP);
+	csInstructionRulePrepList.push_back(&IRFSETP);
+	csInstructionRulePrepList.push_back(&IRS2R);
 	//load directive rules
 	csDirectiveRulePrepList.push_back(&DRKernel);
 	csDirectiveRulePrepList.push_back(&DREndKernel);
 	csDirectiveRulePrepList.push_back(&DRParam);
+	csDirectiveRulePrepList.push_back(&DRSelfDebug);
+	csDirectiveRulePrepList.push_back(&DRArch);
 	OrganiseRules();
 }

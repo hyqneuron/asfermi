@@ -17,7 +17,8 @@ all functions are prefixed with 'hpParse'
 //	3
 //-----Parsing stage helper functions
 
-
+//Break a directive line into its parts (directive name, arguments)
+//The '!' at the beginning is not included in the first part
 void hpParseBreakDirectiveIntoParts()
 {
 	SubString &directiveString = csCurrentDirective.DirectiveString;
@@ -67,49 +68,59 @@ int b_lineLength;			//length of the instruction string
 {																											\
 	for(; b_currentPos < b_lineLength; b_currentPos++)														\
 	{																										\
-		if((int)csCurrentInstruction.InstructionString[b_currentPos]>32)												\
+		if((int)csCurrentInstruction.InstructionString[b_currentPos]>32)									\
 		{																									\
 			b_startPos = b_currentPos;																		\
 			break;																							\
 		}																									\
 	}																										\
-	if(b_currentPos == b_lineLength)return;																									\
+	if(b_currentPos == b_lineLength)return;																	\
 }
 
 #define mExtract(startPos,cutPos) csCurrentInstruction.InstructionString.SubStr(startPos, cutPos-startPos)
-#define mExtractPushComponent {	component.Content = mExtract(b_startPos, b_currentPos);	csCurrentInstruction.Components.push_back(component);}
-#define mExtractPushModifier {component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));csCurrentInstruction.Components.push_back(component);}
+#define mExtractPushComponent {	csCurrentInstruction.Components.push_back(mExtract(b_startPos, b_currentPos));}
+#define mExtractPushModifier { if(b_currentPos==b_startPos){throw 123;} csCurrentInstruction.Modifiers.push_back( mExtract(b_startPos, b_currentPos));}
 
-void hpParseBreakInstructionIntoComponents() //===+done checking once
+void hpParseBreakInstructionIntoComponents()
 {
 	b_currentPos = 0;
 	b_startPos = 0;
 	b_lineLength = csCurrentInstruction.InstructionString.Length;
-	Component component;
+	csCurrentInstruction.Modifiers.clear();
+	csCurrentInstruction.Components.clear();
 
-	
-//PREDSTART:
-	mSkipBlank;
+
+
+	//---predicate
+	//mSkipBlank; //blank is skipped by line parser
 	if(csCurrentInstruction.InstructionString[b_currentPos]=='@')
 	{
 PRED:
 		b_currentPos++;
 		if(b_currentPos==b_lineLength)
 		{
+			csCurrentInstruction.Predicated = true;
 			mExtractPushComponent;
 			return;
 		}
 		if(csCurrentInstruction.InstructionString[b_currentPos] < 33)
 		{
+			csCurrentInstruction.Predicated = true;
 			mExtractPushComponent;
-//			b_currentPos++; b_startPos = b_currentPos;
-			mSkipBlank;
-//			goto INST;
 		}
 		else
 			goto PRED;
 	}
+	else
+		csCurrentInstruction.Predicated = false;
 
+
+
+
+	//---instruction name and modifiers
+	mSkipBlank;
+	bool instNameEnded = false;
+	int instNameEndPos;
 INST:
 	if(b_currentPos==b_lineLength)
 	{
@@ -119,28 +130,45 @@ INST:
 	if( csCurrentInstruction.InstructionString[b_currentPos] < 33 )
 	{
 		mExtractPushComponent;
-		b_currentPos++; b_startPos = b_currentPos;
-		goto OP;
+		mSkipBlank;
+		if(csCurrentInstruction.InstructionString[b_currentPos]=='.')
+		{
+			b_currentPos++; b_startPos = b_currentPos;
+			goto INSTDOT;
+		}
+		else
+			goto OPCONTINUE;
 	}
 	else if(csCurrentInstruction.InstructionString[b_currentPos] == '.')
 	{
-		component.Content = mExtract(b_startPos, b_currentPos);
+		if(b_currentPos==b_startPos)
+			throw 124; //empty instruction name
+		mExtractPushComponent;
 		b_currentPos++; b_startPos = b_currentPos;
 INSTDOT:
+		//End of line
 		if(b_currentPos==b_lineLength)
 		{
 			mExtractPushModifier;
 			return;
 		}
-		else if( csCurrentInstruction.InstructionString[b_currentPos] < 33 ) //no space allowed in modifiers
+		//encounter first blank right after the modifier name
+		else if( csCurrentInstruction.InstructionString[b_currentPos] < 33 )
 		{
 			mExtractPushModifier;
-			b_currentPos++; b_startPos = b_currentPos;
-			goto OP;
+			mSkipBlank;
+			if(csCurrentInstruction.InstructionString[b_currentPos]=='.')
+			{
+				b_currentPos++; b_startPos = b_currentPos;
+				goto INSTDOT;
+			}
+			else
+				goto OPCONTINUE;
 		}
+		// start of another modifier
 		else if(csCurrentInstruction.InstructionString[b_currentPos] == '.')
 		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
+			mExtractPushModifier;
 			b_currentPos++; b_startPos = b_currentPos;
 			goto INSTDOT;
 		}
@@ -157,59 +185,34 @@ INSTDOT:
 	}
 
 
-OP:
-	mSkipBlank;
-	component.Modifiers.clear();
 
-OPNOSKIP:
+
+	//---Operands
+OPNEW:
+	mSkipBlank;
+
+OPCONTINUE:
+	//EOL. ';' will not be encountered as it is eliminated by default line parser
 	if(b_currentPos==b_lineLength)
 	{
+		if(b_currentPos==b_startPos)
+			throw 125; //empty operand
 		mExtractPushComponent;
 		return;
 	}
+	//comma, start of another operand
 	else if( csCurrentInstruction.InstructionString[b_currentPos] == ',' ) //space can exist in operands
 	{
+		if(b_currentPos==b_startPos)
+			throw 125;
 		mExtractPushComponent;
 		b_currentPos++; b_startPos = b_currentPos;
-		goto OP;
-	}
-	else if(csCurrentInstruction.InstructionString[b_currentPos] == '.') //issue: sub-operands cannot have modifiers
-	{
-		component.Content = mExtract(b_startPos, b_currentPos);
-		b_currentPos++; b_startPos = b_currentPos;
-OPDOT:
-		if(b_currentPos==b_lineLength)
-		{
-			mExtractPushModifier;
-			return;
-		}
-		else if( csCurrentInstruction.InstructionString[b_currentPos] == ',' )
-		{
-			mExtractPushModifier;
-			b_currentPos++; b_startPos = b_currentPos;
-			goto OP;
-		}
-		else if(csCurrentInstruction.InstructionString[b_currentPos] == '.' )
-		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-			b_currentPos++; b_startPos = b_currentPos;
-			goto OPDOT;
-		}
-		else if(csCurrentInstruction.InstructionString[b_currentPos] < 33)
-		{
-			component.Modifiers.push_back( mExtract(b_startPos, b_currentPos));
-			mSkipBlank;
-		}
-		else
-		{
-			b_currentPos++;
-			goto OPDOT; //no blank to skip
-		}
+		goto OPNEW;
 	}
 	else
 	{
 		b_currentPos++;
-		goto OPNOSKIP;
+		goto OPCONTINUE;
 	}
 }
 
@@ -283,11 +286,11 @@ int hpParseFindDirectiveRuleArrayIndex(int Index)
 	return -1;
 }
 
-void hpParseApplyModifier(Component &component, ModifierRule &rule)
+void hpParseApplyModifier(ModifierRule &rule)
 {
 	if(rule.NeedCustomProcessing)
 	{
-		rule.CustomProcess(component);
+		rule.CustomProcess();
 	}
 	else
 	{
@@ -309,7 +312,7 @@ static unsigned int predRefNegate = 1<<13;
 static unsigned int predRefMask = 0xFFFFC3FF;
 void hpParseProcessPredicate()
 {
-	SubString predStr = csCurrentInstruction.Components.begin()->Content;
+	SubString &predStr = *csCurrentInstruction.Components.begin();
 	if(predStr.Length < 3)
 		throw 109; //incorrect predicate
 	bool negate = false;

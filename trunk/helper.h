@@ -20,17 +20,22 @@ void hpUsage();
 
 void hpCleanUp() //parsers are created with the new keyword,        =====
 {
-	for(list<MasterParser*>::iterator i = csMasterParserList.begin(); i!=csMasterParserList.end(); i++)
-		delete *i;
-	for(list<LineParser*>::iterator i = csLineParserList.begin(); i!=csLineParserList.end(); i++)
-		delete *i;
-	for(list<InstructionParser*>::iterator i = csInstructionParserList.begin(); i!=csInstructionParserList.end(); i++)
-		delete *i;
-	for(list<DirectiveParser*>::iterator i = csDirectiveParserList.begin(); i!=csDirectiveParserList.end(); i++)
-		delete *i;
-
 	delete[] csInstructionRules;
 	delete[] csInstructionRuleIndices;
+
+	for(list<Kernel>::iterator i = csKernelList.begin(); i != csKernelList.end(); i++)
+	{
+		if(i->TextSection.SectionContent)
+			delete i->TextSection.SectionContent;
+		if(i->Constant0Section.SectionContent)
+			delete i->Constant0Section.SectionContent;
+		if(i->InfoSection.SectionContent)
+			delete i->InfoSection.SectionContent;
+		if(i->SharedSection.SectionContent)
+			delete i->SharedSection.SectionContent;
+		if(i->LocalSection.SectionContent)
+			delete i->LocalSection.SectionContent;
+	}
 
 	delete[] csSource;
 	if(csInput.is_open())
@@ -73,6 +78,7 @@ void hpUsage()				//====
 	puts("	-r target_cubin kernel_name offset: Replace the opcodes in specified location of a kernel in a specified cubin file with the assembled opcodes.");
 	puts("  -sm_20: output cubin for architecture sm_20. This is the default architecture assumed by asfermi.");
 	puts("  -sm_20: output cubin for architecture sm_21");
+	puts("  -SelfDebug: throw unhandled exception when things go wrong. For debugging of asfermi only.");
 }
 
 
@@ -290,17 +296,11 @@ void hpPrintComponents(Instruction &instruction)
 	cout<<"Content: "<<line<<endl;
 	delete[] line;
 	int count = 0;
-	for(list<Component>::iterator i = instruction.Components.begin(); i != instruction.Components.end(); i++, count++)
+	for(list<SubString>::iterator i = instruction.Components.begin(); i != instruction.Components.end(); i++, count++)
 	{
-		line = i->Content.ToCharArrayStopOnCR();
+		line = i->ToCharArrayStopOnCR();
 		cout<<"Component "<<count<<":"<<line<<"||";
 		delete[]line;
-		for(list<SubString>::iterator imod = i->Modifiers.begin(); imod != i->Modifiers.end(); imod++)
-		{
-			line = imod->ToCharArrayStopOnCR();
-			cout<< line<<"|";
-			delete[]line;
-		}
 		cout<<endl;
 	}
 }

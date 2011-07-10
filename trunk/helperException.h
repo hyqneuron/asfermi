@@ -11,6 +11,8 @@ extern void hpUsage();
 
 void hpExceptionHandler(int e)		//===
 {
+	if(csSelfDebug)
+		throw exception();
 	char *message;
 	switch(e)
 	{
@@ -58,9 +60,8 @@ void hpExceptionHandler(int e)		//===
 }
 void hpInstructionErrorHandler(int e)
 {
-#ifndef DebugMode
-	throw exception();
-#endif
+	if(csSelfDebug)
+		throw exception();
 	csErrorPresent = true;
 	char *message;
 	switch(e)
@@ -109,6 +110,20 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 121:	message = "Incorrect floating point number format.";
 		break;
+	case 122:	message = "Too many modifiers present.";
+		break;
+	case 123:	message = "Empty modifier.";
+		break;
+	case 124:	message = "Instruction name not present.";
+		break;
+	case 125:	message = "Empty operand.";
+		break;
+	case 126:	message = "Incorrect predicate.";
+		break;
+	case 127:	message = "Insufficient number of modifiers";
+		break;
+	case 128:	message = "Incorrect special register name.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};
@@ -118,9 +133,8 @@ void hpInstructionErrorHandler(int e)
 }
 void hpDirectiveErrorHandler(int e)
 {
-#ifndef DebugMode
-	throw exception();
-#endif
+	if(csSelfDebug)
+		throw exception();
 	csErrorPresent = true;
 	char *message;
 	switch(e)
@@ -159,9 +173,8 @@ void hpDirectiveErrorHandler(int e)
 
 void hpWarning(int e)
 {
-#ifndef DebugMode
-	throw exception();
-#endif
+	if(csSelfDebug)
+		throw exception();
 	char* message;
 	switch(e)
 	{
