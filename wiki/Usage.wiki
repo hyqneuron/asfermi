@@ -14,3 +14,4 @@ Options:
   * <pre>-r target_cubin kernel_name kernel_offset</pre>Replace the opcodes in specified location of a kernel in a specified cubin file with the assembled opcodes.
   * <pre>-sm_20</pre>output cubin for architecture sm_20. This is the default architecture assumed by asfermi.
   * <pre>-sm_21</pre>output cubin for architecture sm_21.
+  * <pre>-SelfDebug</pre>throw unhandled exception when things go wrong. For debugging of asfermi only.
