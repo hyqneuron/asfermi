@@ -9,10 +9,28 @@ Template opcode:
 {{{
 0010 000000 1110 xxxxxx 000000 aaaaaaaa 00000000 00000000 00000000 110100
 xxxxxx: destination reg
-aaaaaa: 01100100: SR_CTAid_Y;
+aaaaaa: 
+	00000000: SR_WarpID;
 	10100100: SR_CTAid_X;
+	01100100: SR_CTAid_Y;
+	11100100: SR_CTAid_Z;
 	10000100: SR_Tid_X;
 	01000100: SR_Tid_Y;
+	11000100: SR_TID_Z;
 	10001010: SR_Clock_Hi;
 	00001010: SR_Clock_Lo;
+	11000000: SR_VirtId;
+	01000000: SR_VirtCfg;
+	00110100: SR_GridParam;
+
+Related dimensions:
+c [0x0] [0x8] : %ntid.x
+c [0x0] [0xc] : %ntid.y
+c [0x0] [0x10]: %ntid.z
+c [0x0] [0x14]: %nctaid.x
+c [0x0] [0x18]: %nctaid.y
+c [0x0] [0x1c]: %nctaid.z
+BFE VirtId, 0x914 : %smid
+BFE VirtCfg, 0x914: %nsmid
+
 }}}
