@@ -22,4 +22,5 @@
     * [OpcodeDataMovement]
     * [OpcodeFloat]
     * [OpcodeInteger]
+    * [OpcodeMiscellaneous]
   * Stage 2
