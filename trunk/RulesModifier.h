@@ -153,14 +153,23 @@ struct ModifierRuleIMUL1S32: ModifierRule
 	}
 }MRIMUL1S32;
 
-struct ModifierRuleIMULHi: ModifierRule
+struct ModifierRuleIMULHI: ModifierRule
 {
-	ModifierRuleIMULHi(): ModifierRule("HI", true, false, false)
+	ModifierRuleIMULHI(): ModifierRule("HI", true, false, false)
 	{
 		::InstructionRule::BinaryStringToOpcode4("11111101111111111111111111111111", Mask0);
 		::InstructionRule::BinaryStringToOpcode4("00000010000000000000000000000000", Bits0);
 	}
 }MRIMULHI;
+
+struct ModifierRuleIMULSAT: ModifierRule
+{
+	ModifierRuleIMULSAT(): ModifierRule("SAT", false, true, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111111111111111111111101111111", Mask1);
+		::InstructionRule::BinaryStringToOpcode4("00000000000000000000000010000000", Bits1);
+	}
+}MRIMULSAT;
 
 struct ModifierRuleFMULR: ModifierRule
 {

@@ -150,7 +150,7 @@ struct InstructionRuleS2R: InstructionRule
 
 struct InstructionRuleIMUL: InstructionRule
 {
-	InstructionRuleIMUL(): InstructionRule("IMUL", 3, true, false)
+	InstructionRuleIMUL(): InstructionRule("IMUL", 4, true, false)
 	{
 		InstructionRule::BinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3,
@@ -160,8 +160,26 @@ struct InstructionRuleIMUL: InstructionRule
 		ModifierGroups[0].Initialize(true, 2, &MRIMUL0U32, &MRIMUL0S32);
 		ModifierGroups[1].Initialize(true, 2, &MRIMUL1U32, &MRIMUL1S32);
 		ModifierGroups[2].Initialize(true, 1, &MRIMULHI);
+		ModifierGroups[3].Initialize(true, 1, &MRIMULSAT);
 	}
 }IRIMUL;
+
+struct InstructionRuleIMAD: InstructionRule
+{
+	InstructionRuleIMAD(): InstructionRule("IMAD", 4, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000000100", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,
+					&OPRRegister0,
+					&OPRRegister1,
+					&OPRIMULStyle,
+					&OPRRegister3);
+		ModifierGroups[0].Initialize(true, 2, &MRIMUL0U32, &MRIMUL0S32);
+		ModifierGroups[1].Initialize(true, 2, &MRIMUL1U32, &MRIMUL1S32);
+		ModifierGroups[2].Initialize(true, 1, &MRIMULHI);
+		ModifierGroups[3].Initialize(true, 1, &MRIMULSAT);
+	}
+}IRIMAD;
 
 struct InstructionRuleFMUL: InstructionRule
 {
@@ -176,6 +194,22 @@ struct InstructionRuleFMUL: InstructionRule
 		ModifierGroups[1].Initialize(true, 1, &MRFMULSAT);
 	}
 }IRFMUL;
+
+
+struct InstructionRuleFFMA: InstructionRule
+{
+	InstructionRuleFFMA(): InstructionRule("FFMA", 2, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("0000000000111000000000000000000000000000000000000000000000001100", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,
+					&OPRRegister0,
+					&OPRRegister1,
+					&OPRFMULStyle, 
+					&OPRRegister3);
+		ModifierGroups[0].Initialize(true, 3, &MRFMULRP, &MRFMULRM, &MRFMULRZ);
+		ModifierGroups[1].Initialize(true, 1, &MRFMULSAT);
+	}
+}IRFFMA;
 //-----End of specific instruction rules
 
 #else

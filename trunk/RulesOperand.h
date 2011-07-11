@@ -69,6 +69,18 @@ struct OperandRuleRegister: OperandRule
 };
 OperandRuleRegister OPRRegister0(14), OPRRegister1(20), OPRRegister2(26); //different location
 
+struct OperandRuleRegister3: OperandRule
+{
+	OperandRuleRegister3():OperandRule(Register){}
+	virtual void Process(SubString &component)
+	{
+		int result = component.ToRegister();
+		csMaxReg = (result > csMaxReg)? result: csMaxReg;
+		result = result<<17;
+		csCurrentInstruction.OpcodeWord1 |=result;
+	}
+}OPRRegister3;
+
 //32-bit Hexadecimal Constant Operand
 struct OperandRuleImmediate32HexConstant: OperandRule
 {
