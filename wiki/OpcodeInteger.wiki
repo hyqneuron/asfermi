@@ -1,13 +1,16 @@
 #summary opcodes for integer operation instructions
 
+Note: round brackets, instead of square brackets, are used to represent an optional component. This is to avoid confusion with memory operands which are surrounded by square brackets.
+
+Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand] may be mentioned in the parts below. Please visit these two links for more information regarding their meaning.
 
 === Integer Instructions ===
 ==== IADD ====
 Instruction usage:
 {{{
-IADD reg0, reg1, (-)reg2/(-)c[0xa][0xb]/(-)123/0xabcd;
+IADD reg0, reg1, (-)composite operand;
 }}}
-If the third operand is an immediate value, it cannot be longer than 20 bits (cannot be negative).
+If the composite operand is an immediate value, it cannot be longer than 20 bits (cannot be negative).
 
 Template opcode:
 {{{
@@ -18,7 +21,7 @@ Template opcode:
 ==== IMUL ====
 Instruction Usage
 {{{
-IMUL(.U32/S32)(.U32/.S32)(.HI) reg0, reg1, reg2/c[0xa][0xb]/123/0xabcd;
+IMUL(.U32/S32)(.U32/.S32)(.HI) reg0, reg1, composite operand;
 }}}
 
 Template opcode:
