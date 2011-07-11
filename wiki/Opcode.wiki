@@ -14,8 +14,6 @@ General format:
 LSB                                                                MSB
 xxx0 xxxxxx xxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxx
   na    mod   pr    re0    re1                             imme     nb
-imme0:9   is sometimes referred to as immeb on this site.
-imme10:31 is sometimes referred to as immea.
 }}}
 The numbering of bit fields below, such as re0 3:5, start from the MSB, but the displayed binary digits start from the LSB. For instance, when pr is 0101, then "pr 2" will be 1 and "pr 0:2" will be 101.
 
@@ -36,13 +34,17 @@ re0 is most often used for as the destination register. However, for SETP instru
 re1 is often the second register operand. It is also used to store the Rxx in `[Rxx+0xaabb]` for memory operands.
 
 === imme ===
-For instructions with the suffix I32, the entirety of the field is used to store a 32-bit immediate value. For most other instructions that use this field, imme 10:31 can be used to indicate a 20-bit immediate value, a constant memory address, or a register.
-||imme 10:11||imme 12:31                ||
-||00        ||lowest 6 bits: register   ||
-||10        ||lowest 20 bits: constant memory address||
-||11        ||lowest 20 bits: 20-bit immediate||
+For instructions with the suffix I32, the entirety of the field is used to store a 32-bit immediate value. 
 
-When imme 10:11 is 10, imme 12:15 is the constant memory bank number and imme 16:31 is the address within this bank.
+For most other instructions that use this field, imme is divided into two fields: immea(imme10:31) and immeb(imme0:9). immea can be used to indicate a 20-bit immediate value, a constant memory address, or a register.
+||immea 0:1||immea 2:21               ||
+||00        ||lowest 6 bits: register ||
+||10        ||constant memory address ||
+||11        ||20-bit immediate        ||
+
+When immea 0:1 is 10, imme 2:5 is the constant memory bank number and imme 6:21 is the address within this bank.
+
+immeb is sometimes used to store modifier bits.
 
 ----
 == 4-byte ==
