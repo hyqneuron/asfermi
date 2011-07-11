@@ -15,34 +15,33 @@ FADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/F(-)123.123/0xabcd;
 If the third operand is a floating point number, it will be a 32-bit floaitng point number with the last 12 bits truncated.
 
 ==== FSETP ====
-Template opcode:
-{{{
-1100 010000 1110 111 000 000000 0000000000000000000000 0 1110 000000 11000
-                   p  |p    re1                   comp    opp   mod2
-p: destination predicate register
-|p: negate of p
-opp: fifth operand of a SETP instruction. Please refer to ptx manual for its meaning.
-comp: see the imme section of the Opcode page
-mod2 0:3 specifies the comparator
-	1: .LT
-	2: .EQ
-	3: .LE
-	4: .GT
-	5: .NE
-	6: .GE
-	7: .NUM
-	8: .NAN
-	9: .LTU
-	10:.EQU
-	11:.LEU
-	12:.GTU
-	14:.GEU
-mod2 4:5 specifies the logical operation done with opp
-	0: .AND
-	1: .OR
-	2: .XOR
-}}}
 Instruction usage:
 {{{
 FSETP.comparator(.logical op) p (,|p), register, regitser/constant memory/20-bit immediate (,opp)
 }}}
+For what p, |p and opp mean, please refer to the setp instruction section in the ptx manual.
+
+Template opcode:
+{{{
+1100 010000 1110 111 000 000000 0000000000000000000000 0 1110 000000 11000
+        mod        p  |p   reg1                  immea    opp   mod2
+}}}
+||mod2 0:3 value|| comparator||
+||1             ||.LT||
+||2             ||.EQ||
+||3             ||.LE||
+||4             ||.GT||
+||5             ||.NE||
+||6             ||.GE||
+||7             ||.NUM||
+||8             ||.NAN||
+||9             ||.LTU||
+||10            ||.EQU||
+||11            ||.LEU||
+||12            ||.GTU||
+||14            ||.GEU||
+
+||mod2 4:5 value || logical operation||
+||0              ||.AND||
+||1              ||.OR||
+||2              ||.XOR||
