@@ -64,6 +64,9 @@ This feature may be used to conveniently annotate the source. For example:
 LD R0_xvalue [R2_xaddr];
 }}}
 I may write a GUI editor to facilitate coding using this feature when asfermi is more complete.
+
+
+
 === Operands ===
 ==== Registers ====
 Basically, registers can range between R0 to R62. RZ represents a constant value of 0. It is okay to put non-numeric characters after the register name. If the register is greater than or equal to R10, even numeric characters can directly follow the register name (eg. R3000 is taken as R30).
@@ -97,7 +100,7 @@ Also, while integer and floating point numbers can have negative signs, hexadeci
 ==== Global Memory ====
 A global memory operand has the following format:
 {{{
-[Rxx + 0x12345678]
+[reg1 + 32-bit hex number]
 }}}
 Both register and the hex address can be present, and at least one of them should be present. When only the register is present, the immediate value will take the default of 0x0. When only the immediate value is present, the register will take the default value of RZ.
 
@@ -107,9 +110,16 @@ State: 0
 ==== Constant Memory ====
 Format:
 {{{
-c[0xaa][Rxx+0xbb]
+c[0xaa][reg1+0xbb]
 }}}
-0xaa is the constant memory bank number. It can range from 0x0 to 0xa. Rxx+0xbb is the constant memory address inside the specified bank. Note that 0xbb cannot be larger than 0xFFFF. For instructions that do not specifically operate on constant memory, such as MOV and FADD, the register should not be present.
+0xaa is the constant memory bank number. It can range from 0x0 to 0xa. reg1+0xbb is the constant memory address inside the specified bank. Note that 0xbb cannot be larger than 0xFFFF. For instructions that do not specifically operate on constant memory, such as MOV and FADD, the register should not be present.
+
+==== Composite operand ====
+Some instructions support an operand that can take one of the three types:
+  # register
+  # 20-bit immediate value
+  # constant memory without the register component
+
 ----
 ==Comments==
 Comments are exactly the same as as in C/C++.
