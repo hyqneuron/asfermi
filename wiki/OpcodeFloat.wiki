@@ -20,6 +20,23 @@ Template opcode:
 }}}
 
 
+==== FMUL ====
+Template opcode:
+{{{
+0000 000000 1110 000000 000000 0000000000000000000000 0000000000 011010
+        mod        reg0   reg1                  immea       mod2
+}}}
+||mod2 1:2 || meaning||
+||00||default (.rn) ||
+||10||.RM ||
+||01||.RP ||
+||11||.RZ ||
+
+||mod 4 value||meaning||
+||0||default||
+||1||.SAT||
+
+
 ==== FSETP ====
 Instruction usage:
 {{{
