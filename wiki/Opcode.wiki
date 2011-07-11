@@ -36,7 +36,7 @@ re1 is often the second register operand. It is also used to store the Rxx in `[
 === imme ===
 For instructions with the suffix I32, the entirety of the field is used to store a 32-bit immediate value. 
 
-For most other instructions that use this field, imme is divided into two fields: immea(imme10:31) and immeb(imme0:9). immea can be used to indicate a 20-bit immediate value, a constant memory address, or a register.
+For most other instructions that use this field, imme is divided into two fields: immea(imme10:31) and immeb(imme0:9). immea can be used to indicate a 20-bit immediate value, a constant memory address, or a register. immea is most often used by a [SourceFormat#Composite_operand composite operand]
 ||immea 0:1||immea 2:21               ||
 ||00        ||lowest 6 bits: register ||
 ||10        ||constant memory address ||
