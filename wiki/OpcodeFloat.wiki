@@ -44,5 +44,5 @@ mod2 4:5 specifies the logical operation done with opp
 }}}
 Instruction usage:
 {{{
-FSETP.(any of the comparators above)(any of the logical op above) p (,|p), register, regitser/constant memory/20-bit immediate (,opp)
+FSETP.comparator(.logical op) p (,|p), register, regitser/constant memory/20-bit immediate (,opp)
 }}}
