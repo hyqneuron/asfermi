@@ -25,7 +25,7 @@ dd: 00 cccc.. is register
     11 cccc.. is 20-bit immediate value
 mod4: 0 equivalent of .lo(LO), default.
       1 .hi(HI)
-      ptx`'s .wide is not directly supported by ISA, but is splitted into one .lo and one .hi
+      the .wide in ptx is not directly supported by the ISA, but is splitted into one .lo and one .hi
 mod3: 1 S32 for first modifier(default)
       0 U32 for first modifier
 mod5: 1 S32 for second modifier(default)
@@ -33,5 +33,5 @@ mod5: 1 S32 for second modifier(default)
 }}}
 Instruction Usage
 {{{
-IMUL(.U32/S32)(.U32.S32)(.HI) Rxx, Rxx, Rxx/c[0xa][0xb]/123/0xabcd;
+IMUL(.U32/S32)(.U32/.S32)(.HI) Rxx, Rxx, Rxx/c[0xa][0xb]/123/0xabcd;
 }}}
