@@ -3,38 +3,36 @@
 
 === Integer Instructions ===
 ==== IADD ====
-Template opcode:
-{{{
-1100 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 010010
-}}}
 Instruction usage:
 {{{
-IADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/(-)123/0xabcd;
+IADD reg0, reg1, (-)reg2/(-)c[0xa][0xb]/(-)123/0xabcd;
 }}}
-If the third operand is an immediate value, it cannot be longer than 20 bits.
+If the third operand is an immediate value, it cannot be longer than 20 bits (cannot be negative).
 
-==== IMUL ====
 Template opcode:
 {{{
-1100 010100 1110 aaaaaa bbbbbb cccccccccccccccccccc dd 00 00000000 001010
-aaaaaa: destination register
-bbbbbb: second register
-cccc..: Third register/constant memory/20-bit immediate value
-dd: 00 cccc.. is register
-    10 cccc.. is constant memory
-    11 cccc.. is 20-bit immediate value
-mod4: 0 equivalent of .lo(LO), default.
-      1 .hi(HI)
-      the .wide in ptx is not directly supported by the ISA, but is splitted into one .lo and one .hi
-mod3: 1 S32 for first modifier(default)
-      0 U32 for first modifier
-mod5: 1 S32 for second modifier(default)
-      0 U32 for second modifier
+1100 000000 1110 000000 000000 0000000000000000000000 0000000000 010010
+                   reg0   reg1                  immea
 }}}
+
+==== IMUL ====
 Instruction Usage
 {{{
-IMUL(.U32/S32)(.U32/.S32)(.HI) Rxx, Rxx, Rxx/c[0xa][0xb]/123/0xabcd;
+IMUL(.U32/S32)(.U32/.S32)(.HI) reg0, reg1, reg2/c[0xa][0xb]/123/0xabcd;
 }}}
+
+Template opcode:
+{{{
+1100 010100 1110 aaaaaa bbbbbb 0000000000000000000000 00 00000000 001010
+        mod        reg0   reg1                  immea
+}}}
+||mod bit|| meaning||
+||3      ||0: .U32, first modifier||
+||       ||1: .S32, first modifier||
+||4      ||0: .LO default         ||
+||       ||1: .HI                 ||
+||5      ||0: .U32, second modifier||
+||       ||1: .S32, second modifier||
 
 ==== ISETP ====
 Template opcode:
