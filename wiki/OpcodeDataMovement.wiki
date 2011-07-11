@@ -27,11 +27,12 @@ Template opcode:
 }}}
 ----
 ==== ST ====
-Template opcode:
-{{{
-1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 001001
-}}}
 Instruction usage:
 {{{
-ST(.64/.128) Rxx, [Rxx+0xabcd];
+ST(.64/.128) [reg1/0xabcd/reg1+0xabcd], reg0;
+}}}
+Template opcode:
+{{{
+1010 000100 1110 000000 000000 00000000000000000000000000000000 001001
+                   reg0   reg1                           0xabcd
 }}}
