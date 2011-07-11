@@ -12,3 +12,22 @@ Instruction usage:
 IADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/(-)123/0xabcd;
 }}}
 If the third operand is an immediate value, it cannot be longer than 20 bits.
+
+==== IMUL ====
+Template opcode:
+{{{
+1100 010100 1110 aaaaaa bbbbbb cccccccccccccccccccc dd 00 00000000 001010
+aaaaaa: destination register
+bbbbbb: second register
+cccc..: Third register/constant memory/20-bit immediate value
+dd: 00 cccc.. is register
+    10 cccc.. is constant memory
+    11 cccc.. is 20-bit immediate value
+mod4: 0 equivalent of .lo(LO), default.
+      1 .hi(HI)
+      ptx's .wide is not directly supported by ISA, but is splitted into one .lo and one .hi
+mod3: 1 S32 for first modifier(default)
+      0 U32 for first modifier
+mod5: 1 S32 for second modifier(default)
+      0 U32 for second modifier
+}}}
