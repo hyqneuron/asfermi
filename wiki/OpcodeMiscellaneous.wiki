@@ -1,5 +1,9 @@
 #summary Opcodes for miscellaneous instructions
 
+Note: round brackets, instead of square brackets, are used to represent an optional component. This is to avoid confusion with memory operands which are surrounded by square brackets.
+
+Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand] may be mentioned in the parts below. Please visit these two links for more information regarding their meaning.
+
 === Miscellaneous Instructions ===
 
 ==== S2R ====
