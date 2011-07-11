@@ -38,5 +38,5 @@ Template opcode:
 Template opcode:
 {{{
 1100 010000 1110 111 000 000000 0000000000000000000000 0 1110 000000 11000
-Please see FSETP at in the OpcodeFloat page for more information. Note that .NUM, .NAN and all the comparators suffixed with U are not supported by ISETP.
 }}}
+Please see [OpcodeFloat#FSETP FSETP] for more information. Note that .NUM, .NAN and all the comparators suffixed with U are not supported by ISETP.
