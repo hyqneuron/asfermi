@@ -343,6 +343,7 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back(&IRISETP);
 	csInstructionRulePrepList.push_back(&IRFSETP);
 	csInstructionRulePrepList.push_back(&IRS2R);
+	csInstructionRulePrepList.push_back(&IRIMUL);
 	//load directive rules
 	csDirectiveRulePrepList.push_back(&DRKernel);
 	csDirectiveRulePrepList.push_back(&DREndKernel);

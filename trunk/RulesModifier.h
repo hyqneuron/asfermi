@@ -116,6 +116,51 @@ struct ModifierRuleSETPComparison: ModifierRule
 	MRSETPComparisonGTU(12),
 	MRSETPComparisonNEU(13),
 	MRSETPComparisonGEU(14);
+struct ModifierRuleIMUL0U32: ModifierRule
+{
+	ModifierRuleIMUL0U32(): ModifierRule("U32", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111010111111111111111111111111", Mask0);
+		Bits0 = 0;
+	}
+}MRIMUL0U32;
+
+struct ModifierRuleIMUL1U32: ModifierRule
+{
+	ModifierRuleIMUL1U32(): ModifierRule("U32", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111011111111111111111111111111", Mask0);
+		Bits0 = 0;
+	}
+}MRIMUL1U32;
+
+
+struct ModifierRuleIMUL0S32: ModifierRule
+{
+	ModifierRuleIMUL0S32(): ModifierRule("S32", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111010111111111111111111111111", Mask0);
+		::InstructionRule::BinaryStringToOpcode4("00000101000000000000000000000000", Bits0);
+	}
+}MRIMUL0S32;
+
+struct ModifierRuleIMUL1S32: ModifierRule
+{
+	ModifierRuleIMUL1S32(): ModifierRule("S32", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111011111111111111111111111111", Mask0);
+		::InstructionRule::BinaryStringToOpcode4("00000100000000000000000000000000", Bits0);
+	}
+}MRIMUL1S32;
+
+struct ModifierRuleIMULHi: ModifierRule
+{
+	ModifierRuleIMULHi(): ModifierRule("HI", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111101111111111111111111111111", Mask0);
+		::InstructionRule::BinaryStringToOpcode4("00000010000000000000000000000000", Bits0);
+	}
+}MRIMULHI;
 //-----End of specific modifier rules
 
 #else

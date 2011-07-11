@@ -366,13 +366,15 @@ struct OperandRuleMOVStyle: OperandRule
 		if(component.Length<1) \
 			throw 116; \
 	}\
+	/*register*/\
 	if(component[0]=='R' || component[0]=='r')\
 	{\
 		int register2 = component.ToRegister();\
 		csMaxReg = (register2 > csMaxReg)? register2: csMaxReg;\
-		csCurrentInstruction.OpcodeWord0 |= register2 << 20;\
+		csCurrentInstruction.OpcodeWord0 |= register2 << 26;\
 		MarkRegisterForImmediate32();\
 	}		\
+	/*constant memory*/\
 	else if(component[0]=='c' || component[0] == 'C') \
 	{\
 		unsigned int bank, memory;\

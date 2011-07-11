@@ -147,6 +147,21 @@ struct InstructionRuleS2R: InstructionRule
 		SetOperands(2, &OPRRegister0, &OPRS2R);
 	}
 }IRS2R;
+
+struct InstructionRuleIMUL: InstructionRule
+{
+	InstructionRuleIMUL(): InstructionRule("IMUL", 3, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
+		SetOperands(3,
+					&OPRRegister0,
+					&OPRRegister1,
+					&OPRIADDStyle);
+		ModifierGroups[0].Initialize(true, 2, &MRIMUL0U32, &MRIMUL0S32);
+		ModifierGroups[1].Initialize(true, 2, &MRIMUL1U32, &MRIMUL1S32);
+		ModifierGroups[2].Initialize(true, 1, &MRIMULHI);
+	}
+}IRIMUL;
 //-----End of specific instruction rules
 
 #else
