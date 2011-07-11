@@ -3,25 +3,27 @@
 === Data Movement Instructions ===
 
 ==== MOV ====
-Template opcode:
-{{{
-0010 011110 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 010100
-}}}
 Instruction usage:
 {{{
-MOV Rxx, Rxx/c[0xa][0xb]/0xabcd;
+MOV reg0, reg1/c[0xa][0xb]/0xabcd;
 }}}
 If a hex number is used as the second operand, it cannot be longer than 20 bits.
+Template opcode:
+{{{
+0010 011110 1110 000000 000000 0000000000000000000000 0000000000 010100
+                   reg0   reg1                  immea
+}}}
 
 ----
 ==== LD ====
-Template opcode:
-{{{
-1010 000100 1110 xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 000001
-}}}
 Instruction usage:
 {{{
-LD(.64/.128) Rxx, [Rxx+0xabcd];
+LD(.64/.128) reg0, [reg1/0xabcd/reg1+0xabcd];
+}}}
+Template opcode:
+{{{
+1010 000100 1110 000000 000000 00000000000000000000000000000000 000001
+                   reg0   reg1                           0xabcd
 }}}
 ----
 ==== ST ====
