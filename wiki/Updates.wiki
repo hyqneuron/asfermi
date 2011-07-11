@@ -2,6 +2,7 @@
 ==== 11th July, 2011 ====
 Added support for IMUL and FMUL. Things are done in a rush so there should be some errors. Also changed the documentation by quite a lot. 
 
+11pm: added support for IMAD and FFMA. Haven't had the chance to check the issue regarding the immea bits for constant memory yet.
 ----
 ==== 10th July, 2011 ====
 Added support for ISETP, FSETP and S2R. Don't have time to do much documentation for now.
