@@ -3,16 +3,18 @@
 === Floating Point Instructions ===
 
 ==== FADD ====
-Template opcode:
-{{{
-0000 000000 1110 xxxxxx xxxxxx xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx 001010
-}}}
-
 Instruction Usage:
 {{{
-FADD Rxx, Rxx, (-)Rxx/(-)c[0xa][0xb]/F(-)123.123/0xabcd;
+FADD reg0, reg1, (-)reg2/(-)c[0xa][0xb]/(-)F(-)123.123/0xabcd;
 }}}
-If the third operand is a floating point number, it will be a 32-bit floaitng point number with the last 12 bits truncated.
+If the third operand is a floating point number, it will be a 32-bit floaitng point number with the last 12 bits truncated. If the negative sign in the immediate value is before 'F', then a modifier bit will be flipped. If the negative sign comes after the 'F', then the 20-bit immediate value will have the negative bit set.
+
+Template opcode:
+{{{
+0000 000000 1110 000000 000000 0000000000000000000000 0000000000 001010
+        mod        reg0   reg1                  immea
+}}}
+
 
 ==== FSETP ====
 Instruction usage:
