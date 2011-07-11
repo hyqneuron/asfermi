@@ -1,11 +1,15 @@
 #summary Opcodes for the data movement instructions
 
+Note: round brackets, instead of square brackets, are used to represent an optional component. This is to avoid confusion with memory operands which are surrounded by square brackets.
+
+Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand] may be mentioned in the parts below. Please visit these two links for more information regarding their meaning.
+
 === Data Movement Instructions ===
 
 ==== MOV ====
 Instruction usage:
 {{{
-MOV reg0, reg1/c[0xa][0xb]/0xabcd;
+MOV reg0, composite operand;
 }}}
 If a hex number is used as the second operand, it cannot be longer than 20 bits.
 Template opcode:
@@ -18,7 +22,7 @@ Template opcode:
 ==== LD ====
 Instruction usage:
 {{{
-LD(.64/.128) reg0, [reg1/0xabcd/reg1+0xabcd];
+LD(.64/.128) reg0, [reg1(+0xabcd)];
 }}}
 Template opcode:
 {{{
@@ -29,7 +33,7 @@ Template opcode:
 ==== ST ====
 Instruction usage:
 {{{
-ST(.64/.128) [reg1/0xabcd/reg1+0xabcd], reg0;
+ST(.64/.128) [reg1(+0xabcd)], reg0;
 }}}
 Template opcode:
 {{{
