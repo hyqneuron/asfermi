@@ -359,6 +359,8 @@ struct OperandRuleMOVStyle: OperandRule
 	bool negate = false;\
 	if(component[0] == '-')\
 	{\
+		if(!AllowNegate)\
+			throw 129;\
 		negate = true;\
 		csCurrentInstruction.OpcodeWord0 |= 1<<8; \
 		component.Start++;\
@@ -392,7 +394,11 @@ struct OperandRuleMOVStyle: OperandRule
 //when = 11, produces.PO, which I do not understand for now
 struct OperandRuleFADDStyle: OperandRule
 {
-	OperandRuleFADDStyle() :OperandRule(FADDStyle){}
+	bool AllowNegate;
+	OperandRuleFADDStyle(bool allowNegate) :OperandRule(FADDStyle)
+	{
+		AllowNegate = allowNegate;
+	}
 	virtual void Process(SubString &component)
 	{
 		//Register or constant memory
@@ -415,14 +421,19 @@ struct OperandRuleFADDStyle: OperandRule
 		}
 		mArithmeticCommonEnd;
 	}
-}OPRFADDStyle;
+}OPRFADDStyle(true), OPRFMULStyle(false);
 
 //IADD: Register, Constant memory without reg, 20-bit Int)
 struct OperandRuleIADDStyle: OperandRule
 {
-	OperandRuleIADDStyle() :OperandRule(IADDStyle){}
+	bool AllowNegate;
+	OperandRuleIADDStyle(bool allowNegate) :OperandRule(IADDStyle)
+	{
+		AllowNegate = allowNegate;
+	}
 	virtual void Process(SubString &component)
 	{
+		bool allowNegate = true;
 		//register or constant memory
 		mArithmeticCommon
 		//constants
@@ -440,7 +451,8 @@ struct OperandRuleIADDStyle: OperandRule
 		}	
 		mArithmeticCommonEnd
 	}
-}OPRIADDStyle;
+}OPRIADDStyle(true), OPRIMULStyle(false);
+
 //---End of secondary operand rules
 //-----End of Specifc Operand Rules
 

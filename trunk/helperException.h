@@ -124,6 +124,8 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 128:	message = "Incorrect special register name.";
 		break;
+	case 129:	message = "Negative sign cannot be used here.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};

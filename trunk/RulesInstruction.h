@@ -156,12 +156,26 @@ struct InstructionRuleIMUL: InstructionRule
 		SetOperands(3,
 					&OPRRegister0,
 					&OPRRegister1,
-					&OPRIADDStyle);
+					&OPRIMULStyle);
 		ModifierGroups[0].Initialize(true, 2, &MRIMUL0U32, &MRIMUL0S32);
 		ModifierGroups[1].Initialize(true, 2, &MRIMUL1U32, &MRIMUL1S32);
 		ModifierGroups[2].Initialize(true, 1, &MRIMULHI);
 	}
 }IRIMUL;
+
+struct InstructionRuleFMUL: InstructionRule
+{
+	InstructionRuleFMUL(): InstructionRule("FMUL", 2, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("0000000000111000000000000000000000000000000000000000000000011010", OpcodeWord0, OpcodeWord1);
+		SetOperands(3,
+					&OPRRegister0,
+					&OPRRegister1,
+					&OPRFMULStyle);
+		ModifierGroups[0].Initialize(true, 3, &MRFMULRP, &MRFMULRM, &MRFMULRZ);
+		ModifierGroups[1].Initialize(true, 1, &MRFMULSAT);
+	}
+}IRFMUL;
 //-----End of specific instruction rules
 
 #else
