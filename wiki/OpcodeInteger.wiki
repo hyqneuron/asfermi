@@ -23,7 +23,7 @@ IMUL(.U32/S32)(.U32/.S32)(.HI) reg0, reg1, reg2/c[0xa][0xb]/123/0xabcd;
 
 Template opcode:
 {{{
-1100 010100 1110 aaaaaa bbbbbb 0000000000000000000000 00 00000000 001010
+1100 010100 1110 000000 000000 0000000000000000000000 00 00000000 001010
         mod        reg0   reg1                  immea
 }}}
 ||mod bit|| meaning||
