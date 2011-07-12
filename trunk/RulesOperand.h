@@ -81,7 +81,38 @@ struct OperandRuleRegister3: OperandRule
 	}
 }OPRRegister3;
 
-//32-bit Hexadecimal Constant Operand
+//24-bit Hexadecimal Constant Operand
+struct OperandRuleImmediate24HexConstant: OperandRule
+{
+	OperandRuleImmediate24HexConstant() :OperandRule(Immediate32HexConstant){} //issue: wrong type
+	virtual void Process(SubString &component)
+	{
+		bool negate = false;
+		if(component[0]=='-')
+		{
+			negate = true;
+			component.Start++;
+			component.Length--;
+		}
+		unsigned int result = component.ToImmediate32FromHexConstant(false);
+		if(negate)
+		{
+			if(result>0x7FFFFF)
+				throw 131; //too large offset
+			result ^= 0xFFFFFF;
+			result += 1;
+			component.Start--;
+			component.Length++;
+		}
+		else
+		{
+			if(result>0xFFFFFF)
+				throw 131;
+		}
+		WriteToImmediate32(result);
+	}	
+}OPRImmediate24HexConstant;
+
 struct OperandRuleImmediate32HexConstant: OperandRule
 {
 	OperandRuleImmediate32HexConstant() :OperandRule(Immediate32HexConstant){}
@@ -279,6 +310,26 @@ struct OperandRuleGlobalMemoryWithImmediate32: OperandRule
 	}
 }OPRGlobalMemoryWithImmediate32;
 
+struct OperandRuleSharedMemoryWithImmediate20: OperandRule
+{
+	OperandRuleSharedMemoryWithImmediate20(): OperandRule(SharedMemoryWithImmediate20){}
+	virtual void Process(SubString &component)
+	{
+		unsigned int memory; int register1;
+		component.ToGlobalMemory(register1, memory);
+		if(memory>=1<<20) //issue: not sure if negative hex is gonna work
+			throw 130; //cannot be longer than 20 bits
+		//Check max reg when register is not RZ(63)
+		if(register1!=63)
+			csMaxReg = (register1 > csMaxReg)? register1: csMaxReg;
+
+		csCurrentInstruction.OpcodeWord0 |= register1<<20; //RE1
+		WriteToImmediate32(memory);
+	}
+}OPRSharedMemoryWithImmediate20;
+
+
+
 //Constant Memory Operand
 struct OperandRuleConstantMemory: OperandRule
 {
@@ -464,6 +515,37 @@ struct OperandRuleIADDStyle: OperandRule
 		mArithmeticCommonEnd
 	}
 }OPRIADDStyle(true), OPRIMULStyle(false);
+
+struct OperandRuleLOP: OperandRule
+{
+	int ModShift;
+	OperandRuleLOP(int modShift): OperandRule(Custom)
+	{
+		ModShift = modShift;
+	}
+	virtual void Process(SubString &component)
+	{
+		bool not = false;
+		if(component[0]=='~')
+		{
+			not = true;
+			component.Start++;
+			component.Length--;
+		}
+		if(component.Length<1)
+			throw 132; //empty operand
+		if(ModShift==8)
+			OPRMOVStyle.Process(component);
+		else
+			OPRRegister1.Process(component);
+		if(not)
+		{
+			csCurrentInstruction.OpcodeWord0 |= 1<<ModShift;
+			component.Start--;
+			component.Length++;
+		}
+	}
+}OPRLOP1(9), OPRLOP2(8);
 
 //---End of secondary operand rules
 //-----End of Specifc Operand Rules

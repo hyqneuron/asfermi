@@ -4,22 +4,39 @@ This file contains rules for modifiers
 #ifndef RulesModifierDefined
 
 //-----Specific modifier rules
-struct ModifierRule128: ModifierRule
+
+struct ModifierRuleLD: ModifierRule
 {
-	ModifierRule128(): ModifierRule("128", true, false, false)
-	{
-		::InstructionRule::BinaryStringToOpcode4("11111001111111111111111111111111", Mask0);
-		::InstructionRule::BinaryStringToOpcode4("00000010000000000000000000000000", Bits0);
+	ModifierRuleLD(int type): ModifierRule("", true, false, false)
+	{		
+		::InstructionRule::BinaryStringToOpcode4("11111000111111111111111111111111", Mask0);
+		Bits0 = type<<5;
+		switch(type)
+		{
+		case 0:
+			Name = "U8";
+			break;
+		case 1:
+			Name = "S8";
+			break;
+		case 2:
+			Name = "U16";
+			break;
+		case 3:
+			Name = "S16";
+			break;
+		case 5:
+			Name = "64";
+			break;
+		case 6:
+			Name = "128";
+			break;
+		default:
+			throw exception("Unsupported modifier");
+			break;
+		}
 	}
-}MR128;
-struct ModifierRule64: ModifierRule
-{
-	ModifierRule64(): ModifierRule("64", true, false, false)
-	{
-		::InstructionRule::BinaryStringToOpcode4("11111001111111111111111111111111", Mask0);
-		::InstructionRule::BinaryStringToOpcode4("00000100000000000000000000000000", Bits0);
-	}
-}MR64;
+}MRLDU8(0), MRLDS8(1), MRLDU16(2), MRLDS16(3), MRLD64(5), MRLD128(6);
 
 struct ModifierRuleSETPLogic: ModifierRule
 {
@@ -181,6 +198,8 @@ struct ModifierRuleFMULR: ModifierRule
 	}
 }MRFMULRM(1, "RM"), MRFMULRP(2, "RP"), MRFMULRZ(3, "RZ");
 
+
+
 struct ModifierRuleFMULSAT: ModifierRule
 {
 	ModifierRuleFMULSAT(): ModifierRule("SAT", true, false, false)
@@ -189,6 +208,42 @@ struct ModifierRuleFMULSAT: ModifierRule
 		Bits0 = 1<<5;
 	}
 }MRFMULSAT;
+
+struct ModifierRuleCALNOINC: ModifierRule
+{
+	ModifierRuleCALNOINC(): ModifierRule("NOINC", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111111111111110111111111111111", Mask0);
+		Bits0 = 0;
+	}
+}MRCALNOINC;
+
+struct ModifierRuleBRAU: ModifierRule
+{
+	ModifierRuleBRAU(): ModifierRule("U", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111111111111101111111111111111", Mask0);
+		Bits0 = 1<<15;
+	}
+}MRBRAU;
+
+struct ModifierRuleLOP: ModifierRule
+{
+	ModifierRuleLOP(int type): ModifierRule("", true, false, false)
+	{
+		::InstructionRule::BinaryStringToOpcode4("11111100111111111111111111111111", Mask0);
+		Bits0 = type << 6;
+		if(type==0)
+			Name = "AND";
+		else if(type==1)
+			Name = "OR";
+		else if(type==2)
+			Name = "XOR";
+		else if(type ==3)
+			Name = "PASS_B";
+	}
+}MRLOPAND(0), MRLOPOR(1), MRLOPXOR(2), MRLOPPASS(3);
+
 //-----End of specific modifier rules
 
 #else

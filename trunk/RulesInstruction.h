@@ -25,11 +25,33 @@ struct InstructionRuleLD: InstructionRule
 		SetOperands(2, 
 					&OPRRegister0,					
 					&OPRGlobalMemoryWithImmediate32);
-		ModifierGroups[0].Initialize(true, 2,
-					&MR64,
-					&MR128 );
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8,
+					&MRLDS8,
+					&MRLDU16,
+					&MRLDS16,
+					&MRLD64,
+					&MRLD128);
 	}
 }IRLD;
+
+struct InstructionRuleLDS : InstructionRule
+{
+	InstructionRuleLDS(): InstructionRule("LDS", 1, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010000011", OpcodeWord0, OpcodeWord1);
+		SetOperands(2,
+					&OPRRegister0,
+					&OPRSharedMemoryWithImmediate20);
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8, 
+					&MRLDS8, 
+					&MRLDU16, 
+					&MRLDS16, 
+					&MRLD64, 
+					&MRLD128);
+	}
+}IRLDS;
 
 struct InstructionRuleST: InstructionRule
 {
@@ -39,11 +61,34 @@ struct InstructionRuleST: InstructionRule
 		SetOperands(2, 
 					&OPRGlobalMemoryWithImmediate32,
 					&OPRRegister0);
-		ModifierGroups[0].Initialize(true, 2,
-					&MR64,
-					&MR128 );
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8, 
+					&MRLDS8, 
+					&MRLDU16, 
+					&MRLDS16, 
+					&MRLD64, 
+					&MRLD128);
 	}
 }IRST;
+
+struct InstructionRuleSTS : InstructionRule
+{
+	InstructionRuleSTS(): InstructionRule("STS", 1, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010010011", OpcodeWord0, OpcodeWord1);
+		SetOperands(2,
+					&OPRSharedMemoryWithImmediate20,
+					&OPRRegister0);
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8, 
+					&MRLDS8, 
+					&MRLDU16, 
+					&MRLDS16, 
+					&MRLD64, 
+					&MRLD128);
+	}
+}IRSTS;
+
 struct InstructionRuleEXIT: InstructionRule
 {
 	InstructionRuleEXIT() : InstructionRule("EXIT", 0, true, false)
@@ -51,6 +96,47 @@ struct InstructionRuleEXIT: InstructionRule
 		InstructionRule::BinaryStringToOpcode8("1110011110111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
 	}
 }IREXIT;
+
+struct InstructionRuleCAL: InstructionRule
+{
+	InstructionRuleCAL() : InstructionRule("CAL", 1, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1110000000000000100000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRImmediate24HexConstant);
+		ModifierGroups[0].Initialize(true, 1, &MRCALNOINC);
+	}
+}IRCAL;
+
+struct InstructionRuleBRA: InstructionRule
+{
+	InstructionRuleBRA() : InstructionRule("BRA", 1, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1110011110111000000000000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRImmediate24HexConstant);
+		ModifierGroups[0].Initialize(true, 1, &MRBRAU);
+	}
+}IRBRA;
+
+struct InstructionRulePRET: InstructionRule
+{
+	InstructionRulePRET() : InstructionRule("PRET", 1, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1110000000000001000000000000000000000000000000000000000000011110", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRImmediate24HexConstant);
+		ModifierGroups[0].Initialize(true, 1, &MRCALNOINC);
+	}
+}IRPRET;
+
+
+
+struct InstructionRuleRET: InstructionRule
+{
+	InstructionRuleRET() : InstructionRule("RET", 0, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1110011110111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
+	}
+}IRRET;
+
 struct InstructionRuleFADD: InstructionRule
 {
 	InstructionRuleFADD() : InstructionRule("FADD", 0, true, false)
@@ -62,6 +148,7 @@ struct InstructionRuleFADD: InstructionRule
 					&OPRFADDStyle);
 	}
 }IRFADD;
+
 struct InstructionRuleIADD: InstructionRule
 {
 	InstructionRuleIADD() : InstructionRule("IADD", 0, true, false)
@@ -81,6 +168,24 @@ struct InstructionRuleNOP: InstructionRule
 		InstructionRule::BinaryStringToOpcode8("0010011110111000000000000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
 	}
 }IRNOP;
+
+struct InstructionRuleLOP: InstructionRule
+{
+	InstructionRuleLOP(): InstructionRule("LOP", 1, true, false)
+	{
+		InstructionRule::BinaryStringToOpcode8("1100000000111000000000000000000000000000000000000000000000010110", OpcodeWord0, OpcodeWord1);
+		SetOperands(3,
+					&OPRRegister0,
+					&OPRLOP1,
+					&OPRLOP2);
+		ModifierGroups[0].Initialize(false, 4,
+					&MRLOPAND,
+					&MRLOPOR,
+					&MRLOPXOR,
+					&MRLOPPASS);
+	}
+}IRLOP;
+
 struct InstructionRuleISETP: InstructionRule
 {
 	InstructionRuleISETP(): InstructionRule("ISETP", 2, true, false)

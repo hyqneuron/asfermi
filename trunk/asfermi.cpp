@@ -333,20 +333,33 @@ void Initialize() //set up the various lists
 	csDirectiveParser = &DDP;
 	
 	//Load instruction rules
+	//data movement
+	csInstructionRulePrepList.push_back(&IRMOV);
 	csInstructionRulePrepList.push_back(&IRLD);
 	csInstructionRulePrepList.push_back(&IRST);
+	csInstructionRulePrepList.push_back(&IRLDS);
+	csInstructionRulePrepList.push_back(&IRSTS);
+	//execution control
+	csInstructionRulePrepList.push_back(&IRBRA);
+	csInstructionRulePrepList.push_back(&IRCAL);
+	csInstructionRulePrepList.push_back(&IRPRET);
+	csInstructionRulePrepList.push_back(&IRRET);
 	csInstructionRulePrepList.push_back(&IREXIT);
-	csInstructionRulePrepList.push_back(&IRMOV);
+	//floating point op
 	csInstructionRulePrepList.push_back(&IRFADD);
-	csInstructionRulePrepList.push_back(&IRIADD);
-	csInstructionRulePrepList.push_back(&IRNOP);
-	csInstructionRulePrepList.push_back(&IRISETP);
-	csInstructionRulePrepList.push_back(&IRFSETP);
-	csInstructionRulePrepList.push_back(&IRS2R);
-	csInstructionRulePrepList.push_back(&IRIMUL);
-	csInstructionRulePrepList.push_back(&IRIMAD);
 	csInstructionRulePrepList.push_back(&IRFMUL);
 	csInstructionRulePrepList.push_back(&IRFFMA);
+	csInstructionRulePrepList.push_back(&IRFSETP);
+	//integer opp
+	csInstructionRulePrepList.push_back(&IRIADD);
+	csInstructionRulePrepList.push_back(&IRIMUL);
+	csInstructionRulePrepList.push_back(&IRIMAD);
+	csInstructionRulePrepList.push_back(&IRISETP);
+	//miscellaneous
+	csInstructionRulePrepList.push_back(&IRS2R);
+	csInstructionRulePrepList.push_back(&IRNOP);
+	csInstructionRulePrepList.push_back(&IRLOP);
+
 	//load directive rules
 	csDirectiveRulePrepList.push_back(&DRKernel);
 	csDirectiveRulePrepList.push_back(&DREndKernel);

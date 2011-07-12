@@ -109,7 +109,7 @@ typedef enum OperandType
 {
 	Register, Immediate32HexConstant, Predicate,
 	Immediate32IntConstant, Immediate32FloatConstant, Immediate32AnyConstant, 
-	GlobalMemoryWithImmediate32, ConstantMemory, SharedMemory, Optional, Custom, 
+	GlobalMemoryWithImmediate32, ConstantMemory, SharedMemoryWithImmediate20, Optional, Custom, 
 	MOVStyle, FADDStyle, IADDStyle
 };
 struct ModifierRule

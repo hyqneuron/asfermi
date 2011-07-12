@@ -126,6 +126,12 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 129:	message = "Negative sign cannot be used here.";
 		break;
+	case 130:	message = "Shared memory address immediate value cannot be longer than 20 bits.";
+		break;
+	case 131:	message = "Offset is limited to 24-bit long.";
+		break;
+	case 132:	message = "Empty operand.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};
