@@ -4,6 +4,9 @@
 == Currently Supported ==
 MOV, LD, ST, EXIT, FADD, FMUL, FFMA, IADD, IMUL, IMAD, NOP, ISETP, FSETP, S2R, LOP, RET, PRET, BRA, CAL, STS, LDS.
 
+For more information regarding the supported instructions, their usage and opcodes, please see [Opcode], [OpcodeDataMovement], [OpcodeExecution], [OpcodeFloat], [OpcodeInteger] and [OpcodeMiscellaneous].
+
+== All Known Instructions ==
 The following part of this page lists all instruction names that are currently known. For instructions and their corresponding opcode, see [nanb] and [Opcode].
 
 For better explanation of those instructions, please refer to the cuobjdump.pdf that comes with CUDA toolkit 4.0
