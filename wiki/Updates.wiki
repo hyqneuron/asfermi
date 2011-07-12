@@ -1,4 +1,9 @@
 #summary A development log
+
+==== 12th July, 2012 ====
+Added support for LOP, RET, PRET, BRA, CAL, STS, LDS.
+
+----
 ==== 11th July, 2011 ====
 Added support for IMUL and FMUL. Things are done in a rush so there should be some errors. Also changed the documentation by quite a lot. 
 
