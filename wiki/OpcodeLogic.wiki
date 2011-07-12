@@ -1,0 +1,32 @@
+#summary Opcode and instruction information for logic and shift instructions.
+
+Note: round brackets, instead of square brackets, are used to represent an optional component. This is to avoid confusion with memory operands which are surrounded by square brackets.
+
+Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand] may be mentioned in the parts below. Please visit these two links for more information regarding their meaning.
+
+=== Logic And Shift Instructions ===
+
+==== LOP ====
+Instruction usage
+{{{
+LOP.op reg0, (~)reg1, (~)composite operand;
+}}}
+Template opcode
+{{{
+1100 000000 1110 000000 000000 0000000000000000000000 0000000000 010110
+        mod        reg0   reg1                  immea       mod2
+}}}
+||mod 2:3 ||meaning||
+||00      ||.AND   ||
+||10      ||.OR    ||
+||01      ||.XOR   ||
+||11      ||.PASS_B||
+
+||mod 1||meaning||
+||0    ||default||
+||1    ||~composite operand  ||
+
+
+||mod 0||meaning||
+||0    ||default||
+||1    ||~reg1  ||
