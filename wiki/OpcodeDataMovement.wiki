@@ -22,43 +22,64 @@ Template opcode:
 ==== LD ====
 Instruction usage:
 {{{
-LD(.64/.128) reg0, [reg1(+0xabcd)];
+LD(.type) reg0, [reg1(+0xabcd)];
 }}}
 Template opcode:
 {{{
 1010 000100 1110 000000 000000 00000000000000000000000000000000 000001
-                   reg0   reg1                           0xabcd
+        mod        reg0   reg1                           0xabcd
 }}}
+||mod 2:4 || .type ||
+||000     || .U8     ||
+||100     || .S8     ||
+||010     || .U16    ||
+||110     || .S16    ||
+||001     ||default(.u32)||
+||101     ||.64     ||
+||011     ||.128    ||
 
 ----
 ==== LDS ====
+Load shared memory.
+
+Instruction usage:
+{{{
+LDS(.type) reg0, [reg1(+0xabcd)];
+}}}
+Note that 0xabcd should not be greater than 0xFFFF. However, for the sake of experimentation, 0xabcd can have a maximal length of 20 bits.
+
 Template opcode
 {{{
 1010 000100 1110 000000 000000 0000000000000000 0000000000000010 000011
         mod        reg0   reg1           0xabcd
 }}}
-For various values of mod and their meaning please refer to the STS instruction below.
+For various values of mod and their meaning please refer to the LD instruction above.
 ----
 ==== ST ====
 Instruction usage:
 {{{
-ST(.64/.128) [reg1(+0xabcd)], reg0;
+ST(.type) [reg1(+0xabcd)], reg0;
 }}}
 Template opcode:
 {{{
 1010 000100 1110 000000 000000 00000000000000000000000000000000 001001
                    reg0   reg1                           0xabcd
 }}}
+For various values of mod and their meaning please refer to the LD instruction above.
 
 ----
 ==== STS ====
+Store shared memory.
+
+Instruction usage:
+{{{
+STS(.type) [reg1(+0xabcd)], reg0;
+}}}
+Note: the same restriction that applies to LDS applies to STS as well.
+
 Template opcode
 {{{
 1010 000100 1110 000000 000000 0000000000000000 0000000000000010 010011
         mod        reg0   reg1           0xabcd
 }}}
-||mod 2:4 || meaning ||
-||000     || .U8     ||
-||001     ||default(.u32)||
-||101     ||.U64     ||
-||011     ||.U128    ||
+For various values of mod and their meaning please refer to the LD instruction above.
