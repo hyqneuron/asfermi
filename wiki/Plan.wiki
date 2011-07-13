@@ -41,6 +41,8 @@ The major parts of the assembler are already done. Now I'm in the progress of ad
   * Cache associativity
   * Cache eviction policy
   * L2 structure
+  * TLB location
+  * Memory controller
   * Cache consistency across kernel launches
 
 ====Others====
