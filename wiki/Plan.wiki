@@ -43,6 +43,9 @@ The major parts of the assembler are already done. Now I'm in the progress of ad
   * L2 structure
   * TLB location
   * Memory controller
+    * Hashing
+    * Dual-channel
+    * Service order
   * Cache consistency across kernel launches
 
 ====Others====
