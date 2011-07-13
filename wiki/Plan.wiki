@@ -6,15 +6,8 @@
 This project involves two stages. First is the making of the assembler. Second is the probing of various detailed features of the GF1xx architectures.
 
 ===Assembler===
-  # Determining the format of assembly source code. (1/2 complete)
-  # Probing Fermi's opcode (1/4 complete)
-   # Instruction names (Done)
-   # General opcode format (Done)
-   # Specific information for each instruction opcode
-    # MOV, LD, ST, ADD, EXIT
-    # ...
-  # Probing NVIDIA's custom sections in cubins
-  # Writing the assembler
+The major parts of the assembler are already done. Now I'm in the progress of adding support for more instructions.
+
 ----
 *Time line*
   * By 16/6/2011: in-line comment, constant operands
@@ -27,37 +20,28 @@ This project involves two stages. First is the making of the assembler. Second i
 
 ===Microbenchmarking===
 ====Instruction-related====
-  * Instruction cache
-    * Cache associativity
-    * Cacheline size
-    * Prefetch pattern
-    * Effects of large jumping
+  * Instruction latencies
   * Warp scheduling
-    * ILP depth: How many unfinished instructions could the scheduler deal with before stalling?
-    * Scheduling behaviour: depth-first? width-first? Or a mix or the two?
+    * scheduling pattern
+    * replay
     * Divergence behaviour
     * Processing Unit Group characteristics
-    * Is ILP considered when picking warps on CC2.1 devices?
-  * Instruction latencies
-  * Effects of larger-than-32-bit accesses
-  * Register bank conflict
+  * Register file
+    * row size
+    * ports
+    * allocation
+  * Instruction cache
+    * size, associativity, prefetch pattern
 
 ====Memory-related====
   * Latency
     * Various types of caches and memories
-    * Various modifiers
     * Memoryfence
     * Atomic
   * Cache associativity
-  * Cache eviction protocol
-  * Cache consistency across kernel launches, context switches
-  * Cache sharing. (L2)
-  * Specific types
-    * Constant memory
-    * Texture memory
-    * Local memory
-    * Global memory
-    * Shared memory
+  * Cache eviction policy
+  * L2 structure
+  * Cache consistency across kernel launches
 
 ====Others====
   * Kernel launch overhead
