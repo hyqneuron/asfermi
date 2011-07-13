@@ -10,12 +10,8 @@ The major parts of the assembler are already done. Now I'm in the progress of ad
 
 ----
 *Time line*
-  * By 16/6/2011: in-line comment, constant operands
-  * By 30/6/2011: produce cubin independently (kernel info section, constant symbol, shared memory, device function section, directives to mark kernels)
-  * By 15/7/2011: support all 4-byte instructions as well as their 8-byte counterparts.
-<wiki:comment>
-  by 20/7/2011: probe instruction latencies for important instructions
-</wiki:comment>
+  * By 17/7/2011: support all the most frequently used instructions.
+  * By 20/7/2011: find out latency for the supported instructions.
 ----
 
 ===Microbenchmarking===
