@@ -32,6 +32,7 @@ This is a page where all other wiki pages of this project are listed and briefly
   * [OpcodeDataMovement]: Opcode and instruction description for data movement instructions.
   * [OpcodeFloat]: Opcode and instruction description for floating point number operation instructions.
   * [OpcodeInteger]: Opcode and instruction description for integer operation instructions.
+  * [OpcodeConversion]: Opcode and instruction description for conversion instructions.
   * [OpcodeMiscellaneous]: Opcode and instruction description for miscellaneous instructions.
 
 ----
