@@ -1,0 +1,87 @@
+#summary Opcode and instruction usage for conversion instructions.
+
+Note: round brackets, instead of square brackets, are used to represent an optional component. This is to avoid confusion with memory operands which are surrounded by square brackets.
+
+Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand] may be mentioned in the parts below. Please visit these two links for more information regarding their meaning.
+
+== Conversion Instructions ==
+
+==== F2I ====
+Instruction usage:
+{{{
+F2I(.FTZ)(.dtype)(.stype)(.rnd) reg0, (-)composite operand;
+}}}
+Template opcode
+{{{
+0010 000100 1110 000000 010010 0000000000000000000000 0000000000 101000
+        mod        reg0   mod2                  immea       mod3
+}}}
+||mod 1||meaning ||
+||0    ||default ||
+||1    ||negate composite operand||
+
+||mod 2||.dtype ||
+||0    ||.Uxx   ||
+||1    ||.Sxx   ||
+
+||mod 3||meaning||
+||0    ||default||
+||1    ||modulus on composite operand||
+
+||mod2 1:2||.stype ||
+||10      ||.F16   ||
+||01      ||default(.F32)||
+||11      ||.F64   ||
+
+||mod2 4:5||.dtype ||
+||10      ||.x16   ||
+||01      ||.x32   ||
+||11      ||.x64   ||
+
+||mod3 2 ||meaning||
+||0      ||default||
+||1      ||.FTZ   ||
+
+||mod3 7:8||.rnd  ||
+||10      ||.FLOOR||
+||01      ||.CEIL ||
+||11      ||.TRUNC||
+
+----
+==== I2F ====
+Instruction usage:
+{{{
+I2F(.dtype)(.stype)(.rnd) reg0, composite operand;
+}}}
+Template opcode
+{{{
+0010 000001 1110 000000 010010 0000000000000000000000 0000000000 011000
+        mod        reg0   mod2                  immea       mod3
+}}}
+
+||mod 0||.stype||
+||0    ||.Uxx  ||
+||1    ||.Sxx  ||
+
+||mod 1||meaning ||
+||0    ||default ||
+||1    ||negate composite operand||
+
+||mod 3||meaning||
+||0    ||default||
+||1    ||modulus on composite operand||
+
+||mod2 1:2 ||.stype||
+||10       ||.x16  ||
+||01       ||.x32(default)||
+||11       ||.x64  ||
+
+||mod2 4:5 ||.dtype||
+||10      ||.F16   ||
+||01      ||default(.F32)||
+||11      ||.F64   ||
+
+||mod3 7:8||.rnd  ||
+||10      ||.RM   ||
+||01      ||.RP   ||
+||11      ||.RZ   ||
