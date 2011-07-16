@@ -89,7 +89,7 @@ Template opcode
 1010 000100 1110 000000 000000 0000000000000000 0000000000000010 000011
         mod        reg0   reg1           0xabcd
 }}}
-For various values of mod and their meaning please refer to the LD instruction above.
+.type is the same as in LD.
 
 ----
 ==== LDC ====
@@ -157,4 +157,4 @@ Template opcode
 1010 000100 1110 000000 000000 0000000000000000 0000000000000010 010011
         mod        reg0   reg1           0xabcd
 }}}
-For various values of mod and their meaning please refer to the LD instruction above.
+.type is the same as in LD.
