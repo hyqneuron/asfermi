@@ -1,7 +1,9 @@
 #summary A development log
 
 ==== 16th July, 2011 ====
-Just added support for .shared, .local and .nv.constant2 cubin sections. Documentation will come later.
+Added support for .shared, .local and .nv.constant2 cubin sections. Documentation will come later.
+
+6pm: Added support for LDC, LDU, LDL and STL. Cache operators are now supported as well.
 
 ----
 ==== 12th July, 2011 ====
