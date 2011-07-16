@@ -29,6 +29,12 @@ Template opcode:
 1010 000100 1110 000000 000000 00000000000000000000000000000000 000001
         mod        reg0   reg1                           0xabcd
 }}}
+||mod 0:1 || .cop ||
+||00      ||default(.ca)||
+||10      ||.CG   ||
+||01      ||.CS   ||
+||11      ||.CV   ||
+
 ||mod 2:4 || .type ||
 ||000     || .U8     ||
 ||100     || .S8     ||
@@ -37,6 +43,18 @@ Template opcode:
 ||001     ||default(.u32)||
 ||101     ||.64     ||
 ||011     ||.128    ||
+
+----
+==== LDU ====
+Instruction usage:
+{{{
+LD(.type) reg0, [reg1(+0xabcd)];
+}}}
+Template opcode
+{{{
+1010 000100 1110 000000 000000 00000000000000000000000000000000 010001
+        mod        reg0   reg1                           0xabcd
+}}}
 
 ----
 ==== LDS ====
@@ -54,6 +72,7 @@ Template opcode
         mod        reg0   reg1           0xabcd
 }}}
 For various values of mod and their meaning please refer to the LD instruction above.
+
 ----
 ==== ST ====
 Instruction usage:
