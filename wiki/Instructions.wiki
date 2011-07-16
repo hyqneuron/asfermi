@@ -2,7 +2,7 @@
 
 = Instructions =
 == Currently Supported ==
-MOV, LD, ST, EXIT, FADD, FMUL, FFMA, IADD, IMUL, IMAD, NOP, ISETP, FSETP, S2R, LOP, RET, PRET, BRA, CAL, STS, LDS.
+MOV, LD, LDU, LDL, LDC, LDS, ST, STL, STS, FADD, FMUL, FFMA, IADD, IMUL, IMAD, ISETP, FSETP, S2R, LOP, I2F, F2I, EXIT, RET, PRET, BRA, CAL, NOP.
 
 For more information regarding the supported instructions, their usage and opcodes, please see [Opcode], [OpcodeDataMovement], [OpcodeExecution], [OpcodeFloat], [OpcodeInteger] and [OpcodeMiscellaneous].
 
