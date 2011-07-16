@@ -337,8 +337,12 @@ void Initialize() //set up the various lists
 	//data movement
 	csInstructionRulePrepList.push_back(&IRMOV);
 	csInstructionRulePrepList.push_back(&IRLD);
-	csInstructionRulePrepList.push_back(&IRST);
+	csInstructionRulePrepList.push_back(&IRLDU);
+	csInstructionRulePrepList.push_back(&IRLDL);
+	csInstructionRulePrepList.push_back(&IRLDC);;
 	csInstructionRulePrepList.push_back(&IRLDS);
+	csInstructionRulePrepList.push_back(&IRST);
+	csInstructionRulePrepList.push_back(&IRSTL);
 	csInstructionRulePrepList.push_back(&IRSTS);
 	//execution control
 	csInstructionRulePrepList.push_back(&IRBRA);
