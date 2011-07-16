@@ -22,7 +22,7 @@ Template opcode:
 ==== LD ====
 Instruction usage:
 {{{
-LD(.type) reg0, [reg1(+0xabcd)];
+LD(.cop)(.type) reg0, [reg1(+0xabcd)];
 }}}
 Template opcode:
 {{{
@@ -46,19 +46,37 @@ Template opcode:
 
 ----
 ==== LDU ====
+Load uniform. Same as ldu in ptx.
+
 Instruction usage:
 {{{
-LD(.type) reg0, [reg1(+0xabcd)];
+LDU(.type) reg0, [reg1(+0xabcd)];
 }}}
 Template opcode
 {{{
 1010 000100 1110 000000 000000 00000000000000000000000000000000 010001
         mod        reg0   reg1                           0xabcd
 }}}
+.type is the same as in LD
+
+----
+==== LDL ====
+Load local memory. Same as ld.local in ptx
+
+Instruction usage:
+{{{
+LDL(.cop)(.type) reg0, [reg1(+0xabcd)];
+}}}
+Template opcode
+{{{
+1010 000100 1110 000000 000000 00000000000000000000000000000000 000011
+        mod        reg0   reg1                           0xabcd
+}}}
+.type is exactly the same as in LD. As for .cop, .CS is replaced with .LU instead.
 
 ----
 ==== LDS ====
-Load shared memory.
+Load shared memory. Same as ld.shared in ptx
 
 Instruction usage:
 {{{
@@ -74,21 +92,59 @@ Template opcode
 For various values of mod and their meaning please refer to the LD instruction above.
 
 ----
+==== LDC ====
+Load constant memory. Same as ld.const in ptx.
+
+Instruction usage:
+{{{
+LDC(.type) reg0, c[0xa][0xbcde]
+}}}
+Template opcode
+{{{
+0110 000100 1110 000000 000000 0000000000000000 00000 00000000000 101000
+        mod        reg0   reg1           0xbcde   0xa
+}}}
+.type is the same as in LD.
+
+While it appears that 0xa could have a maximum of 0x1f, for now asfermi does not allow any value beyond 0xf. 0xbcde must less than 0x10000.
+
+----
 ==== ST ====
 Instruction usage:
 {{{
-ST(.type) [reg1(+0xabcd)], reg0;
+ST(.cop)(.type) [reg1(+0xabcd)], reg0;
 }}}
 Template opcode:
 {{{
 1010 000100 1110 000000 000000 00000000000000000000000000000000 001001
-                   reg0   reg1                           0xabcd
+        mod        reg0   reg1                           0xabcd
 }}}
-For various values of mod and their meaning please refer to the LD instruction above.
+For various values of mod 2:4 (.type) and their meaning please refer to the LD instruction above.
+
+||mod 0:1 || .cop ||
+||00      ||default(.wb)||
+||10      ||.CG   ||
+||01      ||.CS   ||
+||11      ||.WT   ||
+
+----
+==== STL ====
+Store to local memory. Same as st.local in ptx.
+
+Instruction usage:
+{{{
+STL(.cop)(.type) [reg1(+0xabcd)], reg0;
+}}}
+Template opcode
+{{{
+1010 000100 1110 000000 000000 00000000000000000000000000000000 010011
+        mod        reg0   reg1                           0xabcd
+}}}
+the meaning of mod(.cop and .type) is exactly same as in ST.
 
 ----
 ==== STS ====
-Store shared memory.
+Store shared memory. Same as st.shared in ptx
 
 Instruction usage:
 {{{
