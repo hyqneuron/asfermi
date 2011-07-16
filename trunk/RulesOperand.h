@@ -547,6 +547,43 @@ struct OperandRuleLOP: OperandRule
 	}
 }OPRLOP1(9), OPRLOP2(8);
 
+struct OperandRuleF2I: OperandRule
+{
+	bool F2I;
+	OperandRuleF2I(bool f2I): OperandRule(Custom)
+	{
+		F2I = f2I;
+	}
+	virtual void Process(SubString &component)
+	{
+		bool operated = false;
+		if(component[0]=='-')
+		{
+			operated = true;
+			csCurrentInstruction.OpcodeWord0 |= 1<<8;
+			component.Start++;
+			component.Length--;
+		}
+		else if(component[0]=='|')
+		{
+			operated = true;
+			csCurrentInstruction.OpcodeWord0 |= 1<<6;
+			component.Start++;
+			component.Length--;
+		}
+		if(F2I)
+			OPRFMULStyle.Process(component);
+		else
+			OPRIMULStyle.Process(component);
+		if(operated)
+		{
+			component.Start--;
+			component.Length++;
+		}
+	}
+}OPRF2I(true), OPRI2F(false);
+
+
 //---End of secondary operand rules
 //-----End of Specifc Operand Rules
 

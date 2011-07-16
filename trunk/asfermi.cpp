@@ -344,6 +344,9 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back(&IRST);
 	csInstructionRulePrepList.push_back(&IRSTL);
 	csInstructionRulePrepList.push_back(&IRSTS);
+	//conversion
+	csInstructionRulePrepList.push_back(&IRF2I);
+	csInstructionRulePrepList.push_back(&IRI2F);
 	//execution control
 	csInstructionRulePrepList.push_back(&IRBRA);
 	csInstructionRulePrepList.push_back(&IRCAL);
