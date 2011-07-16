@@ -1,6 +1,10 @@
 #summary A development log
 
-==== 12th July, 2012 ====
+==== 16th July, 2011 ====
+Just added support for .shared, .local and .nv.constant2 cubin sections. Documentation will come later.
+
+----
+==== 12th July, 2011 ====
 Added support for LOP, RET, PRET, BRA, CAL, STS, LDS.
 
 ----
