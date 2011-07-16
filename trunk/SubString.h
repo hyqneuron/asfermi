@@ -12,6 +12,8 @@ using namespace std;
 extern char* csSource;
 extern void hpWarning(int e);
 
+
+char str_zerosaver;
 struct SubString
 {
 	int Length;
@@ -100,6 +102,14 @@ struct SubString
 				return false;
 		}
 		return true;
+	}
+	void SubEndWithNull()
+	{
+		str_zerosaver = Start[Length];
+	}
+	void RecoverEndWithNull()
+	{
+		Start[Length] = str_zerosaver;
 	}
 
 //Parsing functions

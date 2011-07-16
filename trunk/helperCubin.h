@@ -93,10 +93,12 @@ void hpCubinStage1()
 	}
 	//Setup SectionIndex, SHStrTabOffset for .nv.info, nv.constant2
 	
-	//constant2 not implemented yet
-	//cubinSectionConstant2.SectionIndex = cubinCurrentSectionIndex++;
-	//cubinSectionConstant2.SHStrTabOffset = cubinCurrentSHStrTabOffset;
-	//cubinCurrentSHStrTabOffset += strlen(cubin_str_constant2) + 1;
+	if(cubinConstant2Size)
+	{
+		cubinSectionConstant2.SectionIndex = cubinCurrentSectionIndex++;
+		cubinSectionConstant2.SHStrTabOffset = cubinCurrentSHStrTabOffset;
+		cubinCurrentSHStrTabOffset += strlen(cubin_str_constant2) + 1;
+	}
 
 	cubinSectionNVInfo.SectionIndex = cubinCurrentSectionIndex++;
 	cubinSectionNVInfo.SHStrTabOffset = cubinCurrentSHStrTabOffset;
@@ -167,7 +169,8 @@ inline void hpCubinStage2SetSHStrTabSectionContent()
 			hpCubinAddSectionName1(cubinSectionSHStrTab.SectionContent, currentOffset, cubin_str_local, kernel->KernelName);
 	}
 	//tail sections
-	//constant2 not implemented
+	if(cubinConstant2Size)
+		hpCubinAddSectionName2(cubinSectionSHStrTab.SectionContent, currentOffset, cubin_str_constant2);
 	hpCubinAddSectionName2(cubinSectionSHStrTab.SectionContent, currentOffset, cubin_str_nvinfo);
 }
 inline void hpCubinStage2SetStrTabSectionContent()
@@ -236,8 +239,8 @@ inline void hpCubinStage2SetSymTabSectionContent()
 			hpCubinStage2AddSectionSymbol(kernel->LocalSection, entry, offset, 0);
 	}
 	//tail sections
-	//constant2 not implemented
-	//hpCubinStage2AddSectionSymbol(cubinSectionConstant2, entry, offset, 0);
+	if(cubinConstant2Size)
+		hpCubinStage2AddSectionSymbol(cubinSectionConstant2, entry, offset, 0);
 	hpCubinStage2AddSectionSymbol(cubinSectionNVInfo, entry, offset, 0);
 
 	//one entry per __global__ function
@@ -350,12 +353,17 @@ void hpCubinStage3()
 			}
 		}
 
-		//.shared and .local have no file space and do not need setup
+		//.shared
+		kernel->SharedSection.SectionSize = kernel->SharedSize;
+		//.local
+		kernel->LocalSection.SectionSize = kernel->LocalSize;
 	}
 	
 
 	//tail sections
-	//.nv.constant2 not yet supported
+	//.nv.constant2, sectionContent is set up by directive
+	if(cubinConstant2Size)
+		cubinSectionConstant2.SectionSize = cubinConstant2Size;
 	
 	//.nv.info
 	cubinSectionNVInfo.SectionSize = 0x18 * csKernelList.size();//it's guaranteed by the caller that size is greater than 0
@@ -459,7 +467,9 @@ void hpCubinStage4()
 		}
 	}
 	//---tail sections
-	//constant2 not supported yet
+	//nv.constant2
+	if(cubinConstant2Size)
+		hpCubinSetELFSectionHeader1(cubinSectionConstant2, 1, 4, fileOffset);
 	//.nv.info
 	hpCubinSetELFSectionHeader1(cubinSectionNVInfo, 1, 1, fileOffset);
 	cubinSectionNVInfo.SectionHeader.Flags = 2;
@@ -501,8 +511,21 @@ void hpCubinStage5()
 		}
 	}
 
+	//.nv.constant2
+	if(cubinConstant2Size)
+	{
+		cubinSegmentHeaderConstant2.Type = 1;
+		cubinSegmentHeaderConstant2.Offset = cubinSectionConstant2.SectionHeader.FileOffset;
+		cubinSegmentHeaderConstant2.FileSize = cubinConstant2Size;
+		cubinSegmentHeaderConstant2.MemSize = cubinConstant2Size;
+		cubinSegmentHeaderConstant2.Flags = 5;
+		cubinSegmentHeaderConstant2.Alignment = 4;
+		cubinSegmentHeaderConstant2.VirtualMemAddr = 0;
+		cubinSegmentHeaderConstant2.PhysicalMemAddr = 0;
+		count++;
+	}
 	
-	cubinPHCount = count + 1; // +1 is the SELF. should +2 if constant2 is to be included
+	cubinPHCount = count + 1; // +1 is the SELF
 	//PHTSelf
 	cubinSegmentHeaderPHTSelf.Type = 6;
 	cubinSegmentHeaderPHTSelf.Flags = 5;
@@ -562,12 +585,13 @@ void hpCubinStage7()
 		csOutput.write((char*)&kernel->Constant0Section.SectionHeader, 0x28);
 		csOutput.write((char*)&kernel->InfoSection.SectionHeader, 0x28);
 		if(kernel->SharedSize != 0)
-			csOutput.write((char*)&kernel->TextSection.SectionHeader, 0x28);
+			csOutput.write((char*)&kernel->SharedSection.SectionHeader, 0x28);
 		if(kernel->LocalSize !=0)
-			csOutput.write((char*)&kernel->TextSection.SectionHeader, 0x28);
+			csOutput.write((char*)&kernel->LocalSection.SectionHeader, 0x28);
 	}
 	//tail
-	//constant2 not implemented
+	if(cubinConstant2Size)
+		csOutput.write((char*)&cubinSectionConstant2.SectionHeader, 0x28);
 	csOutput.write((char*)&cubinSectionNVInfo.SectionHeader, 0x28);
 
 	//---Sections
@@ -581,12 +605,10 @@ void hpCubinStage7()
 		csOutput.write((char*)kernel->TextSection.SectionContent, kernel->TextSection.SectionSize);
 		csOutput.write((char*)kernel->Constant0Section.SectionContent, kernel->Constant0Section.SectionSize);
 		csOutput.write((char*)kernel->InfoSection.SectionContent, kernel->InfoSection.SectionSize);
-		if(kernel->SharedSize != 0)
-			csOutput.write((char*)kernel->SharedSection.SectionContent, kernel->SharedSection.SectionSize);
-		if(kernel->LocalSize !=0)
-			csOutput.write((char*)kernel->LocalSection.SectionContent, kernel->LocalSection.SectionSize);
 	}
 	//tail
+	if(cubinConstant2Size)
+		csOutput.write((char*)cubinSectionConstant2.SectionContent, cubinSectionConstant2.SectionSize);
 	csOutput.write((char*)cubinSectionNVInfo.SectionContent, cubinSectionNVInfo.SectionSize);
 
 	//---PHT
@@ -599,7 +621,8 @@ void hpCubinStage7()
 			csOutput.write((char*)&kernel->MemorySegmentHeader, 0x20);
 	}
 	//ending segments
-	//constant2 not implemented
+	if(cubinConstant2Size)
+		csOutput.write((char*)&cubinSegmentHeaderConstant2, 0x20);
 
 	//end
 	csOutput.flush();

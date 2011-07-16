@@ -170,6 +170,21 @@ void hpDirectiveErrorHandler(int e)
 	case 1010:	message = "Incorrect number of kernel arguments.";
 		break;
 	case 1011:	message = "Unsupported architecture. Please use only sm_20 or sm_21"; //issue: architecture support may increase in future
+		break;
+	case 1012:	message = "Constant2 size must be declared to non-zero first before constant could be declared.";
+		break;
+	case 1013:	message = "Offset is larger than constant2.";
+		break;
+	case 1014:	message = "Maximal constant2 size supported is 65536 bytes.";
+		break;
+	case 1015:	message = "Constant2 could be declared only once per cubin.";
+		break;
+	case 1016:	message = "Unsupported constant type.";
+		break;
+	case 1017:	message = "Constant object too large.";
+		break;
+	case 1018:	message = "Next directive can only be EndConstant.";
+		break;
 	default:	message = "Unknown error.";
 		break;
 	};
@@ -195,7 +210,7 @@ void hpWarning(int e)
 	default:	message = "No warning message available.";
 		break;
 	}
-	char *line = csCurrentInstruction.InstructionString.ToCharArrayStopOnCR();
+	char *line = csCurrentLine.LineString.ToCharArrayStopOnCR();
 	cout<<"Warning Line "<<csCurrentInstruction.LineNumber<<": "<<line<<": "<<message<<endl;
 	delete[] line;
 }

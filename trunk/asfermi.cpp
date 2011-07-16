@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string.h>
 #include <list>
+#include <stack>
 
 #include "SubString.h"
 #include "DataTypes.h"
@@ -108,7 +109,7 @@ void WriteToCubinDirectOutput()
 	//head sections: (null), .shstrtab, .strtab, .symtab
 	//kern sections: .text.kername, .nv.constant0.kername, (not implemented).nv.constant16.kername,
 	//				 .nv.info.kername, (optional).nv.shared.kername, (optional).nv.local.kername
-	//tail sections: (not implemented).nv.constant2, .nv.info
+	//tail sections: .nv.constant2, .nv.info
 
 	/*
 	Stage1: Set section index and section name for all sections
@@ -322,15 +323,15 @@ void OrganiseRules()
 void Initialize() //set up the various lists
 {
 	//Set default parsers
-	csMasterParserList.push_back(&DMP);
-	csLineParserList.push_back(&DLP);
-	csInstructionParserList.push_back(&DIP);
-	csDirectiveParserList.push_back(&DDP);
+	csMasterParserList.push_back(&MPDefault);
+	csLineParserList.push_back(&LPDefault);
+	csInstructionParserList.push_back(&IPDefault);
+	csDirectiveParserList.push_back(&DPDefault);
 
-	csMasterParser = &DMP;
-	csLineParser = &DLP;
-	csInstructionParser = &DIP;
-	csDirectiveParser = &DDP;
+	csMasterParser = &MPDefault;
+	csLineParser = &LPDefault;
+	csInstructionParser = &IPDefault;
+	csDirectiveParser = &DPDefault;
 	
 	//Load instruction rules
 	//data movement
@@ -364,6 +365,11 @@ void Initialize() //set up the various lists
 	csDirectiveRulePrepList.push_back(&DRKernel);
 	csDirectiveRulePrepList.push_back(&DREndKernel);
 	csDirectiveRulePrepList.push_back(&DRParam);
+	csDirectiveRulePrepList.push_back(&DRShared);
+	csDirectiveRulePrepList.push_back(&DRLocal);
+	csDirectiveRulePrepList.push_back(&DRConstant2);
+	csDirectiveRulePrepList.push_back(&DRConstant);
+	csDirectiveRulePrepList.push_back(&DREndConstant);
 	csDirectiveRulePrepList.push_back(&DRSelfDebug);
 	csDirectiveRulePrepList.push_back(&DRArch);
 	OrganiseRules();

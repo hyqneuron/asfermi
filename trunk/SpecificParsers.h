@@ -13,44 +13,45 @@ using namespace std;
 
 //	1
 //-----Declaration of default parsers: DefaultMasterParser, DefaultLineParser, DefaultInstructionParser, DefaultDirectiveParser
-struct DefaultMasterParser: MasterParser
+struct MasterParserDefault: MasterParser
 {
-	DefaultMasterParser()
+	MasterParserDefault()
 	{
 		Name = "DefaultMasterParser";
 	}
 	void Parse(unsigned int startinglinenumber);
-}DMP;
-struct DefaultLineParser : LineParser
+}MPDefault;
+struct LineParserDefault : LineParser
 {
-	DefaultLineParser()
+	LineParserDefault()
 	{
 		Name = "DefaultLineParser";
 	}
 	void Parse(Line &line);
-}DLP;
-struct DefaultInstructionParser: InstructionParser
+}LPDefault;
+struct InstructionParserDefault: InstructionParser
 {
-	DefaultInstructionParser()
+	InstructionParserDefault()
 	{
 		Name = "DefaultInstructionParser";
 	}
 	void Parse();
-}DIP;
-struct DefaultDirectiveParser: DirectiveParser
+}IPDefault;
+struct DirectiveParserDefault: DirectiveParser
 {
-	DefaultDirectiveParser()
+	DirectiveParserDefault()
 	{
 		Name = "DefaultDirectiveParser";
 	}
 	void Parse();
-}DDP;
+}DPDefault;
 //-----End of default parser declarations
 
 
-//	10
+
+//	2
 //-----Implementation of the parse() functions for parsers declared in 1.
-void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
+void MasterParserDefault:: Parse(unsigned int startinglinenumber)
 {
 	list<Line>::iterator cLine = csLines.begin(); //current line	
 	
@@ -58,61 +59,63 @@ void DefaultMasterParser:: Parse(unsigned int startinglinenumber)
 	//Going through all lines
 	for(unsigned int i =startinglinenumber; i<csLines.size(); i++, cLine++)
 	{
+		csCurrentLine = *cLine;
 		cLine->LineString.RemoveBlankAtBeginning();
-		lineLength = cLine->LineString.Length;
 		//Jump to next line if there's nothing in this line
-		if(lineLength==0)
+		if(cLine->LineString.Length<=0)
 			continue;
-		if(cLine->LineString[0]=='!') //if it's directive, build it, parse it and append it to csDirectives. Issue: the first character of the line must be '!'
-		{
-			try
-			{
-				//build the new directive
-				csCurrentDirective.Reset(cLine->LineString, cLine->LineNumber);
-				csDirectiveParser->Parse();						//parse it. the parser will decide whether to append it to csDirectives or not
-			}
-			catch(int e)
-			{
-				hpDirectiveErrorHandler(e);
-			}
-		}
-		else //if it's not directive, it's instruction. Break it if it has ';'
-		{
-			try
-			{
-				//look for instruction delimiter ';'				
-				int startPos = 0;
-				int lastfoundpos = cLine->LineString.Find(';', startPos); //search for ';', starting at startPos
-				while(lastfoundpos!=-1)
-				{
-					//Build an instruction, parse it and the parser will decide whether to append it to csInstructions or not
-					csCurrentInstruction.Reset(cLine->LineString.SubStr(startPos, lastfoundpos - startPos), csInstructionOffset, cLine->LineNumber);
-					csInstructionParser->Parse();
-					startPos = lastfoundpos + 1; //starting position of next search
-					lastfoundpos = cLine->LineString.Find(';', startPos); //search for ';', starting at startPos
-				}
-				//still have to deal with the last part of the line, which may not end with ';'
-				if(startPos < lineLength)
-				{
-					csCurrentInstruction.Reset(cLine->LineString.SubStr(startPos, lineLength - startPos), csInstructionOffset, cLine->LineNumber);
-					csInstructionParser->Parse();
-				}
-			}
-			catch(int e)
-			{
-				hpInstructionErrorHandler(e);
-			}			
-		}
+		csLineParser->Parse(*cLine);
 	}
 }
 
 //entire thing is done in the masterparser. So this is left empty for now.
-void DefaultLineParser:: Parse(Line &line)
+void LineParserDefault:: Parse(Line &line)
 {
+	int lineLength = line.LineString.Length;
+	if(line.LineString[0]=='!') //if it's directive, build it, parse it and append it to csDirectives. Issue: the first character of the line must be '!'
+	{
+		try
+		{
+			//build the new directive
+			csCurrentDirective.Reset(line.LineString, line.LineNumber);
+			csDirectiveParser->Parse();						//parse it. the parser will decide whether to append it to csDirectives or not
+		}
+		catch(int e)
+		{
+			hpDirectiveErrorHandler(e);
+		}
+	}
+	else //if it's not directive, it's instruction. Break it if it has ';'
+	{
+		try
+		{
+			//look for instruction delimiter ';'				
+			int startPos = 0;
+			int lastfoundpos = line.LineString.Find(';', startPos); //search for ';', starting at startPos
+			while(lastfoundpos!=-1)
+			{
+				//Build an instruction, parse it and the parser will decide whether to append it to csInstructions or not
+				csCurrentInstruction.Reset(line.LineString.SubStr(startPos, lastfoundpos - startPos), csInstructionOffset, line.LineNumber);
+				csInstructionParser->Parse();
+				startPos = lastfoundpos + 1; //starting position of next search
+				lastfoundpos = line.LineString.Find(';', startPos); //search for ';', starting at startPos
+			}
+			//still have to deal with the last part of the line, which may not end with ';'
+			if(startPos < lineLength)
+			{
+				csCurrentInstruction.Reset(line.LineString.SubStr(startPos, lineLength - startPos), csInstructionOffset, line.LineNumber);
+				csInstructionParser->Parse();
+			}
+		}
+		catch(int e)
+		{
+			hpInstructionErrorHandler(e);
+		}			
+	}
 }
 
 
-void DefaultInstructionParser:: Parse()
+void InstructionParserDefault:: Parse()
 {
 	hpParseBreakInstructionIntoComponents();
 
@@ -228,7 +231,7 @@ APPEND:
 	csInstructions.push_back(csCurrentInstruction);
 }
 
-void DefaultDirectiveParser:: Parse()
+void DirectiveParserDefault:: Parse()
 {
 	hpParseBreakDirectiveIntoParts();
 	if(csCurrentDirective.Parts.size()==0)
@@ -245,6 +248,127 @@ void DefaultDirectiveParser:: Parse()
 }
 
 //-----End of parse() function implementation for default parsers
+
+
+struct LineParserConstant2 : LineParser
+{
+	LineParserConstant2()
+	{
+		Name = "ConstantLineParser";
+	}
+	void Parse(Line &line)
+	{
+		
+		try
+		{
+			if(cubinConstant2Overflown)
+				return;
+			//directive
+			if(line.LineString[0]=='!')
+			{
+					//build the new directive
+				csCurrentDirective.Reset(line.LineString, line.LineNumber);
+				hpParseBreakDirectiveIntoParts();
+				if(csCurrentDirective.Parts.size()!=1 || !csCurrentDirective.Parts.begin()->Compare("EndConstant"))
+					throw 1018; //Next directive can only be EndConstant
+				csDirectiveParser->Parse();
+			}
+			//constant
+			else
+			{	
+				int startPos = 0;
+				int lastfoundpos = line.LineString.Find(',', startPos); //search for ';', starting at startPos
+				while(lastfoundpos!=-1)
+				{
+					cubinCurrentConstant2Parser(line.LineString.SubStr(startPos, lastfoundpos - startPos));
+					if(cubinCurrentConstant2Offset>cubinConstant2Size)
+					{
+						cubinConstant2Overflown = true;
+						throw 1017; //constant object too large
+						return;
+					}
+					startPos = lastfoundpos + 1;
+					lastfoundpos = line.LineString.Find(',', startPos);
+				}
+				if(startPos < line.LineString.Length)
+				{
+					cubinCurrentConstant2Parser(line.LineString.SubStr(startPos, line.LineString.Length - startPos));
+					if(cubinCurrentConstant2Offset>cubinConstant2Size)
+					{
+						cubinConstant2Overflown = true;
+						throw 1017;
+						return;
+					}
+				}
+			}
+		}
+		catch(int e)
+		{
+			hpDirectiveErrorHandler(e);
+		}
+	}
+}LPConstant2;
+
+//issue: the parsers do not report error if result 0 is returned
+
+	void Constant2ParseInt(SubString &content)
+	{
+		content.SubEndWithNull();
+		int result = atoi(content.Start);
+		content.RecoverEndWithNull();
+
+		*(int*)(cubinSectionConstant2.SectionContent+cubinCurrentConstant2Offset) = result;
+		cubinCurrentConstant2Offset+=4;
+	}
+
+	void Constant2ParseLong(SubString &content)
+	{
+		content.SubEndWithNull();
+		long long result = atol(content.Start);
+		content.RecoverEndWithNull();
+
+		*(long long *)(cubinSectionConstant2.SectionContent+cubinCurrentConstant2Offset) = result;
+		cubinCurrentConstant2Offset+=8;
+	}
+
+	void Constant2ParseFloat(SubString &content)
+	{
+		content.SubEndWithNull();
+		float result = atof(content.Start);
+		content.RecoverEndWithNull();
+		*(float *)(cubinSectionConstant2.SectionContent+cubinCurrentConstant2Offset) = result;
+		cubinCurrentConstant2Offset+=4;
+	}
+	void Constant2ParseDouble(SubString &content)
+	{
+		content.SubEndWithNull();
+		double result = atof(content.Start);
+		content.RecoverEndWithNull();
+
+		*(double *)(cubinSectionConstant2.SectionContent+cubinCurrentConstant2Offset) = result;
+		cubinCurrentConstant2Offset+=8;
+	}
+
+	void Constant2ParseMixed(SubString &content)
+	{
+		content.RemoveBlankAtBeginning();
+		if(content.Length==0)
+		{
+			cubinCurrentConstant2Offset += 4;
+			return; //
+		}
+		unsigned int result;
+		if(content[0]=='F')
+			result = content.ToImmediate32FromFloatConstant();
+		else if(content.Length>2 && content[0]=='0' && (content[1]=='X' || content[1]=='x'))
+			result = content.ToImmediate32FromHexConstant(true);
+		else
+			result = content.ToImmediate32FromIntConstant();
+
+		*(unsigned int *)(cubinSectionConstant2.SectionContent+cubinCurrentConstant2Offset) = result;
+		cubinCurrentConstant2Offset+=4;
+	}
+
 #else
 #define SpecificParsersDefined
 #endif

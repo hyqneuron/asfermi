@@ -9,10 +9,13 @@ All globla variables are prefixed with 'cs', meaning "current state"
 
 using namespace std;
 
+extern struct Constant2Parser;
+
 bool csSelfDebug = false;
 
 int csLineNumber = 0;
 int csInstructionOffset;
+Line		csCurrentLine;
 Instruction csCurrentInstruction;
 Directive   csCurrentDirective;
 
@@ -50,6 +53,11 @@ int* csDirectiveRuleIndices; //Directive name index of the corresponding element
 int csDirectiveRuleCount;
 list<DirectiveRule*>  csDirectiveRulePrepList; //used for preperation
 
+stack<MasterParser*>	csMasterParserStack;
+stack<LineParser*>		csLineParserStack;
+stack<InstructionParser*>  csInstructionParserStack;
+stack<DirectiveParser*> csDirectiveParserStack;
+
 MasterParser*		csMasterParser;  //curent Master Parser
 LineParser*			csLineParser;
 InstructionParser*	csInstructionParser;
@@ -66,8 +74,8 @@ list<Label> csLabels;
 ELFSection cubinSectionEmpty, cubinSectionSHStrTab, cubinSectionStrTab, cubinSectionSymTab;
 ELFSection cubinSectionConstant2, cubinSectionNVInfo;
 ELFSegmentHeader cubinSegmentHeaderPHTSelf;
-//ELFSegmentHeader cubinSegmentConstant2;
-//ELFSection cubinSectionNVConstant0
+ELFSegmentHeader cubinSegmentHeaderConstant2;
+
 
 unsigned int cubinCurrentSectionIndex = 0;
 unsigned int cubinCurrentOffsetFromFirst = 0; //from the end of the end of .symtab
@@ -76,6 +84,12 @@ unsigned int cubinCurrentStrTabOffset = 0;
 unsigned int cubinTotalSectionCount =0;
 unsigned int cubinPHTOffset = 0;
 unsigned int cubinPHCount;
+unsigned int cubinConstant2Size = 0;
+unsigned int cubinCurrentConstant2Offset = 0;
+bool cubinConstant2Overflown = false;
+
+void (*cubinCurrentConstant2Parser)(SubString &content);
+
 enum Architecture{sm_20, sm_21};
 Architecture cubinArchitecture = sm_20; //default architecture is sm_20
 bool cubin64Bit = false;
