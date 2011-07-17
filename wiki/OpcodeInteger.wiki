@@ -18,6 +18,24 @@ Template opcode:
                    reg0   reg1                  immea
 }}}
 
+----
+==== IADD32I ====
+Template opcode
+{{{
+0100 000000 1110 000000 000000 00000000000000000000000000000000 0 10000
+        mod        reg0   reg1                           0xabcd m
+}}}
+||mod bit||meaning   ||
+||3      ||0: default||
+||       ||1: .X     ||
+||4      ||0: default||
+||       ||1: .SAT   ||
+
+||m 0  ||meaning||
+||0    ||default||
+||1    ||.CC on reg0||
+
+----
 ==== IMUL ====
 Instruction Usage
 {{{
@@ -41,6 +59,7 @@ Template opcode:
 ||0     ||default||
 ||1     ||.SAT   ||
 
+----
 ==== IMAD ====
 Instruction usage:
 {{{
@@ -54,6 +73,7 @@ Template opcode:
 }}}
 The use of mod and mod2 is the same as in IMUL.
 
+----
 ==== ISETP ====
 Template opcode:
 {{{
