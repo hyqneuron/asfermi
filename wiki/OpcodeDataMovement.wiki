@@ -19,6 +19,18 @@ Template opcode:
 }}}
 
 ----
+==== MOV32I ====
+Instruction usage:
+{{{
+MOV32I reg0, 0xabcd/1234;
+}}}
+Template opcode
+{{{
+0100 011110 1110 000000 000000 00000000000000000000000000000000 011000
+                   reg0                                  0xabcd
+}}}
+
+----
 ==== LD ====
 Instruction usage:
 {{{
