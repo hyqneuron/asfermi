@@ -20,6 +20,7 @@
     * [nanb]
     * [OpcodeExecution]
     * [OpcodeDataMovement]
+    * [OpcodeLogic]
     * [OpcodeFloat]
     * [OpcodeInteger]
     * [OpcodeConversion]
