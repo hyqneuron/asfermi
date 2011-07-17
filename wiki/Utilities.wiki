@@ -40,7 +40,7 @@ Ctrl+Down = go to box below
 *Note*: You will need [http://www.go-mono.com/mono-downloads/download.html Mono] if your OS does not already support .NET 3.5. 
 
 May contain bug, as most of it was written while I was half-asleep. This program is written with minimal complexity so you could expect crashes whenever you do something I did not expect.
-[http://code.google.com/p/asfermi/downloads/detail?name=CUBINEditor%20v3.zip Download]
+[http://code.google.com/p/asfermi/downloads/detail?name=CUBINEditor%20v4.zip Download]
 
 ====Change log====
 =====V2=====
@@ -49,3 +49,5 @@ Added support for command-line argument.
 Added a button "File Info". Other 3 disabled buttons are just there for my own use. The "Fill bits" button permutes na and nb bits for 512 instructions. If you want to use this button please modify its property, Enabled, as well as the clicking event handling code on your own.
 
 Currently it has some display glitches when running on Mono under Ubuntu, and the FileInfo page doesn't show up properly. I shouldn't have used the ListView structure.
+=====V4=====
+The display problems are fixed. Not sure how well it runs on native Linux but on my VirtualBox Ubuntu it was terribly slow. Note that this package libmono-winforms2.0-cil is probably needed for Mono to run correctly.
