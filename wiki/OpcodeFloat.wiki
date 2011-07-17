@@ -19,7 +19,26 @@ Template opcode:
         mod        reg0   reg1                  immea
 }}}
 
+----
+==== FADD32I ====
+Instruction usage:
+{{{
+FADD32I(.FTZ) reg0, (-/|)reg1(|), 0xabcd;
+}}}
+Template opcode
+{{{
+0100 000000 1110 000000 000000 00000000000000000000000000000000 010100
+        mod        reg0   reg1                           0xabcd
+}}}
+||mod bit|| meaning  ||
+||0      ||0: default||
+||       ||1: negate reg1||
+||2      ||0: default||
+||       ||1: modulus reg1||
+||4      ||0: default||
+||       ||1: .FTZ||
 
+----
 ==== FMUL ====
 Template opcode:
 {{{
