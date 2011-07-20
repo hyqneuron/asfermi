@@ -18,6 +18,9 @@ Template opcode:
 0000 000000 1110 000000 000000 0000000000000000000000 0000000000 001010
         mod        reg0   reg1                  immea
 }}}
+||mod 1|| meaning ||
+||0    ||default||
+||1    ||-composite operand||
 
 ----
 ==== FADD32I ====
@@ -40,12 +43,16 @@ Template opcode
 
 ----
 ==== FMUL ====
+Instruction usage:
+{{{
+FMUL(.rnd)(.SAT) reg0, reg1, composite operand;
+}}}
 Template opcode:
 {{{
 0000 000000 1110 000000 000000 0000000000000000000000 0000000000 011010
         mod        reg0   reg1                  immea       mod2
 }}}
-||mod2 1:2 || meaning||
+||mod2 1:2 || .rnd||
 ||00||default (.rn) ||
 ||10||.RM ||
 ||01||.RP ||
@@ -55,6 +62,7 @@ Template opcode:
 ||0||default||
 ||1||.SAT||
 
+----
 ==== FFMA ====
 Instruction Usage:
 {{{
@@ -67,6 +75,7 @@ Template Opcode
 }}}
 mod2 1:2 and mod 4 follow the same rules as FMUL.
 
+----
 ==== FSETP ====
 Instruction usage:
 {{{
