@@ -35,9 +35,9 @@ Template opcode
 }}}
 ||mod bit|| meaning  ||
 ||0      ||0: default||
-||       ||1: negate reg1||
+||       ||1: -reg1||
 ||2      ||0: default||
-||       ||1: modulus reg1||
+||       ||1: |reg1| ||
 ||4      ||0: default||
 ||       ||1: .FTZ||
 
