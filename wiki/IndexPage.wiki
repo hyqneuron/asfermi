@@ -22,6 +22,7 @@ This is a page where all other wiki pages of this project are listed and briefly
 
 === Development related ===
   * [Design]: This page describes the framework under which the assembler is written.
+  * [HowToStart]: This page lists the procedures of opcode probing
   * [PTXpriority]: The probing of various PTX instruction and their corresponding opcode will be done in stages. This page lists the priority of each PTX instruction in the probing process.
   * [Utilities] A page describing the utilities made for the purpose of this project.
 
