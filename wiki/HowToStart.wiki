@@ -10,9 +10,42 @@ This page is written by hyq.neuron for the other asfermi team members.
   # Use cuobjdump to disassemble the cubin. From the disassembled code, identify the types of operands for this instruction
   # Use cubinEditor from [http://code.google.com/p/asfermi/downloads/list Downloads] to [Utilities#cubin_binary_editor open] the cubin
   # Document the template opcode on the correct opcode page (We'll discuss which category an instruction belongs to before we start probing). The default modifier bits should be present, so should the default predicate bits(1110). However, please leave all other operand-specific bits as zeros.
-  # Identify and document the meaning of various modifier bit fields
+  # Apart from the variation in modifiers that are already present, please also check for other potential modifier bits by tweaking the unused bit fields.
+  # Identify and document the meaning of various modifier bit fields. If you do not understand what a certain modifier means, please leave a question mark at the end of its name, e.g. .H?.
 
 Things will be clearer after you have thoroughly looked through the opcode pages that I have written so far.
 
+An example of doucmentation taken from [OpcodeFloat]:
+----
+Instruction usage:
+{{{
+FMUL(.rnd)(.SAT) reg0, reg1, composite operand;
+}}}
+Template opcode:
+{{{
+0000 000000 1110 000000 000000 0000000000000000000000 0000000000 011010
+        mod        reg0   reg1                  immea       mod2
+}}}
+||mod2 1:2 || .rnd||
+||00||default (.rn) ||
+||10||.RM ||
+||01||.RP ||
+||11||.RZ ||
+
+||mod 4 value||meaning||
+||0||default||
+||1||.SAT||
+
+----
+A few more examples: [OpcodeConversion#F2I], [OpcodeFloat#FSETP]
+
+If you want, you can try your hand at these simple ones first:
+{{{
+PBK, BRK, PCNT, CONT
+}}}
+All of them are [OpcodeExecution Execution Control Instructions]. Just note that the PBK and PCNT instructions take relative address as operand. If you do not know what these instructions mean, please check up the cuobjdump.pdf that comes with CUDA toolkit 4.0. These 4 simple instructions do not require the use of PTX in probing.
+
+== Adding support for instructions in asfermi ==
+Coming soon
+
 == Probing architectural features ==
-TBD
