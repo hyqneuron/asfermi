@@ -1,12 +1,18 @@
 #summary How to probe instruction opcodes, architectural features.
 
+This page is written by hyq.neuron for the other asfermi team members.
+
 == Probing opcode ==
   # Familiarize yourself with the bit fields of Fermi's opcodes. You can look through all the [Opcode] pages to get a rough idea.
   # Choose an instruction you intend to probe
   # Find out the possible corresponding PTX instruction
   # Code in PTX, with as many permutations of suitable modifiers as possible, and produce the corresponding cubin. PTX modifiers can be found from the PTX manual 2.3 from CUDA Toolkit 4.0
+  # Use cuobjdump to disassemble the cubin. From the disassembled code, identify the types of operands for this instruction
   # Use cubinEditor from [http://code.google.com/p/asfermi/downloads/list Downloads] to [Utilities#cubin_binary_editor open] the cubin
-  # Document the template opcode on the correct opcode page (We'll discuss which category an instruction belongs to before we start probing). The default modifier bits should be present, so should the default predicate bits(1110).
-  # to be continued
+  # Document the template opcode on the correct opcode page (We'll discuss which category an instruction belongs to before we start probing). The default modifier bits should be present, so should the default predicate bits(1110). However, please leave all other operand-specific bits as zeros.
+  # Identify and document the meaning of various modifier bit fields
+
+Things will be clearer after you have thoroughly looked through the opcode pages that I have written so far.
 
 == Probing architectural features ==
+TBD
