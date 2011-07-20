@@ -18,7 +18,7 @@ Template opcode
 }}}
 ||mod 1||meaning ||
 ||0    ||default ||
-||1    ||negate composite operand||
+||1    ||-composite operand||
 
 ||mod 2||.dtype ||
 ||0    ||.Uxx   ||
@@ -26,7 +26,7 @@ Template opcode
 
 ||mod 3||meaning||
 ||0    ||default||
-||1    ||modulus on composite operand||
+||1    || |composite operand| ||
 
 ||mod2 1:2||.stype ||
 ||10      ||.F16   ||
@@ -65,11 +65,11 @@ Template opcode
 
 ||mod 1||meaning ||
 ||0    ||default ||
-||1    ||negate composite operand||
+||1    ||-composite operand||
 
 ||mod 3||meaning||
 ||0    ||default||
-||1    ||modulus on composite operand||
+||1    || |composite operand| ||
 
 ||mod2 1:2 ||.stype||
 ||10       ||.x16  ||
