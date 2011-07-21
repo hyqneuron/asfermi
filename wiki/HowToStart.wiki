@@ -156,16 +156,19 @@ Memory operands:
 
 Composite operands:
   * OPRMOVStyle
-  * OPRFADDStyle
-  * OPRFMULStyle
-  * OPRIADDStyle
-  * OPRIMULStyle
+  * OPRFADDStyle (processes -. doesn't process int expressions)
+  * OPRFMULStyle (doesn't process -)
+  * OPRIADDStyle (processes -. doesn't process float exp)
+  * OPRIMULStyle (doesn't process -)
 
 Other operands:
-  * OPR32I
+  * OPR32I (for all 32I operands)
   * OPRLOP1
   * OPRLOP2
   * OPRF2I
   * OPRI2F
+
+You may look through the operand rules before you start writing your own operand rule. Some operand rules can be reused.
+
 ----
 == Probing architectural features ==
