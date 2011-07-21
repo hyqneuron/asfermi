@@ -170,5 +170,7 @@ Other operands:
 
 You may look through the operand rules before you start writing your own operand rule. Some operand rules can be reused.
 
+After all the rules have been created, add the instruction rule to Initialize() in asfermi.cpp and asfermi should then be able to parse the instruction.
+
 ----
 == Probing architectural features ==
