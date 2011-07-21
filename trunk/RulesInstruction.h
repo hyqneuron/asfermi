@@ -1,6 +1,4 @@
-/*
-This file contains instruction rules
-*/
+
 #include "RulesInstruction\RulesInstructionDataMovement.h"
 #include "RulesInstruction\RulesInstructionExecution.h"
 #include "RulesInstruction\RulesInstructionFloat.h"

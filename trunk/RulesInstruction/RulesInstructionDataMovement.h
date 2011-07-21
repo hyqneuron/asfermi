@@ -24,22 +24,23 @@ struct INstructionRuleMOV32I: InstructionRule
 
 
 
-
 struct InstructionRuleLD: InstructionRule
 {
 	InstructionRuleLD() : InstructionRule("LD", 2, true, false)
 	{
 		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
+		//2 operands
 		SetOperands(2, 
-					&OPRRegister0,					
-					&OPRGlobalMemoryWithImmediate32);
-		ModifierGroups[0].Initialize(true, 3,
-					&MRLDCopCG,
-					&MRLDCopCS,
-					&MRLDCopCV);
-		ModifierGroups[1].Initialize(true, 6,
-					&MRLDU8,
-					&MRLDS8,
+					&OPRRegister0,					 //register
+					&OPRGlobalMemoryWithImmediate32);//global memory
+		//2 modifier groups
+		ModifierGroups[0].Initialize(true, 3, //3 modifiers in this group
+					&MRLDCopCG, //.CG
+					&MRLDCopCS, //.CS
+					&MRLDCopCV);//.CV
+		ModifierGroups[1].Initialize(true, 6, //6 modifiers in this group
+					&MRLDU8,  //.U8
+					&MRLDS8,  //.S8
 					&MRLDU16,
 					&MRLDS16,
 					&MRLD64,

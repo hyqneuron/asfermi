@@ -17,22 +17,28 @@ struct OperandRuleIgnored: OperandRule
 
 struct OperandRule32I: OperandRule
 {
+	//this constructor is not really so useful. However, Optional operand can be indicated
+	//here with a type Optional instead of Custom
 	OperandRule32I() : OperandRule(Custom){}
 	virtual void Process(SubString &component)
 	{
 		unsigned int result;
+		//floating point number expression
 		if(component[0]=='F')
 		{
 			result = component.ToImmediate32FromFloatConstant();
 			goto write;
 		}
 		int startPos = 0;
+		//'-' here is not operator. It's part of a constant expression
 		if(component[0]=='-')
 			startPos=1;
+		//hex constant
 		if(component.Length-startPos>2 && component[startPos] == '0' && (component[startPos+1]=='x' || component[startPos+1]=='X'))
 		{
 			result = component.ToImmediate32FromHexConstant(true);
 		}
+		//int
 		else
 		{
 			result = component.ToImmediate32FromIntConstant();

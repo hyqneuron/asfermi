@@ -19,6 +19,7 @@ struct OperandRuleGlobalMemoryWithImmediate32: OperandRule
 	}
 }OPRGlobalMemoryWithImmediate32;
 
+//SharedMemory operand
 struct OperandRuleSharedMemoryWithImmediate20: OperandRule
 {
 	OperandRuleSharedMemoryWithImmediate20(): OperandRule(SharedMemoryWithImmediate20){}

@@ -22,6 +22,7 @@ struct OperandRuleMOVStyle: OperandRule
 			WriteToImmediate32(memory);
 			MarkConstantMemoryForImmediate32();
 		}
+		//constant
 		else
 		{
 			unsigned int result;
@@ -41,15 +42,15 @@ struct OperandRuleMOVStyle: OperandRule
 }OPRMOVStyle;
 
 
-#define mArithmeticCommonEnd {if(negate){component.Start--;	component.Length++;	}}
+#define mArithmeticCommonEnd {if(negative){component.Start--;	component.Length++;	}}
 
 #define mArithmeticCommon\
-	bool negate = false;\
+	bool negative = false;\
 	if(component[0] == '-')\
 	{\
-		if(!AllowNegate)\
+		if(!AllowNegative)\
 			throw 129;\
-		negate = true;\
+		negative = true;\
 		csCurrentInstruction.OpcodeWord0 |= 1<<8; \
 		component.Start++;\
 		component.Length--;\
@@ -82,10 +83,10 @@ struct OperandRuleMOVStyle: OperandRule
 //when = 11, produces.PO, which I do not understand for now
 struct OperandRuleFADDStyle: OperandRule
 {
-	bool AllowNegate;
-	OperandRuleFADDStyle(bool allowNegate) :OperandRule(FADDStyle)
+	bool AllowNegative;
+	OperandRuleFADDStyle(bool allowNegative) :OperandRule(FADDStyle)
 	{
-		AllowNegate = allowNegate;
+		AllowNegative = allowNegative;
 	}
 	virtual void Process(SubString &component)
 	{
@@ -115,10 +116,10 @@ struct OperandRuleFADDStyle: OperandRule
 //IADD: Register, Constant memory without reg, 20-bit Int)
 struct OperandRuleIADDStyle: OperandRule
 {
-	bool AllowNegate;
-	OperandRuleIADDStyle(bool allowNegate) :OperandRule(IADDStyle)
+	bool AllowNegative;
+	OperandRuleIADDStyle(bool allowNegative) :OperandRule(IADDStyle)
 	{
-		AllowNegate = allowNegate;
+		AllowNegative = allowNegative;
 	}
 	virtual void Process(SubString &component)
 	{

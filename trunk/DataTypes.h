@@ -16,27 +16,15 @@ This file contains basic data types used in asfermi.
 using namespace std;
 
 //-----Extern declarations
-extern char* csSource;
-extern int csMaxReg;
-extern int hpParseComputeInstructionNameIndex(SubString &name);
+extern char* csSource; //The array with the entire source file stored in it
+extern int csMaxReg;   //highest register used
+extern int hpParseComputeInstructionNameIndex(SubString &name);// compute instruction index from instruction name
 extern int hpParseComputeDirectiveNameIndex(SubString &name);
 //-----End of extern declaration
 
 //	1
-//-----Basic structures used by the assembler: Component, Line, Instruction, Directive
+//-----Basic structures used by the assembler: Line, Instruction, Directive
 
-/*
-struct Component //Component can be either an instruction name or an operand
-{
-	SubString Content; //instruction name or operand name, without modifier
-	list<SubString> Modifiers;
-	Component(){}
-	Component(SubString content)
-	{
-		Content = content;
-	}
-};
-*/
 struct Line
 {
 	SubString LineString;
@@ -54,11 +42,11 @@ struct Instruction
 	int LineNumber;
 	list<SubString> Modifiers;
 	list<SubString> Components; //predicate is the first optional component. Then instruction name (without modifier), then operands(unprocesed, may contain modifier)
-	bool Is8;	//true: OpcodeWord1 is used as well
+	bool Is8;	//true: 8-byte opcode. OpcodeWord1 is used as well
 	unsigned int OpcodeWord0;
 	unsigned int OpcodeWord1;
 	int Offset;	//Instruction offset in assembly
-	bool Predicated;
+	bool Predicated;//indicates whether @Px is present at the beginning
 	
 	Instruction(){}
 	Instruction(SubString instructionString, int offset, int lineNumber)
@@ -83,7 +71,7 @@ struct Directive
 {
 	SubString DirectiveString;
 	int LineNumber;
-	list<SubString> Parts;
+	list<SubString> Parts; //Same as Components in Instruction
 	Directive(){}
 	Directive(SubString directiveString, int lineNumber)
 	{
@@ -105,6 +93,7 @@ struct Directive
 
 //	2
 //-----Structures for line analysis: ModifierRule, OperandRule, InstructionRule, DirectiveRule
+//this enum is largely useless for now
 typedef enum OperandType
 {
 	Register, Immediate32HexConstant, Predicate,
@@ -112,9 +101,11 @@ typedef enum OperandType
 	GlobalMemoryWithImmediate32, ConstantMemory, SharedMemoryWithImmediate20, Optional, Custom, 
 	MOVStyle, FADDStyle, IADDStyle
 };
+
+//Rule for specific modifier
 struct ModifierRule
 {
-	SubString Name;
+	SubString Name;// .RZ would have a name of RZ
 
 	bool Apply0; //apply on OpcodeWord0?
 	unsigned int Mask0; // Does an AND operation with opcode first
@@ -135,11 +126,19 @@ struct ModifierRule
 		NeedCustomProcessing = needCustomProcessing;
 	}
 };
+
+//Modifiers are grouped. Modifiers must be present in the correct sequence in which modifier groups are arranged
+//Different modifiers from the same group cannot appear at the same time
+//For example, FMUL has 2 modifier groups
+//1st group: .RP/.RM/.RZ
+//2nd group: .SAT
+//So if .SAT is to be present, it must be the last modifier
+//Only one modifier from the first group could be present
 struct ModifierGroup
 {
-	int ModifierCount;
-	ModifierRule**  ModifierRules;
-	bool Optional;
+	int ModifierCount; //number of possible modifiers there are in this group
+	ModifierRule**  ModifierRules; //point to the modifier rules
+	bool Optional; //whether this modifier group is optional
 	~ModifierGroup()
 	{
 		if(ModifierCount)
@@ -158,26 +157,24 @@ struct ModifierGroup
 
 	}
 };
+
+//Rule for processing specific operand
 struct OperandRule
 {
-	OperandType Type;
+	OperandType Type;//not really useful. 
+	//bool Optional;
 
 	OperandRule(){}
-	OperandRule(OperandType type) //, int modifierCount)
+	OperandRule(OperandType type)
 	{
 		Type = type;
-//		ModifierCount = modifierCount;
-//		if(ModifierCount!=0)
-//			ModifierRules = new ModifierRule*[ModifierCount];
 	}
+	//the custom processing function used to process a specific operand(component) that must be defined in child classes
 	virtual void Process(SubString &component) = 0;
-//	~OperandRule()
-//	{
-//		if(ModifierCount!=0)
-//			delete[] ModifierRules;
-//	}
 };
-//When an instruction rule is initialized, the ComputeIndex needs to be called. They need to be sorted according to their indices and then placed in csInstructionRules;
+
+//When an instruction rule is initialized, the ComputeIndex needs to be called. 
+//They need to be sorted according to their indices and then placed in csInstructionRules
 struct InstructionRule
 {
 	char* Name;
@@ -192,6 +189,9 @@ struct InstructionRule
 	unsigned int OpcodeWord0;
 	unsigned int OpcodeWord1;
 
+	//If NeedCustomProcessing is set to true, the components of an instruction SubString
+	//will not be processed according to the operand rules. Instead, the CustomProcess function
+	//will be called
 	bool NeedCustomProcessing;
 	virtual void CustomProcess(){}
 	int ComputeIndex()
@@ -228,12 +228,14 @@ struct InstructionRule
 	}
 	~InstructionRule()
 	{
-		if(OperandCount>0)
+		if(OperandCount)
 			delete[] Operands;
-		if(ModifierGroupCount>0)
-			delete[] ModifierGroups;
-		
+		if(ModifierGroupCount)
+			delete[] ModifierGroups;		
 	}
+
+	//utility functions. Actually should be placed in helper file
+	//Convert binary string often seen on asfermi's site into an unsigned int
 	static void BinaryStringToOpcode4(char* string, unsigned int &word0) //little endian
 	{
 		word0 = 0;

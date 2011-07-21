@@ -16,8 +16,8 @@ extern void hpWarning(int e);
 char str_zerosaver;
 struct SubString
 {
-	int Length;
-	char* Start;
+	int Length;  //Length of sub-string
+	char* Start; //Points to the beginning of the sub-string, which often resides in csSource(the entire source code string)
 	SubString(){}
 	SubString(int offset, int length)
 	{
@@ -30,13 +30,16 @@ struct SubString
 	}
 	SubString(char* target)
 	{
-		Start = target;
+		Start = target; //In this case Start can point to a location outside of csSource
 		Length = strlen(target);
 	}
 	char operator [] (int position)
 	{
-		return Start[position];
+		return Start[position]; //Individual characters of the SubString can be directly accessed using the square bracket notation
 	}
+	//Look for 'target' in the SubString, starting at startPos
+	//Returns the index of the first character found
+	//If target is not found, returns -1
 	int Find(char target, int startPos) //startPos is the position in this string
 	{
 		for(int currentPos = startPos; currentPos < Length; currentPos++)
@@ -46,6 +49,7 @@ struct SubString
 		}
 		return -1;
 	}
+	//Similar to Find, but looks for all characters with ASCII number below 33 (all taken as blank)
 	int FindBlank(int startPos)
 	{
 		for(int currentPos = startPos; currentPos < Length; currentPos++)
@@ -55,13 +59,14 @@ struct SubString
 		}
 		return -1;
 	}
+	//Extract a SubString from the current SubString
 	SubString SubStr(int startPos, int length)
 	{
 		SubString result(startPos + Start - csSource , length);
-		if(length<0)
-			throw exception();
 		return result;
 	}
+	//Remove all blanks of the SubSting until the first non-blank character is found
+	//Note that this does not affect csSource. It only changes the starting position of the SubString and its length
 	void RemoveBlankAtBeginning()
 	{
 		int i =0;
@@ -73,14 +78,8 @@ struct SubString
 		Start += i;
 		Length -= i;
 	}
-	char* ToCharArray()
-	{
-		char *result = new char[Length + 1];
-		for(int i =0 ; i<Length; i++)
-			result[i] = Start[i];
-		result[Length] = (char)0;
-		return result;
-	}
+
+	//Compare with another SubString. Return true only when both the length as well as all the characters match
 	bool Compare(SubString subString)
 	{
 		if(subString.Length != Length)
@@ -92,6 +91,8 @@ struct SubString
 		}
 		return true;
 	}
+	//Compare with a char array
+	//Do not use this.
 	bool CompareWithCharArray(char* target, int length) //length is the length of the char
 	{
 		if(length < Length)
@@ -103,10 +104,26 @@ struct SubString
 		}
 		return true;
 	}
+	
+	//Auxiliary. Not to be used
+	char* ToCharArray()
+	{
+		char *result = new char[Length + 1];
+		for(int i =0 ; i<Length; i++)
+			result[i] = Start[i];
+		result[Length] = (char)0;
+		return result;
+	}
+
+	//asfermi now uses atoi, atol and atof to convert numerical constant expressions to 
+	//the corresponding number types. atoi and alike recognise null-terminated char arrays
+	//So this function replaces the end of the SubString with null
 	void SubEndWithNull()
 	{
 		str_zerosaver = Start[Length];
+		Start[Length] = 0;
 	}
+	//And this function recovers the null to its original value
 	void RecoverEndWithNull()
 	{
 		Start[Length] = str_zerosaver;
@@ -114,17 +131,17 @@ struct SubString
 
 //Parsing functions
 
-//syntax checking are done in primary  substring functions as well as in composite operand processors
+//syntax checking are done in primary substring functions as well as in composite operand processors
 //but not in 20-bit functions
 	
-	unsigned int ToImmediate32FromHexConstant(bool acceptNegative); //check
-	unsigned int ToImmediate32FromFloat32(); //check
-	unsigned int ToImmediate32FromFloat64(); //check
-	unsigned int ToImmediate32FromInt32(); //check
-	unsigned int ToImmediate32FromInt64(); //check
+	unsigned int ToImmediate32FromHexConstant(bool acceptNegative); 
+	unsigned int ToImmediate32FromFloat32();
+	unsigned int ToImmediate32FromFloat64();
+	unsigned int ToImmediate32FromInt32();
+	unsigned int ToImmediate32FromInt64();
 
-	unsigned int ToImmediate32FromIntConstant(); //check
-	unsigned int ToImmediate32FromFloatConstant(); //check
+	unsigned int ToImmediate32FromIntConstant(); 
+	unsigned int ToImmediate32FromFloatConstant();
 
 	void ToGlobalMemory(int &register1, unsigned int&memory);
 	void ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory);
@@ -165,36 +182,36 @@ struct SubString
 
 
 
-
-static const unsigned int op_HexRef[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+//Parse the SubString as a hexadecimal expression in the form 0xabcd
+//static const unsigned int op_HexRef[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 unsigned int SubString::ToImmediate32FromHexConstant(bool acceptNegative)
 {
 	if(Length<=2)
-		throw 106; //incorrect hex
+		throw 106; //incorrect hex, at least 0x0 need to be present
 	int startPos = 0;
-	bool negate = false;
-	if(acceptNegative && Start[0]=='-')
+	bool negative = false; //if the number starts with '-', needs to do a two's complement later on
+	if(acceptNegative && Start[0]=='-') //not all hexadecimal expressions allow the negative sign
 	{
 		if(Length<=3)
 			throw 106;
-		negate = true;
+		negative = true;
 		startPos = 1;
 	}
+	//Check for presence of 0x or 0X
 	if(Start[startPos]!='0' || (Start[startPos+1]!='x'&& Start[startPos+1] != 'X'))
 		throw 106;
 	unsigned int  result = 0;
-	int maxlength = (Length<10)? Length:10;
 
 	int digit;
 	int i;
-	for(i = startPos + 2; i<maxlength; i++)
+	for(i = startPos + 2; i< Length && i < startPos + 10; i++)
 	{
 		digit = (int) Start[i];
 		
 		if(digit<58)
 		{
 			if(digit<48)
-				break;
+				break; //issue: should issue a warning instead of silently returning
 			digit-=48;
 		}
 		else if(digit<71)
@@ -210,26 +227,32 @@ unsigned int SubString::ToImmediate32FromHexConstant(bool acceptNegative)
 			digit -= 87;
 		}
 		result <<=4;
-		result |= op_HexRef[digit];
+		result |= digit;
+		//result |= op_HexRef[digit];
 	}
-	if(i==startPos + 2) //i has not been incremented, meaning the first character encountered is not hexadecimal digit
+	//i has not been incremented, meaning the first character encountered is not hexadecimal digit
+	if(i==startPos + 2) 
 		throw 106;
-	if(negate) //negate could only be true when acceptNegative is already true
+	//negative could only be true when acceptNegative is already true
+	if(negative) 
 	{
 		if(result > 0x7FFFFFFF)
 			throw 106;
 		result ^= 0xFFFFFFFF;
 		result += 1;
-		result &= 0xFFFFFFFF;
 	}
 	return result;
 }
+
+//Parse the SubString as a floating number expression in the form F1234.1234
 float ti32_PINF = 1000000000000000000000000000000000000000000000000000000000000000000000000000000000.0;
 float ti32_NINF = -1000000000000000000000000000000000000000000000000000000000000000000000000000000000.0;
 unsigned int SubString::ToImmediate32FromFloat32()
 {
-	if(Length<2 || Start[0]!='F') //At least F0
+	//At least F0
+	if(Length<2 || Start[0]!='F') 
 		throw 121; //incorrect floating point number format
+	//pad the null at the end
 	int zeroPos = Length;
 	char zeroSaver = Start[zeroPos];
 	Start[zeroPos] = (char)0;
@@ -243,7 +266,7 @@ unsigned int SubString::ToImmediate32FromFloat32()
 	return *(unsigned int *)&fresult;
 }
 
-
+//Parse the SubString as a floating number expression in the form FH1234.1234 or FL1234.1234
 unsigned int SubString::ToImmediate32FromFloat64()
 {
 	if(Length<3 || Start[0]!='F' || (Start[1]!='H' && Start[1]!='L') ) //At least FH0/FL0
@@ -265,6 +288,8 @@ unsigned int SubString::ToImmediate32FromFloat64()
 		resultbits++;
 	return *resultbits;
 }
+
+//Parse as int
 unsigned int SubString::ToImmediate32FromInt32()
 {
 	char zeroSaver = Start[Length];
@@ -278,6 +303,7 @@ unsigned int SubString::ToImmediate32FromInt32()
 		hpWarning(11);
 	return *(unsigned int*)&result; //issue: can't deal with large unsigned integers
 }
+//Parse as integer expression in the form of H1234 or L1234
 unsigned int SubString::ToImmediate32FromInt64()
 {
 	char zeroSaver = Start[Length];
@@ -296,6 +322,7 @@ unsigned int SubString::ToImmediate32FromInt64()
 	return *resultbits;
 }
 
+//Parse as integer expression. May be in the form 1234 or H1234/L1234
 unsigned int SubString::ToImmediate32FromIntConstant()
 {
 	if(Start[0]=='H' || Start[0]=='L') //long
@@ -307,6 +334,7 @@ unsigned int SubString::ToImmediate32FromIntConstant()
 		return ToImmediate32FromInt32();
 	}
 }
+//Parse as float expression. may be in the form F1234 or FH1234/FL1234
 unsigned int SubString::ToImmediate32FromFloatConstant()
 {
 	if(Length<2) //F0, ToImmediate32FromDouble assumes length 2 or above
@@ -318,39 +346,49 @@ unsigned int SubString::ToImmediate32FromFloatConstant()
 }
 
 
+//Parse as a simple register expression
 int SubString:: ToRegister()
 {
 	int result;
 	if(Length<2 || Start[0]!='R')
 		throw 104; //Incorrect register
+
+	//RZ is has a register number of 63
 	if(Start[1] == 'Z')
 		return 63;
+	//first digit of the register number
 	result = (int)Start[1] - 48;
 	if(result<0 || result>9)
-		throw 104; //incorrect register
+		throw 104;
+
+	//Only R0 to R9
 	if(Length==2)
 		return result;
+
+	//above R9
 	int n2 = (int)Start[2] - 48;
 	if(n2<0 || n2>9)
 		return result;
 	result *= 10;
 	result += n2;
+	
+	//register number too large
 	if(result>=63)
-		throw 105; //register number too large
+		throw 105;
 	return result;
 }
 
 
+//Parse SubString as global memory operand in the form [Rxx + 0xabcd]
 void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 {
-	if(Length < 3 || Start[0]!='[') //[0]
-	{
-		throw 107; //incorrect global mem
-		//return;
-	}	
+	//incorrect global mem. Shortest expression will be [0]
+	if(Length < 3 || Start[0]!='[') 
+		throw 107;
 	register1 = 63; //default RZ
 	memory = 0; //default 0
-
+	
+	//skip blank characters after [ first
 	int startPos = 1;
 	while(startPos<Length)
 	{
@@ -358,7 +396,9 @@ void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 			break;
 		startPos++;
 	}
+	//Look for '+' to determine if both register and hex value will be present
 	int plusPos = Find('+', startPos);
+	//Not present, only register expression or hex is used
 	if(plusPos==-1)
 	{
 		if(Start[startPos]=='R')
@@ -366,6 +406,7 @@ void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 		else //Issue: what about integer values?
 			memory = SubStr(startPos, Length -startPos ).ToImmediate32FromHexConstant(true);
 	}
+	//both register expression and hex are present
 	else
 	{
 		register1 = SubStr(startPos, Length -startPos).ToRegister();
@@ -379,10 +420,15 @@ void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 		memory = SubStr(startPos, Length - startPos).ToImmediate32FromHexConstant(true);
 	}
 }
+
+//parse SubString as a constant memory expression in the form of c[0xa][Rxx+0xb]
 void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory)
 {
-	if(Length<11|| Start[0]!='c') //c[0][0]
+	//shortest expression: c[0x0][0x0]
+	if(Length<11|| Start[0]!='c') 
 		throw 110; //incorrect constant memory format
+
+	//skip the blanks after the 'c'
 	int startPos;
 	for(startPos = 1; startPos<Length; startPos++)
 	{
@@ -396,7 +442,7 @@ void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned in
 	if(endPos == -1)
 		throw 110;
 	bank = SubStr(startPos, endPos - startPos).ToImmediate32FromHexConstant(false); //issue: the error line would be for global mem
-	if(bank > 10)
+	if(bank > 15)
 		throw 114; //bank number too large
 	startPos = endPos + 1;
 	for(; startPos<Length; startPos++)
@@ -406,7 +452,7 @@ void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned in
 	}
 	if(startPos>=Length || Start[startPos]!='[')
 		throw 110;
-	SubStr(startPos, Length - startPos).ToGlobalMemory(register1, memory);
+	SubStr(startPos, Length - startPos).ToGlobalMemory(register1, memory); //issue: negative address offset will not be correctly processed
 	if(memory>0xFFFF) 
 		throw 111; //too large memory address
 }

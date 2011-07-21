@@ -36,6 +36,39 @@ struct OperandRuleImmediate24HexConstant: OperandRule
 	}	
 }OPRImmediate24HexConstant;
 
+/*
+struct OperandRuleImmediateHexConstant: OperandRule
+{
+	unsigned int MaxNum;
+	OperandRuleImmediateHexConstant(int maxBit)
+	{
+		MaxNum = 1<<maxBit - 1;
+	}
+	virtual void Process(SubString &component)
+	{
+		bool negate = false;		
+		if(component[0]=='-')
+		{
+			negate = true;
+			component.Start++;
+			component.Length--;
+		}
+		unsigned int result = component.ToImmediate32FromHexConstant(false);
+		
+		if(!negate)
+		{
+			if(result > MaxNum)
+				throw 131;
+		}
+		else
+		{
+			if(result>MaxNum>>1)
+				throw 131;
+		}
+	}
+};
+*/
+
 struct OperandRuleImmediate32HexConstant: OperandRule
 {
 	OperandRuleImmediate32HexConstant() :OperandRule(Immediate32HexConstant){}
