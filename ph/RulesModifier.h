@@ -1,0 +1,7 @@
+#include "RulesModifier\RulesModifierDataMovement.h"
+#include "RulesModifier\RulesModifierInteger.h"
+#include "RulesModifier\RulesModifierFloat.h"
+#include "RulesModifier\RulesModifierConversion.h"
+#include "RulesModifier\RulesModifierCommon.h"
+#include "RulesModifier\RulesModifierExecution.h"
+#include "RulesModifier\RulesModifierLogic.h"
