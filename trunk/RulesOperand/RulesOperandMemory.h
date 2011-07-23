@@ -59,6 +59,7 @@ struct OperandRuleConstantMemory: OperandRule
 	}
 }OPRConstantMemory;
 
+
 #else
 #define RulesOperandMemoryDefined
 #endif

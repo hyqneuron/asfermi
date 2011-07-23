@@ -5,7 +5,7 @@ struct ModifierRuleLOP: ModifierRule
 {
 	ModifierRuleLOP(int type): ModifierRule("", true, false, false)
 	{
-		::InstructionRule::BinaryStringToOpcode4("11111100111111111111111111111111", Mask0);
+		hpBinaryStringToOpcode4("11111100111111111111111111111111", Mask0);
 		Bits0 = type << 6;
 		if(type==0)
 			Name = "AND";

@@ -3,6 +3,8 @@
 
 //#include <vld.h> //Visual Leak Detector. You can just remove this when you compile.
 
+
+
 #include <stdarg.h>
 #include <iostream>
 #include <sstream>
@@ -343,7 +345,9 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back(&IRSTS);
 	//conversion
 	csInstructionRulePrepList.push_back(&IRF2I);
+	csInstructionRulePrepList.push_back(&IRF2F);
 	csInstructionRulePrepList.push_back(&IRI2F);
+	csInstructionRulePrepList.push_back(&IRI2I);
 	//execution control
 	csInstructionRulePrepList.push_back(&IRBRA);
 	csInstructionRulePrepList.push_back(&IRCAL);

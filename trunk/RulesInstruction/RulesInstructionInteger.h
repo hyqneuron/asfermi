@@ -6,7 +6,7 @@ struct InstructionRuleIADD: InstructionRule
 {
 	InstructionRuleIADD() : InstructionRule("IADD", 0, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1100000000111000000000000000000000000000000000000000000000010010", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1100000000111000000000000000000000000000000000000000000000010010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3, 
 					&OPRRegister0,
 					&OPRRegister1,
@@ -19,7 +19,7 @@ struct INstructionRuleIADD32I: InstructionRule
 {
 	INstructionRuleIADD32I(): InstructionRule("IADD32I", 2, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("0100000000111000000000000000000000000000000000000000000000010000", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0100000000111000000000000000000000000000000000000000000000010000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegisterWithCC4IADD32I,
 					&OPR32I);
@@ -33,7 +33,7 @@ struct InstructionRuleIMUL: InstructionRule
 {
 	InstructionRuleIMUL(): InstructionRule("IMUL", 4, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3,
 					&OPRRegister0,
 					&OPRRegister1,
@@ -49,7 +49,7 @@ struct InstructionRuleIMAD: InstructionRule
 {
 	InstructionRuleIMAD(): InstructionRule("IMAD", 4, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000000100", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000000100", OpcodeWord0, OpcodeWord1);
 		SetOperands(4,
 					&OPRRegister0,
 					&OPRRegister1,
@@ -67,7 +67,7 @@ struct InstructionRuleISETP: InstructionRule
 {
 	InstructionRuleISETP(): InstructionRule("ISETP", 2, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1100010000111011100000000000000000000000000000000111000000011000", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1100010000111011100000000000000000000000000000000111000000011000", OpcodeWord0, OpcodeWord1);
 		SetOperands(5, 
 					&OPRPredicate0,
 					&OPRPredicate1,

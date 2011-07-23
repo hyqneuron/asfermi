@@ -5,24 +5,24 @@ struct ModifierRuleSETPLogic: ModifierRule
 {
 	ModifierRuleSETPLogic(int type) : ModifierRule("", false, true, false)
 	{
-		::InstructionRule::BinaryStringToOpcode4("11111111111111111111100111111111", Mask1);
+		hpBinaryStringToOpcode4("11111111111111111111100111111111", Mask1);
 		//AND
 		if(type==0)
 		{
 		Name = "AND";
-		::InstructionRule::BinaryStringToOpcode4("00000000000000000000000000000000", Bits1);
+		hpBinaryStringToOpcode4("00000000000000000000000000000000", Bits1);
 		}
 		//OR
 		else if(type==1)
 		{
 		Name = "OR";
-		::InstructionRule::BinaryStringToOpcode4("00000000000000000000010000000000", Bits1);
+		hpBinaryStringToOpcode4("00000000000000000000010000000000", Bits1);
 		}
 		//XOR
 		else
 		{
 		Name = "XOR";
-		::InstructionRule::BinaryStringToOpcode4("00000000000000000000001000000000", Bits1);
+		hpBinaryStringToOpcode4("00000000000000000000001000000000", Bits1);
 		}
 	}
 }MRSETPLogicAND(0), MRSETPLogicOR(1), MRSETPLogicXOR(2);
@@ -31,7 +31,7 @@ struct ModifierRuleSETPComparison: ModifierRule
 {
 	ModifierRuleSETPComparison(int type): ModifierRule("", false, true, false)
 	{
-		::InstructionRule::BinaryStringToOpcode4("11111111111111111111111000011111", Mask1);
+		hpBinaryStringToOpcode4("11111111111111111111111000011111", Mask1);
 		Bits1 = type<<23;
 		
 		switch(type)

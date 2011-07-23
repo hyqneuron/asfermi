@@ -6,7 +6,7 @@ struct ModifierRuleLDType: ModifierRule
 {
 	ModifierRuleLDType(int type): ModifierRule("", true, false, false)
 	{		
-		::InstructionRule::BinaryStringToOpcode4("11111000111111111111111111111111", Mask0);
+		hpBinaryStringToOpcode4("11111000111111111111111111111111", Mask0);
 		Bits0 = type<<5;
 		switch(type)
 		{
@@ -39,7 +39,7 @@ struct ModifierRuleLDCop: ModifierRule
 {
 	ModifierRuleLDCop(int type): ModifierRule("", true, false, false)
 	{
-		::InstructionRule::BinaryStringToOpcode4("11111111001111111111111111111111", Mask0);
+		hpBinaryStringToOpcode4("11111111001111111111111111111111", Mask0);
 		Bits0 = type << 8;
 		if(type==1)
 			Name = "CG";
@@ -60,7 +60,7 @@ struct ModifierRuleSTCop: ModifierRule
 {
 	ModifierRuleSTCop(int type): ModifierRule("", true, false, false)
 	{
-		::InstructionRule::BinaryStringToOpcode4("11111111001111111111111111111111", Mask0);
+		hpBinaryStringToOpcode4("11111111001111111111111111111111", Mask0);
 		Bits0 = type << 8;
 		if(type==1)
 			Name = "CG";

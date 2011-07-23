@@ -247,14 +247,6 @@ void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint)		
 
 
 
-
-
-
-
-
-
-
-
 //9
 //-----Debugging functions
 void hpPrintLines()
@@ -323,6 +315,48 @@ void hpPrintBinary8(unsigned int word0, unsigned int word1)
 	cout<<endl;
 }
 //-----End of debugging functions
+
+
+
+//Convert binary string often seen on asfermi's site into an unsigned int
+void hpBinaryStringToOpcode4(char* string, unsigned int &word0, int &i) //little endian
+{
+	word0 = 0;
+	int counted = 0;
+	i=0;
+	for(; i<200; i++)
+	{
+		if(string[i]=='1')
+		{
+			word0 |=  1<<counted;
+			counted++;
+			if(counted==32)
+				break;
+		}
+		else if(string[i]=='0')
+		{
+			counted++;
+			if(counted==32)
+				break;
+		}
+	}
+	if(i==200)
+		throw exception("Error in binary string.");
+}
+void hpBinaryStringToOpcode4(char* string, unsigned int &word0)
+{
+	int i=0;
+	hpBinaryStringToOpcode4(string, word0, i);
+}
+
+void hpBinaryStringToOpcode8(char* string, unsigned int &word0, unsigned int &word1)
+{
+	word0 = 0;
+	int i =0;
+	hpBinaryStringToOpcode4(string, word0, i);
+	hpBinaryStringToOpcode4(string+i+1, word1);
+		
+}
 
 #else
 #define helperMixedDefined

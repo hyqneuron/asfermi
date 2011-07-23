@@ -233,32 +233,6 @@ struct InstructionRule
 		if(ModifierGroupCount)
 			delete[] ModifierGroups;		
 	}
-
-	//utility functions. Actually should be placed in helper file
-	//Convert binary string often seen on asfermi's site into an unsigned int
-	static void BinaryStringToOpcode4(char* string, unsigned int &word0) //little endian
-	{
-		word0 = 0;
-		for(int i =0; i<32; i++)
-		{
-			if(string[i]=='1')
-				word0 |=  1u<<i;
-		}
-	}
-	static void BinaryStringToOpcode8(char* string, unsigned int &word0, unsigned int &word1)
-	{
-		word0 = 0;
-		for(int i =0; i<32; i++)
-		{
-			if(string[i]=='1')
-				word0 |=  1<<i;
-		}
-		for(int i =0; i< 32; i++)
-		{
-			if(string[i+32]=='1')
-				word1 |= 1<<i;
-		}
-	}
 };
 
 struct DirectiveRule

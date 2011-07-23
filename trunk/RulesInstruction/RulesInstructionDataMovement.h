@@ -4,7 +4,7 @@ struct INstructionRuleMOV: InstructionRule
 {
 	INstructionRuleMOV(): InstructionRule("MOV", 0, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("0010011110111000000000000000000000000000000000000000000000010100", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0010011110111000000000000000000000000000000000000000000000010100", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,
 					&OPRMOVStyle);
@@ -15,7 +15,7 @@ struct INstructionRuleMOV32I: InstructionRule
 {
 	INstructionRuleMOV32I(): InstructionRule("MOV32I", 0, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("0100011110111000000000000000000000000000000000000000000000011000", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0100011110111000000000000000000000000000000000000000000000011000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,
 					&OPR32I);
@@ -28,7 +28,7 @@ struct InstructionRuleLD: InstructionRule
 {
 	InstructionRuleLD() : InstructionRule("LD", 2, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
 		//2 operands
 		SetOperands(2, 
 					&OPRRegister0,					 //register
@@ -53,7 +53,7 @@ struct InstructionRuleLDU: InstructionRule
 {
 	InstructionRuleLDU() : InstructionRule("LDU", 1, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000010001", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000010001", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,					
 					&OPRGlobalMemoryWithImmediate32);
@@ -72,7 +72,7 @@ struct InstructionRuleLDL: InstructionRule
 {
 	InstructionRuleLDL() : InstructionRule("LDL", 2, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000011", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,					
 					&OPRGlobalMemoryWithImmediate32);
@@ -94,7 +94,7 @@ struct InstructionRuleLDS : InstructionRule
 {
 	InstructionRuleLDS(): InstructionRule("LDS", 1, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010000011", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010000011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
 					&OPRRegister0,
 					&OPRSharedMemoryWithImmediate20);
@@ -112,7 +112,7 @@ struct InstructionRuleLDC : InstructionRule
 {
 	InstructionRuleLDC(): InstructionRule("LDC", 1, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("0110000100111000000000000000000000000000000000000000000000101000", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0110000100111000000000000000000000000000000000000000000000101000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
 					&OPRRegister0,
 					&OPRConstantMemory);
@@ -130,7 +130,7 @@ struct InstructionRuleST: InstructionRule
 {
 	InstructionRuleST() : InstructionRule("ST", 2, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRGlobalMemoryWithImmediate32,
 					&OPRRegister0);
@@ -153,7 +153,7 @@ struct InstructionRuleSTL: InstructionRule
 {
 	InstructionRuleSTL() : InstructionRule("STL", 2, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000010011", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000010011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRGlobalMemoryWithImmediate32,
 					&OPRRegister0);
@@ -175,7 +175,7 @@ struct InstructionRuleSTS : InstructionRule
 {
 	InstructionRuleSTS(): InstructionRule("STS", 1, true, false)
 	{
-		InstructionRule::BinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010010011", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010010011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
 					&OPRSharedMemoryWithImmediate20,
 					&OPRRegister0);

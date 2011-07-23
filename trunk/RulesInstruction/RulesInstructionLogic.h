@@ -7,7 +7,7 @@ struct InstructionRuleLOP: InstructionRule
 	InstructionRuleLOP(): InstructionRule("LOP", 1, true, false)
 	{
 		//set template opcode
-		InstructionRule::BinaryStringToOpcode8("1100000000111000000000000000000000000000000000000000000000010110", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1100000000111000000000000000000000000000000000000000000000010110", OpcodeWord0, OpcodeWord1);
 		//Set operands
 		//SetOperands(int operandCount, OperandRule*...)
 		SetOperands(3,

@@ -7,7 +7,7 @@ struct ModifierRuleFADD32IFTZ: ModifierRule
 	ModifierRuleFADD32IFTZ(): ModifierRule("FTZ", true, false, false)
 	{
 		//Setting the mask. No bits are to be cleared for FTZ, so it's just all 1s
-		::InstructionRule::BinaryStringToOpcode4("11111111111111111111111111111111", Mask0);
+		hpBinaryStringToOpcode4("11111111111111111111111111111111", Mask0);
 		//mod 4 is to be set to 1
 		Bits0 = 1<<5;
 	}
@@ -19,7 +19,7 @@ struct ModifierRuleFMULR: ModifierRule
 	{
 		Name = name;
 		//2 bits are to be cleared
-		::InstructionRule::BinaryStringToOpcode4("11111111111111111111111001111111", Mask1);
+		hpBinaryStringToOpcode4("11111111111111111111111001111111", Mask1);
 		//immeb 1:2 to be set to 10, 01 or 11
 		Bits1 = type<<23;
 	}
@@ -31,7 +31,7 @@ struct ModifierRuleFMULSAT: ModifierRule
 {
 	ModifierRuleFMULSAT(): ModifierRule("SAT", true, false, false)
 	{
-		::InstructionRule::BinaryStringToOpcode4("11111011111111111111111111111111", Mask0);
+		hpBinaryStringToOpcode4("11111011111111111111111111111111", Mask0);
 		Bits0 = 1<<5;
 	}
 }MRFMULSAT;
