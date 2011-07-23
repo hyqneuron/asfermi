@@ -35,7 +35,7 @@ struct ModifierRuleFMULSAT: ModifierRule
 {
 	ModifierRuleFMULSAT(): ModifierRule("SAT", true, false, false)
 	{
-		hpBinaryStringToOpcode4("11111011111111111111111111111111", Mask0);
+		hpBinaryStringToOpcode4("1111 101111 1111111111111111111111", Mask0);
 		Bits0 = 1<<5;
 	}
 }MRFMULSAT;
