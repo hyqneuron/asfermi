@@ -1,5 +1,12 @@
 #summary A development log
 
+==== 23rd July, 2011 ====
+hyq.neuron: 
+  # asfermi has 2 more members in the team now. 
+  # Added support for I2I and F2F. 
+  # Created a branch under the folder /ph with all the re-written, proper .h and .cpp files(under /trunk, the main branch, there is only a single .cpp file). Though compilation time still seems too long in VS.
+
+----
 ==== 16th July, 2011 ====
 Added support for .shared, .local and .nv.constant2 cubin sections. Documentation will come later.
 
