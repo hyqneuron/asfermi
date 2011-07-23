@@ -85,3 +85,57 @@ Template opcode
 ||10      ||.RM   ||
 ||01      ||.RP   ||
 ||11      ||.RZ   ||
+
+----
+==== I2I ====
+Instruction usage:
+{{{
+I2I.dtype.stype(.SAT) reg0, (-/|)composite operand(|);
+}}}
+Template opcode
+{{{
+0010 000000 1110 000000 000000 0000000000000000000000 0000000000 111000
+        mod        reg0   mod2                  immea       mod3
+}}}
+
+||mod 0||.stype||
+||0    ||.Uxx  ||
+||1    ||.Sxx  ||
+
+||mod 1||meaning ||
+||0    ||default ||
+||1    ||-composite operand||
+
+||mod 2||.dtype||
+||0    ||.Uxx  ||
+||1    ||.Sxx  ||
+
+||mod 3||meaning||
+||0    ||default||
+||1    || |composite operand| ||
+
+||mod 4||meaning||
+||0    ||default||
+||1    ||.SAT   ||
+
+||mod2 1:2 ||.stype||
+||00       ||.X8   ||
+||10       ||.X16  ||
+||01       ||.X32  ||
+||11       ||.X64  ||
+
+||mod2 4:5 ||.dtype||
+||00       ||.X8   ||
+||10       ||.X16  ||
+||01       ||.X32  ||
+||11       ||.X64  ||
+
+||mod3 1:2 ||meaning||
+||00       ||default||
+||10       ||.B1 on composite operand||
+||01       ||.B2 on composite operand||
+||11       ||.B3 on composite operand||
+
+||mod3 9 ||meaning||
+||0      ||default||
+||1      ||.CC on reg0||
