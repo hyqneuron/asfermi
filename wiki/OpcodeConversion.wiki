@@ -48,6 +48,60 @@ Template opcode
 ||11      ||.TRUNC||
 
 ----
+==== F2F ====
+Instruciton usage:
+{{{
+F2F(.FTZ).dtype.stype(.rop)(.SAT) reg0, (-/|)composite operand(|);
+}}}
+Template opcode
+{{{
+0010 000000 1110 000000 010010 0000000000000000000000 0000000000 001000
+        mod        reg0   mod2                  immea       mod3
+}}}
+||mod 1||meaning||
+||0    ||default||
+||1    ||-composte operand||
+
+mod 2 is effective only when both dtype and stype are F32
+||mod 2||meaning||
+||0    ||.PASS  ||
+||1    ||.ROUND ||
+
+||mod 3||meaning||
+||0    ||default||
+||1    || |composte operand| ||
+
+||mod 4||meaning||
+||0    ||default||
+||1    ||.SAT   ||
+
+||mod 5||meaning||
+||0    ||default||
+||1    ||.S     ||
+
+
+||mod2 1:2||.stype ||
+||10      ||.F16   ||
+||01      ||.F32   ||
+||11      ||.F64   ||
+
+||mod2 4:5||.dtype ||
+||00      ||default||
+||10      ||.F16   ||
+||01      ||.F32   ||
+||11      ||.F64   ||
+
+||mod3 2 ||meaning||
+||0      ||default||
+||1      ||.FTZ   ||
+
+||mod3 7:8||.rnd  ||
+||00      ||default||
+||10      ||.RM||
+||01      ||.RP ||
+||11      ||.RZ||
+
+----
 ==== I2F ====
 Instruction usage:
 {{{
@@ -94,7 +148,7 @@ I2I.dtype.stype(.SAT) reg0, (-/|)composite operand(|);
 }}}
 Template opcode
 {{{
-0010 000000 1110 000000 000000 0000000000000000000000 0000000000 111000
+0010 000000 1110 000000 010010 0000000000000000000000 0000000000 111000
         mod        reg0   mod2                  immea       mod3
 }}}
 
