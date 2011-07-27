@@ -30,3 +30,39 @@ Template opcode
 ||mod 0||meaning||
 ||0    ||default||
 ||1    ||~reg1  ||
+
+----
+==== SHR ====
+Instruction usage
+{{{
+SHR(.U32)(.W) reg0(.CC), reg1, composite operand;
+}}}
+Template opcode
+{{{
+1100 010001 1110 000000 000000 0000000000000000000000 0000000000 011010
+        mod        reg0   reg1                  immea       mod2
+}}}
+||mod 0||meaning||
+||0    ||.W     ||
+||1    ||default||
+
+||mod 4||meaning||
+||0    ||.U32   ||
+||1    ||default||
+
+||mod2 9||meaning||
+||0     ||default||
+||1     ||.CC on reg0||
+
+----
+==== SHL ====
+Instruction usage
+{{{
+SHL(.U32)(.W) reg0(.CC), reg1, composite operand;
+}}}
+Template opcode
+{{{
+1100 010001 1110 000000 000000 0000000000000000000000 0000000000 000110
+        mod        reg0   reg1                  immea       mod2
+}}}
+mod and mo2 are the same as in SHR
