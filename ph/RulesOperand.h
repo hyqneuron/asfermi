@@ -3,6 +3,7 @@
 
 
 #ifndef RulesOperandDefined
+#define RulesOperandDefined
 
 inline void WriteToImmediate32(unsigned int content)
 {
@@ -28,5 +29,4 @@ inline void MarkRegisterForImmediate32()
 #include "RulesOperand\RulesOperandOthers.h"
 
 #else
-#define RulesOperandDefined
 #endif

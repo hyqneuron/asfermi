@@ -1,6 +1,9 @@
-#include "RulesModifierLogic.h"
+
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
+
+#include "stdafx.h"
+#include "RulesModifierLogic.h"
 
 
 struct ModifierRuleLOP: ModifierRule
@@ -19,3 +22,21 @@ struct ModifierRuleLOP: ModifierRule
 			Name = "PASS_B";
 	}
 }MRLOPAND(0), MRLOPOR(1), MRLOPXOR(2), MRLOPPASS(3);
+
+struct ModifierRuleSHR: ModifierRule
+{
+	ModifierRuleSHR(bool u32): ModifierRule("", true, false, false)
+	{
+		Bits0 = 0;
+		if(u32)
+		{
+			Name = "U32";
+			hpBinaryStringToOpcode4("1111 101111 1111111111111111111111", Mask0);
+		}
+		else
+		{
+			Name = "W";
+			hpBinaryStringToOpcode4("1111 111110 1111111111111111111111", Mask0);
+		}
+	}
+}MRSHRU32(true), MRSHRW(false);

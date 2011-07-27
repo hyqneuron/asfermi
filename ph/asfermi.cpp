@@ -1,5 +1,7 @@
 using namespace std;
 
+
+
 #include <stdarg.h>
 #include <iostream>
 #include <sstream>
@@ -14,6 +16,9 @@ using namespace std;
 #include "GlobalVariables.h"
 #include "helper.h"
 #include "SpecificParsers.h"
+
+#include "stdafx.h"
+
 #include "RulesModifier.h"
 #include "RulesOperand.h"
 #include "RulesInstruction.h"
@@ -361,10 +366,13 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRIMUL);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRIMAD);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRISETP);
+	//Logic and shift
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRSHR);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRSHL);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRLOP);
 	//miscellaneous
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRS2R);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRNOP);
-	csInstructionRulePrepList.push_back((InstructionRule*)&IRLOP);
 
 	//load directive rules
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRKernel);

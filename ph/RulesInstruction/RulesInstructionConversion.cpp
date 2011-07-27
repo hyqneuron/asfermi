@@ -1,6 +1,10 @@
-#include "RulesInstructionConversion.h"
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
+
+
+#include "stdafx.h"
+
+#include "RulesInstructionConversion.h"
 #include "..\RulesModifier.h"
 #include "..\RulesOperand.h"
 
@@ -11,7 +15,7 @@ struct InstructionRuleF2I: InstructionRule
 {
 	InstructionRuleF2I(): InstructionRule("F2I", 4, true, false)
 	{
-		hpBinaryStringToOpcode8("0010000100111000000001001000000000000000000000000000000000101000", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0010 000100111000000001001000000000000000000000000000000000101000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
 					&OPRRegister0,
 					&OPRF2I);
@@ -67,7 +71,7 @@ struct InstructionRuleI2F: InstructionRule
 {
 	InstructionRuleI2F(): InstructionRule("I2F", 3, true, false)
 	{
-		hpBinaryStringToOpcode8("0010000001111000000001001000000000000000000000000000000000011000", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0010 000001111000000001001000000000000000000000000000000000011000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
 					&OPRRegister0,
 					&OPRI2F);

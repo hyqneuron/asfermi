@@ -7,10 +7,10 @@ This file contains various helper functions used during cubin output (the post-p
 
 all functions are prefixed with 'hpCubin'
 */
-
 #include "helperCubin.h"
 #include "../GlobalVariables.h"
 
+#include "stdafx.h"
 
 
 

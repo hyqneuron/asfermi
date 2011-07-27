@@ -1,8 +1,9 @@
-
-#include <exception>
 #include "../DataTypes.h"
 #include "../GlobalVariables.h"
 #include "helperException.h"
+
+#include "stdafx.h"
+#include <exception>
 
 
 extern void hpUsage();

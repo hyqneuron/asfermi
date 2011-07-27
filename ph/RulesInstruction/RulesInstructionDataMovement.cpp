@@ -1,6 +1,8 @@
-#include "RulesInstructionDataMovement.h"
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
+
+#include "stdafx.h"
+#include "RulesInstructionDataMovement.h"
 #include "..\RulesModifier.h"
 #include "..\RulesOperand.h"
 
@@ -8,7 +10,7 @@ struct InstructionRuleMOV: InstructionRule
 {
 	InstructionRuleMOV(): InstructionRule("MOV", 0, true, false)
 	{
-		hpBinaryStringToOpcode8("0010011110111000000000000000000000000000000000000000000000010100", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0010 011110111000000000000000000000000000000000000000000000010100", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,
 					&OPRMOVStyle);
@@ -19,7 +21,7 @@ struct InstructionRuleMOV32I: InstructionRule
 {
 	InstructionRuleMOV32I(): InstructionRule("MOV32I", 0, true, false)
 	{
-		hpBinaryStringToOpcode8("0100011110111000000000000000000000000000000000000000000000011000", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0100 011110111000000000000000000000000000000000000000000000011000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,
 					&OPR32I);
@@ -32,7 +34,7 @@ struct InstructionRuleLD: InstructionRule
 {
 	InstructionRuleLD() : InstructionRule("LD", 2, true, false)
 	{
-		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
 		//2 operands
 		SetOperands(2, 
 					&OPRRegister0,					 //register
@@ -57,7 +59,7 @@ struct InstructionRuleLDU: InstructionRule
 {
 	InstructionRuleLDU() : InstructionRule("LDU", 1, true, false)
 	{
-		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000010001", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000010001", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,					
 					&OPRGlobalMemoryWithImmediate32);
@@ -76,7 +78,7 @@ struct InstructionRuleLDL: InstructionRule
 {
 	InstructionRuleLDL() : InstructionRule("LDL", 2, true, false)
 	{
-		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000000011", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000000011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,					
 					&OPRGlobalMemoryWithImmediate32);
@@ -98,7 +100,7 @@ struct InstructionRuleLDS : InstructionRule
 {
 	InstructionRuleLDS(): InstructionRule("LDS", 1, true, false)
 	{
-		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010000011", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000010000011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
 					&OPRRegister0,
 					&OPRSharedMemoryWithImmediate20);

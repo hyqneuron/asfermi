@@ -1,10 +1,10 @@
-#include "SubString.h"
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
 
+#include "SubString.h"
 extern char* csSource;
 extern void hpWarning(int e);
+
+#include "stdafx.h"
+
 
 char str_zerosaver;
 

@@ -3,6 +3,8 @@
 #include "SubString.h"
 #include <stdarg.h>
 
+#include "stdafx.h"
+
 
 
 //-----Extern declarations

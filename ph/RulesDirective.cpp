@@ -1,8 +1,12 @@
+
 #include "DataTypes.h"
 #include "GlobalVariables.h"
 #include "helper\helperException.h"
-#include "RulesDirective.h"
 #include "SpecificParsers.h"
+
+#include "stdafx.h"
+
+#include "RulesDirective.h"
 
 
 //Kernel

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-extern struct Constant2Parser;
+struct Constant2Parser;
 
 extern bool csSelfDebug;
 

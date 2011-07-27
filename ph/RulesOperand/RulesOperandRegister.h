@@ -12,7 +12,7 @@ extern OperandRuleRegister3 OPRRegister3;
 //Note that some operands can have modifiers
 //This rule deals with registers that can have the .CC modifier
 struct OperandRuleRegisterWithCC;
-extern OperandRuleRegisterWithCC OPRRegisterWithCC4IADD32I;//for reg0
+extern OperandRuleRegisterWithCC OPRRegisterWithCC4IADD32I, OPRRegisterWithCCAt16;
 
 
 //Predicate register operand

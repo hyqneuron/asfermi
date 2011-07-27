@@ -1,6 +1,10 @@
-#include "RulesInstructionInteger.h"
+
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
+
+#include "stdafx.h"
+
+#include "RulesInstructionInteger.h"
 #include "..\RulesModifier.h"
 #include "..\RulesOperand.h"
 

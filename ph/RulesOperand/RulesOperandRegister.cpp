@@ -1,5 +1,8 @@
 #include "..\DataTypes.h"
 #include "..\GlobalVariables.h"
+
+#include "stdafx.h"
+
 #include "..\RulesOperand.h"
 #include "RulesOperandRegister.h"
 
@@ -73,7 +76,7 @@ struct OperandRuleRegisterWithCC: OperandRule
 			}
 		}
 	}
-}OPRRegisterWithCC4IADD32I(14, 26);//for reg0
+}OPRRegisterWithCC4IADD32I(14, 26), OPRRegisterWithCCAt16(14, 16);//for reg0
 
 
 //Predicate register operand

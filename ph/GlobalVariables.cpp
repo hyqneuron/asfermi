@@ -1,6 +1,8 @@
 
 #include "GlobalVariables.h"
 
+#include "stdafx.h"
+
 
 
 

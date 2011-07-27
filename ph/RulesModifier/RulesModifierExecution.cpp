@@ -1,6 +1,10 @@
-#include "RulesModifierExecution.h"
+
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
+
+#include "stdafx.h"
+
+#include "RulesModifierExecution.h"
 
 
 struct ModifierRuleCALNOINC: ModifierRule

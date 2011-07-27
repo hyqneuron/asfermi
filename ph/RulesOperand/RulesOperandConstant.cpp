@@ -1,5 +1,9 @@
+
 #include "..\DataTypes.h"
 #include "..\GlobalVariables.h"
+
+#include "stdafx.h"
+
 #include "..\RulesOperand.h"
 #include "RulesOperandConstant.h"
 

@@ -1,6 +1,9 @@
-#include "RulesModifierCommon.h"
+
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
+
+#include "stdafx.h"
+#include "RulesModifierCommon.h"
 
 
 struct ModifierRuleSETPLogic: ModifierRule

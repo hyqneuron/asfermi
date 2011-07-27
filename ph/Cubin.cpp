@@ -2,6 +2,8 @@
 #include "Cubin.h"
 #include "SubString.h"
 
+#include "stdafx.h"
+
 
 const unsigned int ELFFlagsForsm_20 = 0x00140114;
 const unsigned int ELFFlagsForsm_21 = 0x00140115;

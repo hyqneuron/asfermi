@@ -1,6 +1,9 @@
+
 #include "../SubString.h"
 #include "../GlobalVariables.h"
 #include "helperParse.h"
+
+#include "stdafx.h"
 
 
 //Break a directive line into its parts (directive name, arguments)

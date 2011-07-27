@@ -1,10 +1,10 @@
-
 #include "SpecificParsers.h"
 #include "GlobalVariables.h"
 #include "helper\helperException.h"
 #include "helper\helperParse.h"
-using namespace std;
 
+#include "stdafx.h"
+using namespace std;
 
 struct MasterParserDefault: MasterParser
 {

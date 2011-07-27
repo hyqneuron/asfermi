@@ -1,16 +1,18 @@
-#include "RulesInstructionFloat.h"
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
+
+#include "stdafx.h"
+
+#include "RulesInstructionFloat.h"
 #include "..\RulesModifier.h"
 #include "..\RulesOperand.h"
-
 
 
 struct InstructionRuleFADD: InstructionRule
 {
 	InstructionRuleFADD() : InstructionRule("FADD", 0, true, false)
 	{
-		hpBinaryStringToOpcode8("0000000000111000000000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0000 000000111000000000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3, 
 					&OPRRegister0,
 					&OPRRegister1, //issue: should allow modulus and negate
@@ -22,7 +24,7 @@ struct InstructionRuleFADD32I: InstructionRule
 {
 	InstructionRuleFADD32I() : InstructionRule("FADD32I", 1, true, false)
 	{
-		hpBinaryStringToOpcode8("0100000000111000000000000000000000000000000000000000000000010100", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0100 000000111000000000000000000000000000000000000000000000010100", OpcodeWord0, OpcodeWord1);
 		SetOperands(3, 
 					&OPRRegister0,
 					&OPRFADD32IReg1,
@@ -37,7 +39,7 @@ struct InstructionRuleFMUL: InstructionRule
 {
 	InstructionRuleFMUL(): InstructionRule("FMUL", 2, true, false)
 	{
-		hpBinaryStringToOpcode8("0000000000111000000000000000000000000000000000000000000000011010", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0000 000000111000000000000000000000000000000000000000000000011010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3,
 					&OPRRegister0,
 					&OPRRegister1,
@@ -52,7 +54,7 @@ struct InstructionRuleFFMA: InstructionRule
 {
 	InstructionRuleFFMA(): InstructionRule("FFMA", 2, true, false)
 	{
-		hpBinaryStringToOpcode8("0000000000111000000000000000000000000000000000000000000000001100", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0000 000000111000000000000000000000000000000000000000000000001100", OpcodeWord0, OpcodeWord1);
 		SetOperands(4,
 					&OPRRegister0,
 					&OPRRegister1,

@@ -3,6 +3,8 @@
 #include "../GlobalVariables.h"
 #include "helperMixed.h"
 
+#include "stdafx.h"
+
 
 //	1
 //-----Main helper functions
