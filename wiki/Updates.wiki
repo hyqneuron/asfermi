@@ -1,5 +1,11 @@
 #summary A development log
 
+==== 27th July, 2011 ====
+hyq.neuron:
+  # added support for SHL and SHR
+  # code is only uploaded to the ph branch. Files under the ph branch uses stdafx.h, the default pre-compiled header file for VS.
+
+----
 ==== 23rd July, 2011 ====
 hyq.neuron: 
   # asfermi has 2 more members in the team now. 
