@@ -37,9 +37,10 @@ Ctrl+Up = go to the box above
 
 Ctrl+Down = go to box below
 
-*Note*: You will need [http://www.go-mono.com/mono-downloads/download.html Mono] if your OS does not already support .NET 3.5. 
-
-May contain bug, as most of it was written while I was half-asleep. This program is written with minimal complexity so you could expect crashes whenever you do something I did not expect.
+*Note*: 
+  # Only supports 32-bit cubin.
+  # You will need [http://www.go-mono.com/mono-downloads/download.html Mono] if your OS does not already support .NET 3.5. 
+  # May contain bug, as most of it was written while I was half-asleep. This program is written with minimal complexity so you could expect crashes whenever you do something I did not expect.
 [http://code.google.com/p/asfermi/downloads/detail?name=CUBINEditor%20v4.zip Download]
 
 ====Change log====
