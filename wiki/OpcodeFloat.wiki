@@ -45,35 +45,85 @@ Template opcode
 ==== FMUL ====
 Instruction usage:
 {{{
-FMUL(.rnd)(.SAT) reg0, reg1, composite operand;
+FMUL(.rnd)(.SAT)(.fma) reg0, reg1, (-)composite operand;
 }}}
 Template opcode:
 {{{
 0000 000000 1110 000000 000000 0000000000000000000000 0000000000 011010
         mod        reg0   reg1                  immea       mod2
 }}}
+||mod2 0||meaning||
+||0     ||default||
+||1     ||-composite operand||
+
 ||mod2 1:2 || .rnd||
 ||00||default (.rn) ||
 ||10||.RM ||
 ||01||.RP ||
 ||11||.RZ ||
 
+||mod 0:1||.fma||
+||00     ||default||
+||10     ||.FMA  ||
+||10     ||.FMA2 ||
+||11     ||Invalid||
+
 ||mod 4 value||meaning||
-||0||default||
-||1||.SAT||
+||0          ||default||
+||1          ||.SAT||
+
+
+----
+==== FMUL32I ====
+Instruction usage:
+{{{
+FMUL32I(.FTZ)(.SAT) reg0, reg1, F(-)123.123;
+}}}
+Template opcode:
+{{{
+0100 000000 1110 000000 000000 00000000000000000000000000000000 001100
+        mod        reg0   reg1                        fp number
+}}}
+||mod 0:1||meaning||
+||00     ||default||
+||10     ||.FMA   ||
+||10     ||.FMA2  ||
+||11     ||Invalid||
+
+||mod 2||meaning||
+||0    ||default||
+||1    ||.FMZ||
+
+||mod 3||meaning||
+||0    ||default||
+||1    ||.FTZ||
+
+||mod 4||meaning||
+||0    ||default||
+||1    ||.SAT||
 
 ----
 ==== FFMA ====
 Instruction Usage:
 {{{
-FFMA(.roundOp)(.SAT) reg0, reg1, composite operand, reg3;
+FFMA(.roundOp)(.SAT) reg0, reg1, (-)composite operand, (-)reg3;
 }}}
 Template Opcode
 {{{
 0000 000000 1110 000000 000000 0000000000000000000000 0 000000  000 001100
         mod        reg0   reg1                  immea     reg3 mod2
 }}}
-mod2 1:2 and mod 4 follow the same rules as FMUL.
+mod2 1:2, mod 3,4 follow the same rules as in FMUL.
+
+||mod 0||meaning||
+||0    ||default||
+||1    ||-composite operand||
+
+||mod 1||meaning||
+||0    ||default||
+||1    ||-reg3  ||
+
+
 
 ----
 ==== FSETP ====
