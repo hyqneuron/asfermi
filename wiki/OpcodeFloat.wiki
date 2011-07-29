@@ -171,7 +171,7 @@ Template Opcode
 ==== FSETP ====
 Instruction usage:
 {{{
-FSETP.comparator(.logical op) p (,|p), (-)(|)reg1(|), (-)(|)composite operand(|) (,opp);
+FSETP.compOp(.logicOp) p (,|p), (-)(|)reg1(|), (-)(|)composite operand(|) (,opp);
 }}}
 For what p, |p and opp mean, please refer to the setp instruction section in the ptx manual.
 
@@ -195,7 +195,7 @@ Template opcode:
 ||3      ||0: default||
 ||       ||1: |composite operand| ||
 
-||mod2 0:3 value|| comparator||
+||mod2 0:3 value||.compOp||
 ||1             ||.LT||
 ||2             ||.EQ||
 ||3             ||.LE||
@@ -210,7 +210,7 @@ Template opcode:
 ||12            ||.GTU||
 ||14            ||.GEU||
 
-||mod2 4:5 value || logical operation||
+||mod2 4:5 value ||.logicOp||
 ||0              ||.AND||
 ||1              ||.OR||
 ||2              ||.XOR||
@@ -286,7 +286,41 @@ Template opcode
 
 ----
 ==== DSETP ====
+Instruction usage:
+{{{
+DSETP.compOp(.logicOp) p (,|p), (-)(|)reg1(|), (-)(|)composite operand(|) (,opp);
+}}}
 {{{
 1000 000000 1110 111 000 000000 0000000000000000000000 0 1110 000000 11000
         mod       |p   p   reg1                  immea    opp   mod2
 }}}
+
+||mod bit||meaning   ||
+||0      ||0: default||
+||       ||1: -reg1  ||
+||1      ||0: default||
+||       ||1: -composite operand||
+||2      ||0: default||
+||       ||1: |reg1| ||
+||3      ||0: default||
+||       ||1: |composite operand| ||
+
+||mod2 0:3 value||.compOp||
+||1             ||.LT||
+||2             ||.EQ||
+||3             ||.LE||
+||4             ||.GT||
+||5             ||.NE||
+||6             ||.GE||
+||7             ||.NUM||
+||8             ||.NAN||
+||9             ||.LTU||
+||10            ||.EQU||
+||11            ||.LEU||
+||12            ||.GTU||
+||14            ||.GEU||
+
+||mod2 4:5 value ||.logicOp||
+||0              ||.AND||
+||1              ||.OR||
+||2              ||.XOR||
