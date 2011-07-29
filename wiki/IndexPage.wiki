@@ -17,6 +17,7 @@ This is a page where all other wiki pages of this project are listed and briefly
   * [Usage]: A page describing the command-line usage of asfermi.
   * [SourceFormat]: A specification of the format of source code that can be assembled.
   * [CodeExample]: A page with some examples showing how the input file of asfermi would look like.
+  * [KnownIssues]: A list of known issues and other things that users of asfermi should take note of.
   * [Instructions]: A list of instructions that are supported/ to be supported.
   * [Directives]: A list of directives that are supported/to be supported.
 
