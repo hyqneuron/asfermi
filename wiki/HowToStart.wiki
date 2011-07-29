@@ -10,7 +10,7 @@ This page is written by hyq.neuron for the other asfermi team members.
   # Find out the possible corresponding PTX instruction
   # Code in PTX (here's a template file I often use: [PTXHelp]), with as many permutations of suitable modifiers as possible, and produce the corresponding cubin. PTX modifiers can be found from the PTX manual 2.3 from CUDA Toolkit 4.0
   # Use cuobjdump to disassemble the cubin. From the disassembled code, identify the types of operands for this instruction
-  # Use cubinEditor from [http://code.google.com/p/asfermi/downloads/list Downloads] to [Utilities#cubin_binary_editor open] the cubin
+  # Use cubinEditor from [http://code.google.com/p/asfermi/downloads/list Downloads] to [Utilities#cubin_binary_editor open] the cubin (only 32-bit cubins can be correctly identified)
   # Document the template opcode on the correct opcode page (We'll discuss which category an instruction belongs to before we start probing). The default modifier bits should be present, so should the default predicate bits(1110). However, please leave all other operand-specific bits as zeros.
   # Apart from the variation in modifiers that are already present, please also check for other potential modifier bits by tweaking the unused bit fields.
   # Identify and document the meaning of various modifier bit fields. If you do not understand what a certain modifier means, please leave a question mark at the end of its name, e.g. .H?.
