@@ -8,15 +8,30 @@ Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand]
 ==== IADD ====
 Instruction usage:
 {{{
-IADD reg0, reg1, (-)composite operand;
+IADD(.SAT)(.X) reg0, (-)reg1, (-)composite operand;
 }}}
 If the composite operand is an immediate value, it cannot be longer than 20 bits (cannot be negative).
+
+Also note that the when the negative operator is used on both reg1 and reg3, a .PO modifier would appear in the cubin instead. What .PO does has not been tested.
 
 Template opcode:
 {{{
 1100 000000 1110 000000 000000 0000000000000000000000 0000000000 010010
-                   reg0   reg1                  immea
+        mod        reg0   reg1                  immea
 }}}
+
+||mod 0:1||meaning||
+||00     ||default||
+||10     ||-reg3  ||
+||01     ||-reg1  ||
+||11     ||.PO    ||
+
+||mod bit||meaning   ||
+||3      ||0: default||
+||       ||1: .X     ||
+||4      ||0: default||
+||       ||1: .SAT   ||
+
 
 ----
 ==== IADD32I ====
@@ -33,13 +48,13 @@ Template opcode
 
 ||m 0  ||meaning||
 ||0    ||default||
-||1    ||.CC on reg0||
+||1    ||reg0.CC||
 
 ----
 ==== IMUL ====
 Instruction Usage
 {{{
-IMUL(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0, reg1, composite operand;
+IMUL(.U32/S32)(.U32/.S32)(.HI) reg0(.CC), reg1, composite operand;
 }}}
 
 Template opcode:
@@ -48,30 +63,47 @@ Template opcode:
         mod        reg0   reg1                  immea       mod2
 }}}
 ||mod bit|| meaning||
-||3      ||0: .U32, first modifier||
+||2      ||0: .U32, first modifier||
 ||       ||1: .S32, first modifier||
-||4      ||0: .LO default         ||
+||3      ||0: .LO default         ||
 ||       ||1: .HI                 ||
-||5      ||0: .U32, second modifier||
+||4      ||0: .U32, second modifier||
 ||       ||1: .S32, second modifier||
 
-||mod2 1|| meaning ||
+||mod2 9||meaning||
 ||0     ||default||
-||1     ||.SAT   ||
+||1     ||reg0.CC||
 
 ----
 ==== IMAD ====
 Instruction usage:
 {{{
-IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0, reg1, composite operand, reg3;
+IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0, (-)reg1, composite operand, (-)reg3;
 }}}
+Note that the when the negative operator is used on both reg1 and reg3, a .PO modifier would appear in the cubin instead. What .PO does has not been tested.
 
 Template opcode:
 {{{
 1100 010100 1110 000000 000000 0000000000000000000000 0 000000  000 000100
         mod        reg0   reg1                  immea     reg3 mod2
 }}}
-The use of mod and mod2 is the same as in IMUL.
+
+||mod 0:1||meaning||
+||00     ||default||
+||10     ||-reg3  ||
+||01     ||-reg1  ||
+||11     ||.PO    ||
+
+||2      ||0: .U32, first modifier||
+||       ||1: .S32, first modifier||
+||3      ||0: .LO default         ||
+||       ||1: .HI                 ||
+||4      ||0: .U32, second modifier||
+||       ||1: .S32, second modifier||
+
+||mod2 1|| meaning ||
+||0     ||default||
+||1     ||.SAT   ||
 
 ----
 ==== ISETP ====
