@@ -9,6 +9,7 @@
     * [Usage]
     * [SourceFormat]
     * [CodeExample]
+    * [KnownIssues]
     * [Instructions]
     * [Directives]
   * Development Related
