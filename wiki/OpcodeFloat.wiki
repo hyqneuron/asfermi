@@ -171,7 +171,7 @@ Template Opcode
 ==== FSETP ====
 Instruction usage:
 {{{
-FSETP.comparator(.logical op) p (,|p), reg1, composite operand (,opp);
+FSETP.comparator(.logical op) p (,|p), (-)(|)reg1(|), (-)(|)composite operand(|) (,opp);
 }}}
 For what p, |p and opp mean, please refer to the setp instruction section in the ptx manual.
 
@@ -184,6 +184,17 @@ Template opcode:
 0000 000000 1110 111 000 000000 0000000000000000000000 0 1110 000000 00100
         mod       |p   p   reg1                  immea    opp   mod2
 }}}
+
+||mod bit||meaning   ||
+||0      ||0: default||
+||       ||1: -reg1  ||
+||1      ||0: default||
+||       ||1: -composite operand||
+||2      ||0: default||
+||       ||1: |reg1| ||
+||3      ||0: default||
+||       ||1: |composite operand| ||
+
 ||mod2 0:3 value|| comparator||
 ||1             ||.LT||
 ||2             ||.EQ||
@@ -272,3 +283,10 @@ Template opcode
 ||mod 1||meaning||
 ||0    ||default||
 ||1    ||-reg3  ||
+
+----
+==== DSETP ====
+{{{
+1000 000000 1110 111 000 000000 0000000000000000000000 0 1110 000000 11000
+        mod       |p   p   reg1                  immea    opp   mod2
+}}}
