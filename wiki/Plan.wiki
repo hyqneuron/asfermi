@@ -10,7 +10,7 @@ The major parts of the assembler are already done. Now I'm in the progress of ad
 
 A few more things to do:
   # Finish adding support for the most commonly used instructions. See [OpcodeToDo].
-  # Support elf-64.
+  # Support 64-bit cubin (elf-64).
   # Add a few directives to allow custom content (raw, hex/binary opcode)
   # Add directives to allow custom register count, stack size, bar count and so on
   # Write tests and debug
