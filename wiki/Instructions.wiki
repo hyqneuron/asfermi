@@ -2,7 +2,12 @@
 
 = Instructions =
 == Currently Supported ==
-MOV, LD, LDU, LDL, LDC, LDS, ST, STL, STS, FADD, FMUL, FFMA, IADD, IMUL, IMAD, ISETP, FSETP, S2R, LOP, I2F, F2I, EXIT, RET, PRET, BRA, CAL, NOP.
+  * MOV, LD, LDU, LDL, LDC, LDS, ST, STL, STS
+  * FADD, FADD32I, FMUL, FMUL32I, FFMA, FSETP, DADD, DMUL, DFMA, DSETP, 
+  * IADD, IADD32I, IMUL, IMAD, ISETP
+  * S2R, I2F, I2I, F2I, F2F
+  * LOP, LOP32I, SHL, SHR
+  * EXIT, RET, PRET, BRA, CAL, NOP.
 
 For more information regarding the supported instructions, their usage and opcodes, please see the [IndexPage#Fermi_ISA Opcode pages].
 
