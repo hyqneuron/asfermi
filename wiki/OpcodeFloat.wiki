@@ -9,7 +9,7 @@ Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand]
 ==== FADD ====
 Instruction Usage:
 {{{
-FADD reg0, reg1, (-)composite operand;
+FADD reg0, (-)reg1, (-)composite operand;
 }}}
 If the third operand is a floating point number, it will be a 32-bit floaitng point number with the last 12 bits truncated. If the negative sign in the immediate value is before 'F', then a modifier bit will be flipped. If the negative sign comes after the 'F', then the 20-bit immediate value will have the negative bit set.
 
@@ -135,8 +135,8 @@ For what p, |p and opp mean, please refer to the setp instruction section in the
 
 Template opcode:
 {{{
-1100 010000 1110 111 000 000000 0000000000000000000000 0 1110 000000 11000
-        mod        p  |p   reg1                  immea    opp   mod2
+0000 000000 1110 111 000 000000 0000000000000000000000 0 1110 000000 00100
+        mod       |p   p   reg1                  immea    opp   mod2
 }}}
 ||mod2 0:3 value|| comparator||
 ||1             ||.LT||
@@ -176,7 +176,7 @@ Template opcode
 DMUL reg0, reg1, composite operand;
 }}}
 Template opcode
-{{{{{{
+{{{
 1000 000000 1110 000000 000000 0000000000000000000000 0000000000 001010
         mod        reg0   reg1                  immea       mod2
 }}}
