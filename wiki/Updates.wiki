@@ -1,5 +1,10 @@
 #summary A development log
 
+==== 29 July, 2011 ====
+  # Fixed things for some float/integer instructions and added support for more operators of those instructions.
+  # Added support for LOP32I, DADD, DMUL, DFMA and DSETP.
+
+----
 ==== 27th July, 2011 ====
 hyq.neuron:
   # added support for SHL and SHR
