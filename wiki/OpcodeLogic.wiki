@@ -31,6 +31,29 @@ Template opcode
 ||0    ||default||
 ||1    ||~reg1  ||
 
+
+----
+==== LOP32I ====
+Usage:
+{{{
+LOP32I.op reg0, (~)reg1, 0xabcd;
+}}}
+Template opcode
+{{{
+0100 000000 1110 000000 000000 00000000000000000000000000000000 011100
+        mod        reg0   reg1                           0xabcd
+}}}
+
+||mod 2:3 ||meaning||
+||00      ||.AND   ||
+||10      ||.OR    ||
+||01      ||.XOR   ||
+||11      ||.PASS_B||
+
+||mod 0||meaning||
+||0    ||default||
+||1    ||~reg1  ||
+
 ----
 ==== SHR ====
 Instruction usage
