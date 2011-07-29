@@ -24,6 +24,7 @@ This is a page where all other wiki pages of this project are listed and briefly
 === Development related ===
   * [Design]: This page describes the framework under which the assembler is written.
   * [HowToStart]: This page lists the procedures of opcode probing
+  * [OpcodeToDo]: A list of instructions to be probed soon.
   * [PTXpriority]: The probing of various PTX instruction and their corresponding opcode will be done in stages. This page lists the priority of each PTX instruction in the probing process.
   * [Utilities] A page describing the utilities made for the purpose of this project.
 
@@ -34,7 +35,7 @@ This is a page where all other wiki pages of this project are listed and briefly
   * [OpcodeDataMovement]: Opcode and instruction description for data movement instructions.
   * [OpcodeFloat]: Opcode and instruction description for floating point number operation instructions.
   * [OpcodeInteger]: Opcode and instruction description for integer operation instructions.
-  * [OpcodeLogic]
+  * [OpcodeLogic]: Opcode and instruction description for logic and shift instructions.
   * [OpcodeConversion]: Opcode and instruction description for conversion instructions.
   * [OpcodeMiscellaneous]: Opcode and instruction description for miscellaneous instructions.
 
