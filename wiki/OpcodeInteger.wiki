@@ -107,8 +107,29 @@ Template opcode:
 
 ----
 ==== ISETP ====
+Instruction usage:
+{{{
+ISETP.comparator(.U32)(.logicOp) p, |p, reg0, composite operand, opp;
+}}}
 Template opcode:
 {{{
 1100 010000 1110 111 000 000000 0000000000000000000000 0 1110 000000 11000
+        mod       |p   p   reg0                  immea    opp   mod2
 }}}
-Please see [OpcodeFloat#FSETP FSETP] for more information. Note that .NUM, .NAN and all the comparators suffixed with U are not supported by ISETP.
+
+||mod 4||meaning||
+||0    ||.U32   ||
+||1    ||default||
+
+||mod2 0:3 value|| comparator||
+||1             ||.LT||
+||2             ||.EQ||
+||3             ||.LE||
+||4             ||.GT||
+||5             ||.NE||
+||6             ||.GE||
+
+||mod2 4:5 value || logical operation||
+||0              ||.AND||
+||1              ||.OR||
+||2              ||.XOR||
