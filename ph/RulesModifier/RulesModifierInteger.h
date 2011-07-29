@@ -27,5 +27,9 @@ extern ModifierRuleIADD32ISAT MRIADD32ISAT;
 struct ModifierRuleIADD32IX;
 extern ModifierRuleIADD32IX MRIADD32IX;
 
+
+struct ModifierRuleISETPU32;
+extern ModifierRuleISETPU32 MRISETPU32;
+
 #else
 #endif

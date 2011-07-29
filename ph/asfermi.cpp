@@ -358,8 +358,13 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFADD);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFADD32I);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFMUL);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRFMUL32I);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFFMA);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFSETP);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRDADD);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRDMUL);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRDFMA);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRDSETP);
 	//integer opp
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRIADD);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRIADD32I);

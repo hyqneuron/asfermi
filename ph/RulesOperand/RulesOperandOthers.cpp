@@ -57,6 +57,7 @@ struct OperandRule32I: OperandRule
 
 
 
+
 struct OperandRuleLOP: OperandRule
 {
 	int ModShift;

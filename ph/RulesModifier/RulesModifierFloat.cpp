@@ -21,6 +21,16 @@ struct ModifierRuleFADD32IFTZ: ModifierRule
 	}
 }MRFADD32IFTZ;
 
+
+struct ModifierRuleFMUL32IFTZ: ModifierRule
+{
+	ModifierRuleFMUL32IFTZ(): ModifierRule("FTZ", true, false, false)
+	{
+		hpBinaryStringToOpcode4("11111111111111111111111111111111", Mask0);
+		Bits0 = 1<<6;
+	}
+}MRFMUL32IFTZ;
+
 struct ModifierRuleFMULR: ModifierRule
 {
 	ModifierRuleFMULR(int type, char* name): ModifierRule("", false, true, false)
@@ -33,6 +43,15 @@ struct ModifierRuleFMULR: ModifierRule
 	}
 }MRFMULRM(1, "RM"), MRFMULRP(2, "RP"), MRFMULRZ(3, "RZ");
 
+
+struct ModifierRuleFADDSAT : ModifierRule
+{
+	ModifierRuleFADDSAT() : ModifierRule("SAT", false, true, false)
+	{
+		Mask1 = 0xffffffff;
+		Bits1 = 1<<17;
+	}
+}MRFADDSAT;
 
 
 struct ModifierRuleFMULSAT: ModifierRule

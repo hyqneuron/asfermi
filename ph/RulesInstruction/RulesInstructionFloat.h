@@ -8,11 +8,11 @@ extern InstructionRuleFADD IRFADD;
 struct InstructionRuleFADD32I;
 extern InstructionRuleFADD32I IRFADD32I;
 
-
-
 struct InstructionRuleFMUL;
 extern InstructionRuleFMUL IRFMUL;
 
+struct InstructionRuleFMUL32I;
+extern InstructionRuleFMUL32I IRFMUL32I;
 
 struct InstructionRuleFFMA;
 extern InstructionRuleFFMA IRFFMA;
@@ -20,5 +20,17 @@ extern InstructionRuleFFMA IRFFMA;
 struct InstructionRuleFSETP;
 extern InstructionRuleFSETP IRFSETP;
 
-#else
+struct InstructionRuleDADD;
+extern InstructionRuleDADD IRDADD;
+
+
+struct InstructionRuleDMUL;
+extern InstructionRuleDMUL IRDMUL;
+
+struct InstructionRuleDFMA;
+extern InstructionRuleDFMA IRDFMA;
+
+struct InstructionRuleDSETP;
+extern InstructionRuleDSETP IRDSETP;
+
 #endif

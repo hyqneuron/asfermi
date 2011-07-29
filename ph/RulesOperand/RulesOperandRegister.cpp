@@ -39,13 +39,26 @@ struct OperandRuleRegister3: OperandRule
 	virtual void Process(SubString &component)
 	{
 		//parse
+		bool negative = false;
+		if(component[0]=='-')
+		{
+			negative = true;
+			component.Start++;
+			component.Length--;
+			csCurrentInstruction.OpcodeWord0|= 1<<8;
+		}
 		int result = component.ToRegister();
 		csMaxReg = (result > csMaxReg)? result: csMaxReg;
 		//apply result
 		result = result<<17;
 		csCurrentInstruction.OpcodeWord1 |=result;
+		if(negative)
+		{
+			component.Start--;
+			component.Length++;
+		}
 	}
-}OPRRegister3;
+}OPRRegister3ForMAD;
 
 //Note that some operands can have modifiers
 //This rule deals with registers that can have the .CC modifier
@@ -88,7 +101,7 @@ struct OperandRulePredicate: OperandRule
 	{
 		//some predicate operands can be optional
 		if(optional)
-			Type = OperandType::Optional;
+			Type = OperandType::Optional; //issue: doesn't work for predicate1 as operands in the middle cannot be optional
 		Word0 = word0;
 		Offset = offset;
 	}
@@ -118,7 +131,7 @@ struct OperandRulePredicate: OperandRule
 		else
 			csCurrentInstruction.OpcodeWord1 |= result;
 	}
-}OPRPredicate1(14, true, false), OPRPredicate0(17, true, false), OPRPredicate2NotNegatable(17, false, true);
+}OPRPredicate1(14, true, true), OPRPredicate0(17, true, false), OPRPredicate2NotNegatable(17, false, true);
 
 //Some predicate registers expressions can be negated with !
 //this kind of operand is processed separately
@@ -147,9 +160,7 @@ struct OperandRulePredicate2: OperandRule
 
 struct OperandRuleFADD32IReg1: OperandRule
 {
-	OperandRuleFADD32IReg1(): OperandRule(Register)
-	{
-	}
+	OperandRuleFADD32IReg1(): OperandRule(Register){}
 	virtual void Process(SubString &component)
 	{
 		int startPos = 1;
@@ -162,4 +173,28 @@ struct OperandRuleFADD32IReg1: OperandRule
 		OPRRegister1.Process(component.SubStr(startPos, component.Length - startPos));
 	}
 }OPRFADD32IReg1;
+
+struct OperandRuleIMADReg1 : OperandRule
+{
+	
+	OperandRuleIMADReg1(): OperandRule(Register){}
+	virtual void Process(SubString &component)
+	{
+		bool negative = false;
+		if(component[0]=='-')
+		{
+			negative = true;
+			component.Start++;
+			component.Length--;
+			csCurrentInstruction.OpcodeWord0 |= 1<<9;
+			//no need to check length. checked in substring function
+		}
+		OPRRegister1.Process(component);
+		if(negative)
+		{
+			component.Start--;
+			component.Length++;
+		}
+	}
+}OPRIMADReg1;
 

@@ -121,6 +121,36 @@ struct OperandRuleFADDStyle: OperandRule
 	}
 }OPRFADDStyle(true), OPRFMULStyle(false);
 
+struct OperandRuleFAllowNegative: OperandRule
+{
+	bool OnWord0;
+	int FlagPos;
+	OperandRuleFAllowNegative(bool onWord0, int flagPos): OperandRule(Custom)
+	{
+		OnWord0 = onWord0;
+		FlagPos = flagPos;
+	}
+	virtual void Process(SubString &component)
+	{
+		bool negative = false;
+		if(component[0]=='-')
+		{
+			negative = true;
+			component.Start++;
+			component.Length--;
+			int flag = 1<<FlagPos;
+			if(OnWord0)
+				csCurrentInstruction.OpcodeWord0 |= flag;
+			else
+				csCurrentInstruction.OpcodeWord1 |= flag;
+			if(component.Length<2)
+				throw 116;//issue: bad error message
+		}
+		OPRFMULStyle.Process(component);
+		mArithmeticCommonEnd
+	}
+}OPRFMULAllowNegative(false, 25), OPRFFMAAllowNegative(true, 9);
+
 
 //IADD: Register, Constant memory without reg, 20-bit Int)
 struct OperandRuleIADDStyle: OperandRule
@@ -151,4 +181,20 @@ struct OperandRuleIADDStyle: OperandRule
 		mArithmeticCommonEnd
 	}
 }OPRIADDStyle(true), OPRIMULStyle(false);
+
+
+struct OperandRuleFADDCompositeWithOperator: OperandRule
+{
+	OperandRuleFADDCompositeWithOperator(): OperandRule(Custom){}
+	virtual void Process(SubString &component)
+	{
+		int startPos = 1;
+		if(component[0]=='-')
+			csCurrentInstruction.OpcodeWord0 |= 1<<8;
+		else if(component[0]=='|')
+			csCurrentInstruction.OpcodeWord0 |= 1<<6;
+		else startPos = 0;
+		OPRFMULStyle.Process(component.SubStr(startPos, component.Length - startPos));
+	}
+}OPRFADDCompositeWithOperator;
 
