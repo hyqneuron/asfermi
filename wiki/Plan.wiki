@@ -8,11 +8,12 @@ This project involves two stages. First is the making of the assembler. Second i
 ===Assembler===
 The major parts of the assembler are already done. Now I'm in the progress of adding support for more instructions.
 
-----
-*Time line*
-  * By 17/7/2011: support all the most frequently used instructions.
-  * By 20/7/2011: find out latency for the supported instructions.
-----
+A few more things to do:
+  # Finish adding support for the most commonly used instructions. See [OpcodeToDo].
+  # Support elf-64.
+  # Add a few directives to allow custom content (raw, hex/binary opcode)
+  # Add directives to allow custom register count, stack size, bar count and so on
+  # Write tests and debug
 
 ===Microbenchmarking===
 ====Instruction-related====
