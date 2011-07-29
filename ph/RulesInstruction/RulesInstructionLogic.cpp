@@ -33,6 +33,24 @@ struct InstructionRuleLOP: InstructionRule
 }IRLOP;
 
 
+struct InstructionRuleLOP32I: InstructionRule
+{
+	InstructionRuleLOP32I(): InstructionRule("LOP32I", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("0100 000000 1110 000000 000000 00000000000000000000000000000000 011100", OpcodeWord0, OpcodeWord1);
+		SetOperands(3,
+					&OPRRegister0,
+					&OPRLOP1,
+					&OPR32I);
+		ModifierGroups[0].Initialize(false, 4,
+					&MRLOPAND,
+					&MRLOPOR,
+					&MRLOPXOR,
+					&MRLOPPASS);
+	}
+}IRLOP32I;
+
+
 struct InstructionRuleSHR: InstructionRule
 {
 	InstructionRuleSHR(bool shr) : InstructionRule("", 2, true, false)

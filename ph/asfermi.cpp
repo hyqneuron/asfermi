@@ -370,6 +370,7 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRSHR);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRSHL);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRLOP);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRLOP32I);
 	//miscellaneous
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRS2R);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRNOP);
