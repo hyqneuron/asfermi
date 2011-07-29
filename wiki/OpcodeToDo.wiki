@@ -1,0 +1,6 @@
+#summary One-sentence summary of this page.
+
+  * Integer: IMUL32I, ISCADD, ICMP, BFI, BFE
+  * Float: MUFU, FCMP
+  * Execution control: SSY, ATOM, BAR, NOP.S CC.T, PBK, BRK, PCNT, CONT
+  * Others: SEL
