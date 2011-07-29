@@ -9,18 +9,40 @@ Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand]
 ==== FADD ====
 Instruction Usage:
 {{{
-FADD reg0, (-)reg1, (-)composite operand;
+FADD(.FTZ)(.rnd)(.SAT) reg0, (-)(|)reg1(|), (-)(|)composite operand(|);
 }}}
 If the third operand is a floating point number, it will be a 32-bit floaitng point number with the last 12 bits truncated. If the negative sign in the immediate value is before 'F', then a modifier bit will be flipped. If the negative sign comes after the 'F', then the 20-bit immediate value will have the negative bit set.
 
 Template opcode:
 {{{
 0000 000000 1110 000000 000000 0000000000000000000000 0000000000 001010
-        mod        reg0   reg1                  immea
+        mod        reg0   reg1                  immea       mod2
 }}}
-||mod 1|| meaning ||
-||0    ||default||
-||1    ||-composite operand||
+||mod bit|| meaning  ||
+||0      ||0: default||
+||       ||1: -reg1  ||
+||1      ||0: default||
+||       ||1: -composite operand||
+||2      ||0: default||
+||       ||1: |reg1| ||
+||3      ||0: default||
+||       ||1: |composite operand| ||
+||4      ||0: default||
+||       ||1: .FTZ   ||
+
+||mod2 0||meaning||
+||0     ||default||
+||1     ||.FMA||
+
+||mod2 1:2 || .rnd||
+||00||default (.rn) ||
+||10||.RM ||
+||01||.RP ||
+||11||.RZ ||
+
+||mod2 8||meaning||
+||0     ||default||
+||1     ||.SAT   ||
 
 ----
 ==== FADD32I ====
@@ -35,17 +57,17 @@ Template opcode
 }}}
 ||mod bit|| meaning  ||
 ||0      ||0: default||
-||       ||1: -reg1||
+||       ||1: -reg1  ||
 ||2      ||0: default||
 ||       ||1: |reg1| ||
 ||4      ||0: default||
-||       ||1: .FTZ||
+||       ||1: .FTZ   ||
 
 ----
 ==== FMUL ====
 Instruction usage:
 {{{
-FMUL(.rnd)(.SAT)(.fma) reg0, reg1, (-)composite operand;
+FMUL(.FTZ)(.rnd)(.SAT) reg0, reg1, (-)composite operand;
 }}}
 Template opcode:
 {{{
@@ -57,20 +79,27 @@ Template opcode:
 ||1     ||-composite operand||
 
 ||mod2 1:2 || .rnd||
-||00||default (.rn) ||
+||00||default(.rn)||
 ||10||.RM ||
 ||01||.RP ||
 ||11||.RZ ||
 
-||mod 0:1||.fma||
+||mod 0:1||.meaning||
 ||00     ||default||
 ||10     ||.FMA  ||
 ||10     ||.FMA2 ||
 ||11     ||Invalid||
 
-||mod 4 value||meaning||
-||0          ||default||
-||1          ||.SAT||
+
+||mod 2:3||meaning||
+||00     ||default||
+||10     ||.FTZ   ||
+||01     ||.FMZ   ||
+||11     ||Invalid||
+
+||mod 4||meaning||
+||0    ||default||
+||1    ||.SAT||
 
 
 ----
@@ -90,13 +119,12 @@ Template opcode:
 ||10     ||.FMA2  ||
 ||11     ||Invalid||
 
-||mod 2||meaning||
-||0    ||default||
-||1    ||.FMZ||
 
-||mod 3||meaning||
-||0    ||default||
-||1    ||.FTZ||
+||mod 2:3||meaning||
+||00     ||default||
+||10     ||.FTZ   ||
+||01     ||.FMZ   ||
+||11     ||Invalid||
 
 ||mod 4||meaning||
 ||0    ||default||
@@ -106,14 +134,19 @@ Template opcode:
 ==== FFMA ====
 Instruction Usage:
 {{{
-FFMA(.roundOp)(.SAT) reg0, reg1, (-)composite operand, (-)reg3;
+FFMA(.FTZ)(.roundOp)(.SAT) reg0, reg1, (-)composite operand, (-)reg3;
 }}}
 Template Opcode
 {{{
 0000 000000 1110 000000 000000 0000000000000000000000 0 000000  000 001100
         mod        reg0   reg1                  immea     reg3 mod2
 }}}
-mod2 1:2, mod 3,4 follow the same rules as in FMUL.
+
+||mod2 1:2 || .rnd||
+||00||default (.rn) ||
+||10||.RM ||
+||01||.RP ||
+||11||.RZ ||
 
 ||mod 0||meaning||
 ||0    ||default||
@@ -123,15 +156,28 @@ mod2 1:2, mod 3,4 follow the same rules as in FMUL.
 ||0    ||default||
 ||1    ||-reg3  ||
 
+||mod 2:3||meaning||
+||00     ||default||
+||10     ||.FTZ   ||
+||01     ||.FMZ   ||
+||11     ||Invalid||
+
+||mod 4||meaning||
+||0    ||default||
+||1    ||.SAT||
 
 
 ----
 ==== FSETP ====
 Instruction usage:
 {{{
-FSETP.comparator(.logical op) p (,|p), register, composite operand (,opp);
+FSETP.comparator(.logical op) p (,|p), reg1, composite operand (,opp);
 }}}
 For what p, |p and opp mean, please refer to the setp instruction section in the ptx manual.
+
+<wiki:comment>
+issue: reg1 and composite operand should support operators - and ||
+</wiki:comment>
 
 Template opcode:
 {{{
@@ -166,7 +212,7 @@ DADD reg0, reg1, composite operand;
 }}}
 Template opcode
 {{{
-1000 000000 1110 000000 000000 0000000000000000000000 0000000000 010010
+1000 000000 1110 000000 000000 0000000000000000000000 0000000000 110010
         mod        reg0   reg1                  immea       mod2
 }}}
 
