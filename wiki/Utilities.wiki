@@ -44,11 +44,6 @@ Ctrl+Down = go to box below
 [http://code.google.com/p/asfermi/downloads/detail?name=CUBINEditor%20v4.zip Download]
 
 ====Change log====
-=====V2=====
-Added support for command-line argument.
-=====V3=====
-Added a button "File Info". Other 3 disabled buttons are just there for my own use. The "Fill bits" button permutes na and nb bits for 512 instructions. If you want to use this button please modify its property, Enabled, as well as the clicking event handling code on your own.
-
-Currently it has some display glitches when running on Mono under Ubuntu, and the FileInfo page doesn't show up properly. I shouldn't have used the ListView structure.
-=====V4=====
-The display problems are fixed. Not sure how well it runs on native Linux but on my VirtualBox Ubuntu it was terribly slow. Note that this package libmono-winforms2.0-cil is probably needed for Mono to run correctly.
+  # v2: Added support for command-line argument.
+  # v3: Added a button "File Info". Other 3 disabled buttons are just there for my own use. The "Fill bits" button permutes na and nb bits for 512 instructions. If you want to use this button please modify its property, Enabled, as well as the clicking event handling code on your own. Currently it has some display glitches when running on Mono under Ubuntu, and the FileInfo page doesn't show up properly. I shouldn't have used the ListView structure.
+  # v4: The display problems are fixed. Not sure how well it runs on native Linux but on my VirtualBox Ubuntu it was terribly slow. Note that this package libmono-winforms2.0-cil is probably needed for Mono to run correctly.
