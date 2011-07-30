@@ -5,4 +5,5 @@
   # No warning is given when the parsing of some floating point/integer expressions using atoi(), atol() or atof() produce errors.
 
 == Others ==
-  # 64-bit output is not yet supported
+  # 64-bit output is not yet supported.
+  # Memory leaks are not being dealt with.
