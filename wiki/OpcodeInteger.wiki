@@ -74,6 +74,30 @@ Template opcode:
 ||0     ||default||
 ||1     ||reg0.CC||
 
+
+----
+==== IMUL32I ====
+Instruction usage:
+{{{
+IMUL32I(.U32/S32)(.U32/.S32)(.HI) reg0(.CC), reg1, composite operand;
+}}}
+Template opcode:
+{{{
+0100 010100 1110 000000 000000 00000000000000000000000000000000    0 01000
+        mod        reg0   reg1                           0xabcd mod2
+}}}
+
+||mod bit|| meaning||
+||2      ||0: .U32, first modifier||
+||       ||1: .S32, first modifier||
+||3      ||0: .LO default         ||
+||       ||1: .HI                 ||
+||4      ||0: .U32, second modifier||
+||       ||1: .S32, second modifier||
+
+||mod2 0||meaning||
+||0     ||default||
+||1     ||reg0.CC||
 ----
 ==== IMAD ====
 Instruction usage:
