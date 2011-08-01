@@ -185,3 +185,28 @@ Template opcode:
 ||0              ||.AND||
 ||1              ||.OR||
 ||2              ||.XOR||
+
+----
+==== ICMP ====
+Instruction usage:
+{{{
+ICMP.CompOp(.U32) reg0, reg1, composite operand, reg3
+}}}
+reg0 = (reg3 CompOp 0)? reg1 : composite operand; The .U32 modifier indicates the type of reg3. reg3 is assumed to be S32 when .U32 is not specified.
+
+Template opcode
+{{{
+1100 010000 1110 000000 000000 0000000000000000000000 0 000000  000 001100
+        mod        reg0   reg1                  immea     reg3 mod2
+}}}
+||mod 4||meaning||
+||0    ||.U32   ||
+||1    ||default(.s32)||
+
+||mod2 0:2 value||meaning||
+||1             ||.LT||
+||2             ||.EQ||
+||3             ||.LE||
+||4             ||.GT||
+||5             ||.NE||
+||6             ||.GE||
