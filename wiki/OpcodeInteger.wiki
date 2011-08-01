@@ -129,6 +129,34 @@ Template opcode:
 ||0     ||default||
 ||1     ||.SAT   ||
 
+
+----
+==== ISCADD ====
+Instruction usage:
+{{{
+ISCADD reg0, reg1, composite operand, int1;
+}}}
+reg0 = reg1<<int1 + reg0;
+
+Note that int1 must be less than 32.
+
+Template opcode:
+{{{
+1100 0 00000 1110 000000 000000 0000000000000000000000 0000000000 000010
+        int1        reg0   reg1                  immea       mod2
+}}}
+
+||mod2 1:2||meaning   ||
+||00      ||0: default||
+||01      ||1: -reg1  ||
+||10      ||0: -int0  ||
+||11      ||1: .PO    ||
+
+||mod2 9||meaning||
+||0     ||default||
+||1     ||reg0.CC||
+
+
 ----
 ==== ISETP ====
 Instruction usage:
