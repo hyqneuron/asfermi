@@ -1,6 +1,9 @@
 #summary A development log
+==== 1st August, 2011 ====
+  Added support for IMUL32I, ISCADD, ICMP and FCMP
 
-==== 29 July, 2011 ====
+----
+==== 29th July, 2011 ====
   # Fixed things for some float/integer instructions and added support for more operators of those instructions.
   # Added support for LOP32I, DADD, DMUL, DFMA and DSETP.
 
