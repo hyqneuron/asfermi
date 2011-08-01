@@ -20,9 +20,11 @@ extern InstructionRuleFFMA IRFFMA;
 struct InstructionRuleFSETP;
 extern InstructionRuleFSETP IRFSETP;
 
+struct InstructionRuleFCMP;
+extern InstructionRuleFCMP IRFCMP;
+
 struct InstructionRuleDADD;
 extern InstructionRuleDADD IRDADD;
-
 
 struct InstructionRuleDMUL;
 extern InstructionRuleDMUL IRDMUL;

@@ -19,5 +19,7 @@ struct OperandRuleF2I;
 extern OperandRuleF2I OPRF2I, OPRI2F;
 
 
-#else
+struct OperandRuleISCADDShift;
+extern OperandRuleISCADDShift OPRISCADDShift;
+
 #endif

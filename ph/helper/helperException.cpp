@@ -130,6 +130,10 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 132:	message = "Empty operand.";
 		break;
+	case 133:	message = "Shift cannot be larger than 31";
+		break;
+	case 134:	message = "Negative sign not allowed here.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};

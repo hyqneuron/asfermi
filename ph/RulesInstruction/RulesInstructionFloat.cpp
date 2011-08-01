@@ -119,6 +119,35 @@ struct InstructionRuleFSETP: InstructionRule
 	}
 }IRFSETP;
 
+struct InstructionRuleFCMP: InstructionRule
+{
+	InstructionRuleFCMP(): InstructionRule("FCMP", 2, true, false)
+	{
+		hpBinaryStringToOpcode8("0000 000000 1110 000000 000000 0000000000000000000000 0 000000 0000 11100", OpcodeWord0, OpcodeWord1);
+		SetOperands(4, 
+					&OPRRegister0,
+					&OPRRegister1,
+					&OPRFMULStyle, 
+					&OPRRegister3ForCMP);
+		ModifierGroups[0].Initialize(false, 14, 
+					&MRSETPComparisonLT,
+					&MRSETPComparisonEQ,
+					&MRSETPComparisonLE,
+					&MRSETPComparisonGT,
+					&MRSETPComparisonNE,
+					&MRSETPComparisonGE,
+					&MRSETPComparisonNUM,
+					&MRSETPComparisonNAN,
+					&MRSETPComparisonLTU,
+					&MRSETPComparisonEQU,
+					&MRSETPComparisonLEU,
+					&MRSETPComparisonGTU,
+					&MRSETPComparisonNEU,
+					&MRSETPComparisonGEU);
+		ModifierGroups[1].Initialize(true, 1, &MRFADD32IFTZ);
+	}
+}IRFCMP;
+
 struct InstructionRuleDADD: InstructionRule
 {
 	InstructionRuleDADD() : InstructionRule("DADD", 1, true, false)
@@ -194,3 +223,5 @@ struct InstructionRuleDSETP: InstructionRule
 					&MRSETPLogicXOR);
 	}
 }IRDSETP;
+
+

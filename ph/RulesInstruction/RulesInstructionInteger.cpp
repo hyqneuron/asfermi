@@ -41,7 +41,7 @@ struct INstructionRuleIADD32I: InstructionRule
 
 struct InstructionRuleIMUL: InstructionRule
 {
-	InstructionRuleIMUL(): InstructionRule("IMUL", 4, true, false)
+	InstructionRuleIMUL(): InstructionRule("IMUL", 3, true, false)
 	{
 		hpBinaryStringToOpcode8("1100010100111000000000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3,
@@ -51,9 +51,23 @@ struct InstructionRuleIMUL: InstructionRule
 		ModifierGroups[0].Initialize(true, 2, &MRIMUL0U32, &MRIMUL0S32);
 		ModifierGroups[1].Initialize(true, 2, &MRIMUL1U32, &MRIMUL1S32);
 		ModifierGroups[2].Initialize(true, 1, &MRIMULHI);
-		ModifierGroups[3].Initialize(true, 1, &MRIMULSAT);
 	}
 }IRIMUL;
+
+struct InstructionRuleIMUL32I: InstructionRule
+{
+	InstructionRuleIMUL32I() : InstructionRule("IMUL32I", 3, true, false)
+	{
+		hpBinaryStringToOpcode8("0100 010100 1110 000000 000000 00000000000000000000000000000000 0 01000", OpcodeWord0, OpcodeWord1);
+		SetOperands(3,
+					&OPRRegisterWithCC4IADD32I, //different cc pos
+					&OPRRegister1,
+					&OPR32I);
+		ModifierGroups[0].Initialize(true, 2, &MRIMUL0U32, &MRIMUL0S32);
+		ModifierGroups[1].Initialize(true, 2, &MRIMUL1U32, &MRIMUL1S32);
+		ModifierGroups[2].Initialize(true, 1, &MRIMULHI);
+	}
+}IRIMUL32I;
 
 struct InstructionRuleIMAD: InstructionRule
 {
@@ -72,6 +86,18 @@ struct InstructionRuleIMAD: InstructionRule
 	}
 }IRIMAD;
 
+struct InstructionRuleISCADD: InstructionRule
+{
+	InstructionRuleISCADD(): InstructionRule("ISCADD", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1100 0 00000 1110 000000 000000 0000000000000000000000 0000000000 000010", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,
+					&OPRRegisterWithCCAt16,
+					&OPRISCADDReg1,
+					&OPRISCADDAllowNegative,
+					&OPRISCADDShift);
+	}
+}IRISCADD;
 
 struct InstructionRuleISETP: InstructionRule
 {
@@ -98,4 +124,26 @@ struct InstructionRuleISETP: InstructionRule
 					&MRSETPLogicXOR);
 	}
 }IRISETP;
+
+struct InstructionRuleICMP: InstructionRule
+{
+	InstructionRuleICMP(): InstructionRule("ICMP", 2, true, false)
+	{
+		hpBinaryStringToOpcode8("1100 010000 1110 000000 000000 0000000000000000000000 0 000000  000 001100", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,
+					&OPRRegister0,
+					&OPRRegister1,
+					&OPRIMULStyle,
+					&OPRRegister3ForCMP);
+					
+		ModifierGroups[0].Initialize(false, 6, 
+					&MRSETPComparisonLT,
+					&MRSETPComparisonEQ,
+					&MRSETPComparisonLE,
+					&MRSETPComparisonGT,
+					&MRSETPComparisonNE,
+					&MRSETPComparisonGE);
+		ModifierGroups[1].Initialize(true, 1, &MRIMUL1U32);
+	}
+}IRICMP;
 

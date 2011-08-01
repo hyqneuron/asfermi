@@ -14,8 +14,10 @@ extern OperandRuleFAllowNegative OPRFMULAllowNegative, OPRFFMAAllowNegative;
 struct OperandRuleIADDStyle;
 extern OperandRuleIADDStyle OPRIADDStyle, OPRIMULStyle;
 
+struct OperandRuleIAllowNegative;
+extern OperandRuleIAllowNegative OPRISCADDAllowNegative;
+
 struct OperandRuleFADDCompositeWithOperator;
 extern OperandRuleFADDCompositeWithOperator OPRFADDCompositeWithOperator;
 
-#else
 #endif

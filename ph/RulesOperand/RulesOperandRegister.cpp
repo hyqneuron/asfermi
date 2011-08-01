@@ -35,13 +35,19 @@ OperandRuleRegister OPRRegister0(14), OPRRegister1(20), OPRRegister2(26);
 //reg3 used a separate rule because it applies it result to OpcodeWord1 instead of 0
 struct OperandRuleRegister3: OperandRule
 {
-	OperandRuleRegister3():OperandRule(Register){}
+	bool AllowNegative;
+	OperandRuleRegister3(bool allowNegative):OperandRule(Register)
+	{
+		AllowNegative = allowNegative;
+	}
 	virtual void Process(SubString &component)
 	{
 		//parse
 		bool negative = false;
 		if(component[0]=='-')
 		{
+			if(!AllowNegative)
+				throw 134; //negative now allowed here
 			negative = true;
 			component.Start++;
 			component.Length--;
@@ -58,7 +64,7 @@ struct OperandRuleRegister3: OperandRule
 			component.Length++;
 		}
 	}
-}OPRRegister3ForMAD;
+}OPRRegister3ForMAD(true), OPRRegister3ForCMP(false);
 
 //Note that some operands can have modifiers
 //This rule deals with registers that can have the .CC modifier
@@ -174,10 +180,15 @@ struct OperandRuleFADD32IReg1: OperandRule
 	}
 }OPRFADD32IReg1;
 
-struct OperandRuleIMADReg1 : OperandRule
+struct OperandRuleRegister1WithSignFlag : OperandRule
 {
-	
-	OperandRuleIMADReg1(): OperandRule(Register){}
+	int FlagPos;
+	bool OnWord1;
+	OperandRuleRegister1WithSignFlag(int flagPos, bool onWord1): OperandRule(Register)
+	{
+		FlagPos = flagPos;
+		OnWord1 = onWord1;
+	}
 	virtual void Process(SubString &component)
 	{
 		bool negative = false;
@@ -186,7 +197,11 @@ struct OperandRuleIMADReg1 : OperandRule
 			negative = true;
 			component.Start++;
 			component.Length--;
-			csCurrentInstruction.OpcodeWord0 |= 1<<9;
+			unsigned int result = 1<<FlagPos;
+			if(OnWord1)
+				csCurrentInstruction.OpcodeWord1 |= result;
+			else
+				csCurrentInstruction.OpcodeWord0 |= result;
 			//no need to check length. checked in substring function
 		}
 		OPRRegister1.Process(component);
@@ -196,5 +211,4 @@ struct OperandRuleIMADReg1 : OperandRule
 			component.Length++;
 		}
 	}
-}OPRIMADReg1;
-
+}OPRIMADReg1(9, false), OPRISCADDReg1(24, true);

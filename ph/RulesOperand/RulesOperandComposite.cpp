@@ -183,6 +183,36 @@ struct OperandRuleIADDStyle: OperandRule
 }OPRIADDStyle(true), OPRIMULStyle(false);
 
 
+struct OperandRuleIAllowNegative: OperandRule
+{
+	bool OnWord0;
+	int FlagPos;
+	OperandRuleIAllowNegative(bool onWord0, int flagPos): OperandRule(Custom)
+	{
+		OnWord0 = onWord0;
+		FlagPos = flagPos;
+	}
+	virtual void Process(SubString &component)
+	{
+		bool negative = false;
+		if(component[0]=='-')
+		{
+			negative = true;
+			component.Start++;
+			component.Length--;
+			int flag = 1<<FlagPos;
+			if(OnWord0)
+				csCurrentInstruction.OpcodeWord0 |= flag;
+			else
+				csCurrentInstruction.OpcodeWord1 |= flag;
+			if(component.Length<2)
+				throw 116;//issue: bad error message
+		}
+		OPRIMULStyle.Process(component);
+		mArithmeticCommonEnd
+	}
+}OPRISCADDAllowNegative(false, 23);
+
 struct OperandRuleFADDCompositeWithOperator: OperandRule
 {
 	OperandRuleFADDCompositeWithOperator(): OperandRule(Custom){}

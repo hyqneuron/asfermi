@@ -125,3 +125,22 @@ struct OperandRuleF2I: OperandRule
 		}
 	}
 }OPRF2I(true), OPRI2F(false);
+
+
+struct OperandRuleISCADDShift: OperandRule
+{
+	OperandRuleISCADDShift(): OperandRule(Custom)
+	{
+	}
+	virtual void Process(SubString &component)
+	{
+		unsigned int result;
+		if(component.Length>2 && component[0]=='0' && (component[1] == 'x' || component[1] == 'X'))
+			result = component.ToImmediate32FromHexConstant(false);
+		else
+			result = component.ToImmediate32FromInt32();
+		if(result>=32)
+			throw 133;//shift can be no larger than 31
+		csCurrentInstruction.OpcodeWord0 |= result << 5; //assumes that the opcode0 has unwritten field
+	}
+}OPRISCADDShift;

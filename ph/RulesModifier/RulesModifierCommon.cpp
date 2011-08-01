@@ -1,4 +1,4 @@
-
+	
 #include "..\DataTypes.h"
 #include "..\helper\helperMixed.h"
 
@@ -37,8 +37,8 @@ struct ModifierRuleSETPComparison: ModifierRule
 	ModifierRuleSETPComparison(int type): ModifierRule("", false, true, false)
 	{
 		hpBinaryStringToOpcode4("11111111111111111111111000011111", Mask1);
-		Bits1 = type<<23;
 		
+		Bits1 = type<<23;
 		switch(type)
 		{
 		case 1: //LT
@@ -87,7 +87,7 @@ struct ModifierRuleSETPComparison: ModifierRule
 			throw exception("Unknown SETP comparison modifier");
 		};
 	}
-}MRSETPComparisonLT(1),
+}	MRSETPComparisonLT(1),
 	MRSETPComparisonEQ(2),
 	MRSETPComparisonLE(3),
 	MRSETPComparisonGT(4),
