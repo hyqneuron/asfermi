@@ -114,3 +114,18 @@ The composite operand should be a 16-bit number. The higher 8 bits indicate the 
 ||mod2 9||meaning||
 ||0     ||default||
 ||1     ||reg0.CC||
+
+----
+==== BFI ====
+Instruction usage:
+{{{
+BFI reg0(.CC), reg1, composite operand, reg3;
+}}}
+Template opcode
+{{{
+1100 000000 1110 000000 000000 0000000000000000000000    0  000000  000 010100
+        mod        reg0   reg1                 immea mod2   reg3 mod2 
+}}}
+||mod2 0||meaning||
+||0     ||default||
+||1     ||reg0.CC||
