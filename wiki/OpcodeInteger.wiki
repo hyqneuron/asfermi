@@ -161,7 +161,7 @@ Template opcode:
 ==== ISETP ====
 Instruction usage:
 {{{
-ISETP.comparator(.U32)(.logicOp) p, |p, reg0, composite operand, opp;
+ISETP.CompOp(.U32)(.LogicOp) p, |p, reg0, composite operand, opp;
 }}}
 Template opcode:
 {{{
@@ -173,7 +173,7 @@ Template opcode:
 ||0    ||.U32   ||
 ||1    ||default||
 
-||mod2 0:3 value|| comparator||
+||mod2 0:3 value||.CompOp||
 ||1             ||.LT||
 ||2             ||.EQ||
 ||3             ||.LE||
@@ -181,7 +181,7 @@ Template opcode:
 ||5             ||.NE||
 ||6             ||.GE||
 
-||mod2 4:5 value || logical operation||
+||mod2 4:5 value ||.LogicOp||
 ||0              ||.AND||
 ||1              ||.OR||
 ||2              ||.XOR||
@@ -203,7 +203,7 @@ Template opcode
 ||0    ||.U32   ||
 ||1    ||default(.s32)||
 
-||mod2 0:2 value||meaning||
+||mod2 0:2 value||.CompOp||
 ||1             ||.LT||
 ||2             ||.EQ||
 ||3             ||.LE||
