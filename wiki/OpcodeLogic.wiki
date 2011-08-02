@@ -89,3 +89,28 @@ Template opcode
         mod        reg0   reg1                  immea       mod2
 }}}
 mod and mo2 are the same as in SHR
+
+----
+==== BFE ====
+Instruction usage:
+{{{
+BFE(.U32)(.BREV) reg0(.CC), reg1, composite operand
+}}}
+The composite operand should be a 16-bit number. The higher 8 bits indicate the length of the field, and the lower 8 bits indicate the starting bit of the field.
+
+{{{
+1100 010000 1110 000000 000000 0000000000000000000000 0000000000 001110
+        mod        reg0   reg1                  immea       mod2
+}}}
+
+||mod 1||meaning||
+||0    ||default||
+||1    ||.BREV  ||
+
+||mod 4||meaning||
+||0    ||.U32   ||
+||1    ||default||
+
+||mod2 9||meaning||
+||0     ||default||
+||1     ||reg0.CC||
