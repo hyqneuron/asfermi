@@ -192,7 +192,7 @@ Instruction usage:
 {{{
 ICMP.CompOp(.U32) reg0, reg1, composite operand, reg3
 }}}
-reg0 = (reg3 CompOp 0)? reg1 : composite operand; The .U32 modifier indicates the type of reg3. reg3 is assumed to be S32 when .U32 is not specified.
+reg0 = (reg3 `CompOp` 0)? reg1 : composite operand; The .U32 modifier indicates the type of reg3. reg3 is assumed to be S32 when .U32 is not specified.
 
 Template opcode
 {{{
