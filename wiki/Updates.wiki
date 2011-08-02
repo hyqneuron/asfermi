@@ -1,6 +1,11 @@
 #summary A development log
+
+==== 2nd August, 2011 ====
+Added support for BFE, BFI, SEL and MUFU.
+
+----
 ==== 1st August, 2011 ====
-  Added support for IMUL32I, ISCADD, ICMP and FCMP
+Added support for IMUL32I, ISCADD, ICMP and FCMP
 
 ----
 ==== 29th July, 2011 ====
