@@ -73,3 +73,45 @@ struct InstructionRuleSHR: InstructionRule
 		ModifierGroups[1].Initialize(true, 1, &MRSHRW);
 	}
 }IRSHR(true), IRSHL(false);
+
+
+struct InstructionRuleBFE: InstructionRule
+{
+	InstructionRuleBFE(): InstructionRule("BFE", 2, true ,false)
+	{
+		hpBinaryStringToOpcode8("1100 010000 1110 000000 000000 0000000000000000000000 0000000000 001110", OpcodeWord0, OpcodeWord1);
+		SetOperands(3,
+					&OPRRegisterWithCCAt16,
+					&OPRRegister1,
+					&OPRIMULStyle);
+		ModifierGroups[0].Initialize(true, 1, &MRSHRU32);
+		ModifierGroups[1].Initialize(true, 1, &MRBFEBREV);
+	}
+}IRBFE;
+
+struct InstructionRuleBFI: InstructionRule
+{
+	InstructionRuleBFI(): InstructionRule("BFI", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1100 000000 1110 000000 000000 0000000000000000000000 0 000000 000 010100", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,
+					&OPRRegisterWithCCAt16,
+					&OPRRegister1,
+					&OPRIMULStyle,
+					&OPRRegister3ForCMP);
+	}
+}IRBFI;
+
+
+struct InstructionRuleSEL: InstructionRule
+{
+	InstructionRuleSEL(): InstructionRule("SEL", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("0010 000000 1110 000000 000000 0000000000000000000000 0 0000 00000 000100", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,					
+					&OPRRegister0,
+					&OPRRegister1,
+					&OPRIMULStyle,
+					&OPRPredicate2);
+	}
+}IRSEL;

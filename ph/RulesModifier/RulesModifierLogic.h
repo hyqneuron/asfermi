@@ -8,5 +8,7 @@ extern ModifierRuleLOP MRLOPAND, MRLOPOR, MRLOPXOR, MRLOPPASS;
 struct ModifierRuleSHR;
 extern ModifierRuleSHR MRSHRU32, MRSHRW;
 
-#else
+struct ModifierRuleBFEBREV;
+extern ModifierRuleBFEBREV MRBFEBREV;
+
 #endif

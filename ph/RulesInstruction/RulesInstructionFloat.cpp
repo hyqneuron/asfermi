@@ -148,6 +148,28 @@ struct InstructionRuleFCMP: InstructionRule
 	}
 }IRFCMP;
 
+struct InstructionRuleMUFU: InstructionRule
+{
+	InstructionRuleMUFU(): InstructionRule("MUFU", 2, true, false)
+	{
+		hpBinaryStringToOpcode8("0000 000000 1110 000000 000000 0000 0000000000000000000000000000 010011", OpcodeWord0, OpcodeWord1);
+		SetOperands(2,
+					&OPRRegister0,
+					&OPRFADD32IReg1);
+		ModifierGroups[0].Initialize(false, 8, 
+					&MRMUFUCOS,
+					&MRMUFUSIN,
+					&MRMUFUEX2,
+					&MRMUFULG2,
+					&MRMUFURCP,
+					&MRMUFURSQ,
+					&MRMUFURCP64H,
+					&MRMUFURSQ64H);
+		ModifierGroups[1].Initialize(true, 1, &MRFADD32IFTZ);
+	}
+}IRMUFU;
+
+
 struct InstructionRuleDADD: InstructionRule
 {
 	InstructionRuleDADD() : InstructionRule("DADD", 1, true, false)

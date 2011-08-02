@@ -16,5 +16,15 @@ extern ModifierRuleFADDSAT MRFADDSAT;
 struct ModifierRuleFMULSAT;
 extern ModifierRuleFMULSAT MRFMULSAT;
 
-#else
+struct ModifierRuleMUFU;
+extern ModifierRuleMUFU
+	MRMUFUCOS,
+	MRMUFUSIN,
+	MRMUFUEX2,
+	MRMUFULG2,
+	MRMUFURCP,
+	MRMUFURSQ,
+	MRMUFURCP64H,
+	MRMUFURSQ64H;
+
 #endif

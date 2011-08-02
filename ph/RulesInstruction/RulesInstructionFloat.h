@@ -23,6 +23,9 @@ extern InstructionRuleFSETP IRFSETP;
 struct InstructionRuleFCMP;
 extern InstructionRuleFCMP IRFCMP;
 
+struct InstructionRuleMUFU;
+extern InstructionRuleMUFU IRMUFU;
+
 struct InstructionRuleDADD;
 extern InstructionRuleDADD IRDADD;
 

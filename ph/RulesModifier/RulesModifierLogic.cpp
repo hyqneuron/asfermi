@@ -40,3 +40,12 @@ struct ModifierRuleSHR: ModifierRule
 		}
 	}
 }MRSHRU32(true), MRSHRW(false);
+
+struct ModifierRuleBFEBREV :ModifierRule
+{
+	ModifierRuleBFEBREV(): ModifierRule("BREV", true, false, false)
+	{
+		Mask0 = 0xffffffff;
+		Bits0 = 1 << 8;
+	}
+}MRBFEBREV;

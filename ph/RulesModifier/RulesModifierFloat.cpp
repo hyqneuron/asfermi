@@ -62,3 +62,36 @@ struct ModifierRuleFMULSAT: ModifierRule
 		Bits0 = 1<<5;
 	}
 }MRFMULSAT;
+
+
+struct ModifierRuleMUFU: ModifierRule
+{
+	ModifierRuleMUFU(int type): ModifierRule("", true, false, false)
+	{
+		hpBinaryStringToOpcode4("1111 111111 1111 111111 111111 0000 11", Mask0);
+		Bits0 = type<<26;
+		if(type==0)
+			Name = "COS";
+		else if(type==1)
+			Name = "SIN";
+		else if(type==2)
+			Name = "EX2";
+		else if(type==3)
+			Name = "LG2";
+		else if(type==4)
+			Name = "RCP";
+		else if(type==5)
+			Name = "RSQ";
+		else if(type==6)
+			Name = "RCP64H";
+		else if(type==7)
+			Name = "RSQ64H";
+	}
+}	MRMUFUCOS(0),
+	MRMUFUSIN(1),
+	MRMUFUEX2(2),
+	MRMUFULG2(3),
+	MRMUFURCP(4),
+	MRMUFURSQ(5),
+	MRMUFURCP64H(6),
+	MRMUFURSQ64H(7);
