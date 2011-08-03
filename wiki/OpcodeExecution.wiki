@@ -65,7 +65,66 @@ Template opcode:
 
 ----
 ==== NOP ====
+Instruction usage:
+{{{
+NOP(.TRIG)(.Op)(.S) (CC(.CCop)) (, 0xabcd);
+}}}
 Template opcode:
 {{{
-0010 011110 1110 000000 000000 00000000000000000000000000000000 000010
+0010 011110 1110 000000 000000 0000000000000000 00000000 00000000 000010
+        mod                    0xabcd                        mod2
 }}}
+Note: the following modifiers are produced according to the output of cuobjdump. Whether they are meaningful to NOP or not is not confirmed.
+
+||mod 0:4 value||.CCop||
+||0            ||.F   ||
+||1            ||.LT  ||
+||2            ||.EQ  ||
+||3            ||.LE  ||
+||4            ||.GT  ||
+||5            ||.NE  ||
+||6            ||.GE  ||
+||7            ||.NUM  ||
+||8            ||.NAN  ||
+||9            ||.LTU  ||
+||10           ||.EQU  ||
+||11           ||.LEU  ||
+||12           ||.GTU  ||
+||13           ||.NEU  ||
+||14           ||.GEU  ||
+||15           ||.T  ||
+||16           ||.OFF  ||
+||17           ||.LO  ||
+||18           ||.SFF  ||
+||19           ||.LS  ||
+||20           ||.HI  ||
+||21           ||.SFT  ||
+||22           ||.HS  ||
+||23           ||.OFT  ||
+||24           ||.CSM_TA  ||
+||25           ||.CSM_TR  ||
+||26           ||.CSM_MX  ||
+||27           ||.FCSM_TA  ||
+||28           ||.FCSM_TR  ||
+||29           ||.FCSM_MX  ||
+||30           ||.RLE  ||
+||31           ||.RGT  ||
+
+||mod 5||meaning||
+||0    ||default||
+||1    ||.S     ||
+
+||mod2 7||meaning||
+||0     ||default||
+||1     ||.TRIG  ||
+
+||mod2 3:6 value||.Op ||
+||0             ||none  ||
+||1             ||.FMA64||
+||2             ||.FMA32||
+||3             ||.XLU  ||
+||4             ||.ALU  ||
+||5             ||.AGU  ||
+||6             ||.SU   ||
+||7             ||.FU   ||
+||8             ||.FMUL ||
