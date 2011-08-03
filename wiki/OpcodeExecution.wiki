@@ -5,16 +5,16 @@ Note: round brackets, instead of square brackets, are used to represent an optio
 Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand] may be mentioned in the parts below. Please visit these two links for more information regarding their meaning.
 
 === Execution Control Instructions ===
-
+<wiki:toc>
 ==== BRA ====
 Instruction usage
 {{{
-BRA(.U) (-)0xabcd;
+BRA(.U)  const mem addr/(-)0xabcd;
 }}}
 Template opcode 
 {{{
 1110 011110 1110 000000 000000 000000000000000000000000 00000000 000010
-                   mod2                          0xabcd
+                   mod2           const mem addr/0xabcd
 }}}
 ||mod2 3||meaning||
 ||0     ||default||
@@ -23,6 +23,10 @@ Template opcode
 ||mod2 4||meaning||
 ||0     ||default||
 ||1     ||.U     ||
+
+||mod2 5||meaning||
+||0     ||0xabcd ||
+||1     ||const mem addr||
 
 
 ----
@@ -48,11 +52,23 @@ Template opcode:
 ==== PRET ====
 Set return address for the RET instruction
 
-Template code
+Instruction usage:
 {{{
-1110 000000 0000 010000 000000 000000000000000000000000 00000000 011110
+PRET  const mem addr/0xabcd;
 }}}
 
+Template code
+{{{
+1110 000000 0000   01 0000 000000 000000000000000000000000 00000000 011110
+                 mod2                const mem addr/0xabcd
+}}}
+||mod2 0||meaning||
+||0     ||.NOINC ||
+||1     ||default||
+
+||mod2 1||meaning||
+||0     ||0xabcd||
+||1     ||const mem addr||
 ----
 ==== RET ====
 Template opcode:
@@ -78,7 +94,7 @@ Template opcode:
 0010 011110 1110 000000 000000 0000000000000000 00000000 00000000 000010
         mod                    0xabcd                        mod2
 }}}
-Note: the following modifiers are produced according to the output of cuobjdump. Whether they are meaningful to NOP or not is not confirmed.
+Note: the following modifiers are produced according to the output of cuobjdump. Whether they are meaningful to NOP or not is not confirmed. Conditional code operation seems to be supported by NOP, BRA, RET, EXIT, BRK and CONT.
 
 ||mod 0:4 value||.CCop||
 ||0            ||.F   ||
@@ -132,3 +148,57 @@ Note: the following modifiers are produced according to the output of cuobjdump.
 ||6             ||.SU   ||
 ||7             ||.FU   ||
 ||8             ||.FMUL ||
+
+----
+==== PBK ====
+Instruction usage:
+{{{
+PBK constant mem address/0xabcd;
+}}}
+Template opcode
+{{{
+1110 000000 1110 0 00000 000000 000000000000000000000000 00000000 010110
+                 m                     const addr/0xabcd
+}}}
+||m||meaning||
+||0||0xabcd ||
+||1||const addr||
+
+----
+==== BRK ====
+Instruction usage:
+{{{
+BRK;
+}}}
+Template opcode
+{{{
+1110 01110 1110 000000 000000 00000000000000000000000000000000 010101
+}}}
+
+
+----
+==== PCNT ====
+Instruction usage:
+{{{
+PCNT const mem addr/0xabcd;
+}}}
+Template opcode:
+{{{
+1110 000000 1110 0 00000 000000 000000000000000000000000 00000000 001110
+                 m                     const addr/0xabcd
+}}}
+
+||m||meaning||
+||0||0xabcd ||
+||1||const addr||
+
+----
+==== CONT ====
+Instruction usage:
+{{{
+CONT;
+}}}
+Template opcode
+{{{
+1110 01110 1110 000000 000000 00000000000000000000000000000000 001101
+}}}
