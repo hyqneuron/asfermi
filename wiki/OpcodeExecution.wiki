@@ -16,6 +16,10 @@ Template opcode
 1110 011110 1110 000000 000000 000000000000000000000000 00000000 000010
                    mod2                          0xabcd
 }}}
+||mod2 3||meaning||
+||0     ||default||
+||1     ||.LMT   ||
+
 ||mod2 4||meaning||
 ||0     ||default||
 ||1     ||.U     ||
