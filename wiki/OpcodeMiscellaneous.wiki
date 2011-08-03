@@ -44,3 +44,70 @@ c [0x0] [0x1c]: %nctaid.z
 BFE VirtId, 0x914 : %smid
 BFE VirtCfg, 0x914: %nsmid
 }}}
+
+
+----
+==== LEPC ====
+Instructon usage:
+{{{
+LEPC reg0;
+}}}
+Template opcode
+{{{
+0010 000000 1110 000000 000000 00000000000000000000000000000000 100010
+                   reg0
+}}}
+----
+==== CCTL ====
+Instruction usage:
+{{{
+CCTL(.E)(.Op1).Op2 reg0, [reg1+0xabcd];
+}}}
+0xabcd should be a multiple of 4.
+Template opcode:
+{{{
+1010 000000 1110 000000 000000   00 000000000000000000000000000000    0 11001
+        mod        reg0   reg1 mod2                         0xabcd mod3
+}}}
+||mod 2:4 value||.Op2   ||
+||0            ||QRY1   ||
+||1            ||PF1    ||
+||2            ||PF1_5  ||
+||3            ||PR2    ||
+||4            ||WB     ||
+||5            ||IV     ||
+||6            ||IVALL  ||
+||7            ||RS     ||
+
+||mod2 value||.Op1   ||
+||0         ||default||
+||1         ||.U     ||
+||2         ||.C     ||
+||3         ||.I     ||
+
+||mod3||meaning||
+||0   ||default||
+||1   ||.E     ||
+
+----
+==== CCTLL ====
+Instruction usage:
+{{{
+CCTLL.Op1 reg0, [reg1 + 0xabcd];
+}}}
+0xabcd should can be at most 24 bits long and should be a multiple of 4.
+Template opcode
+{{{
+1010 000000 1110 000000 000000 000000000000000000000000 00000000 011001
+        mod        reg0   reg1                   0xabcd 
+}}}
+
+||mod 2:4 value||.Op2   ||
+||0            ||QRY1   ||
+||1            ||PF1    ||
+||2            ||PF1_5  ||
+||3            ||PR2    ||
+||4            ||WB     ||
+||5            ||IV     ||
+||6            ||IVALL  ||
+||7            ||RS     ||
