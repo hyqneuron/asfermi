@@ -2,9 +2,9 @@
 
 To include:
   * Data movement: LDLK, LDSLK, STUL, STSUL
-  * Execution control: SSY, ATOM, RED, BAR, MEMBAR, PBK, BRK, PCNT, CONT, VOTE
+  * Execution control: SSY, ATOM, RED, BAR, MEMBAR, PBK, BRK, PCNT, CONT, VOTE, JMP, JCAL, LONGJMP, PLONGJMP
   * Conversion: PSET, PSETP, B2R
-  * Others: LEPC, CCTL, CCTLL
+  * Others: CCTL, CCTLL
 
 May include:
   * ALD, AST, LD_LDU, LDS_LDU
