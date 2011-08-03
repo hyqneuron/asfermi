@@ -34,7 +34,7 @@ Template opcode
 ==== LD ====
 Instruction usage:
 {{{
-LD(.cop)(.type) reg0, [reg1(+0xabcd)];
+LD(.E)(.cop)(.type) reg0, [reg1(+0xabcd)];
 }}}
 Template opcode:
 {{{
@@ -66,15 +66,18 @@ Load uniform. Same as ldu in ptx.
 
 Instruction usage:
 {{{
-LDU(.type) reg0, [reg1(+0xabcd)];
+LDU(.E)(.type) reg0, [reg1(+0xabcd)];
 }}}
 Template opcode
 {{{
-1010 000100 1110 000000 000000 00000000000000000000000000000000 010001
-        mod        reg0   reg1                           0xabcd
+1010 000100 1110 000000 000000 00000000000000000000000000000000 0 10001
+        mod        reg0   reg1                           0xabcd m
 }}}
 .type is the same as in LD
 
+||m 0  ||meaning||
+||0    ||default||
+||1    ||.E     ||
 ----
 ==== LDL ====
 Load local memory. Same as ld.local in ptx
@@ -128,12 +131,12 @@ While it appears that 0xa could have a maximum of 0x1f, for now asfermi does not
 ==== ST ====
 Instruction usage:
 {{{
-ST(.cop)(.type) [reg1(+0xabcd)], reg0;
+ST(.E)(.cop)(.type) [reg1(+0xabcd)], reg0;
 }}}
 Template opcode:
 {{{
-1010 000100 1110 000000 000000 00000000000000000000000000000000 001001
-        mod        reg0   reg1                           0xabcd
+1010 000100 1110 000000 000000 00000000000000000000000000000000 0 01001
+        mod        reg0   reg1                           0xabcd m
 }}}
 For various values of mod 2:4 (.type) and their meaning please refer to the LD instruction above.
 
@@ -143,6 +146,9 @@ For various values of mod 2:4 (.type) and their meaning please refer to the LD i
 ||01      ||.CS   ||
 ||11      ||.WT   ||
 
+||m 0  ||meaning||
+||0    ||default||
+||1    ||.E     ||
 ----
 ==== STL ====
 Store to local memory. Same as st.local in ptx.
