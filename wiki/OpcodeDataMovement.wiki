@@ -180,3 +180,59 @@ Template opcode
         mod        reg0   reg1           0xabcd
 }}}
 .type is the same as in LD.
+
+
+----
+==== LDLK ====
+Instruction usage:
+{{{
+LDLK(.type) p, reg0, [reg1 + 0xabcd];
+}}}
+Template opcode
+{{{
+1010 0000  00 1110 000000 000000 00000000000000000000000000000000   0 00101
+      mod p_0        reg0   reg1                           0xabcd p_1
+}}}
+.type is the same as in LD.
+
+p_0 and p_1 combined is p;
+
+
+----
+==== LDSLK ====
+Instruction usage:
+{{{
+LDSLK(.type) p, reg0, [reg1 + 0xabcd];
+}}}
+Template opcode
+{{{
+1010 000000 1110 000000 000000 000000000000000000000000 000 00000 100011
+        mod        reg0   reg1                   0xabcd   p
+}}}
+.type is the same as in LD.
+
+----
+==== STUL ====
+Instruction usage:
+{{{
+STUL(.type) [reg1+0xabcd], reg0;
+}}}
+Template opcode
+{{{
+1010 000000 1110 000000 000000 0000000000000000 0000000000000000 010111
+        mod        reg0   reg1           0xabcd
+}}}
+.type is the same as in LD.
+
+----
+==== STSUL ====
+Instruction usage:
+{{{
+STSUL(.type) [reg1+0xabcd], reg0;
+}}}
+Template opcode
+{{{
+1010 000000 1110 000000 000000 0000000000000000 0000000000000000 110011
+        mod        reg0   reg1           0xabcd
+}}}
+.type is the same as in LD.
