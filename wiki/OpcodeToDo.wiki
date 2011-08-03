@@ -1,3 +1,15 @@
 #summary One-sentence summary of this page.
 
-  * Execution control: SSY, ATOM, BAR, NOP.S CC.T, PBK, BRK, PCNT, CONT
+
+  * Data movement: LDLK, LDSLK, STUL, STSUL
+  * Execution control: SSY, ATOM, RED, BAR, NOP.S CC.T, PBK, BRK, PCNT, CONT, VOTE
+  * Others: LEPC, IPA, CCTL, CCTLL
+
+May include:
+  * ALD, AST, LD_LDU, LDS_LDU
+  * B2R, P2R, R2P, PSET, PSETP
+  * KIL
+  * IMNMX, FMNMX, DMNMX, FCCO, FLO, FSWZ, ISAD, IMAD32I, FFMA32I, ISCADD32I
+  * POPC, PRMT
+  * OUT
+  * Most of the [nanb#4-Byte 4-byte instructions]
