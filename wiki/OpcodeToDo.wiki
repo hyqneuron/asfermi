@@ -13,3 +13,4 @@ May include:
   * POPC, PRMT
   * OUT
   * Most of the [nanb#4-Byte 4-byte instructions]
+  * Some of the video instructions.
