@@ -1,6 +1,6 @@
-#summary One-sentence summary of this page.
+#List of instructions to be supported.
 
-
+To include:
   * Data movement: LDLK, LDSLK, STUL, STSUL
   * Execution control: SSY, ATOM, RED, BAR, NOP.S CC.T, PBK, BRK, PCNT, CONT, VOTE
   * Others: LEPC, IPA, CCTL, CCTLL
