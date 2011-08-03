@@ -55,3 +55,24 @@ struct InstructionRuleRET: InstructionRule
 		hpBinaryStringToOpcode8("1110 011110111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
 	}
 }IRRET;
+
+
+struct InstructionRuleNOP: InstructionRule
+{
+	InstructionRuleNOP(): InstructionRule("NOP", 3, true, false)
+	{
+		hpBinaryStringToOpcode8("0010 011110 111000000000000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
+		SetOperands(2, &OPRNOPCC, &OPRImmediate16HexOrIntOptional);
+		ModifierGroups[0].Initialize(true, 1, &MRNOPTRIG);
+		ModifierGroups[1].Initialize(true, 8, 
+										&MRNOPFMA64,
+										&MRNOPFMA32,
+										&MRNOPXLU  ,
+										&MRNOPALU  ,
+										&MRNOPAGU  ,
+										&MRNOPSU   ,
+										&MRNOPFU   ,
+										&MRNOPFMUL);
+		ModifierGroups[2].Initialize(true, 1, &MRS);
+	}
+}IRNOP;

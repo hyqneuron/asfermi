@@ -17,5 +17,9 @@ extern InstructionRulePRET IRPRET;
 struct InstructionRuleRET;
 extern InstructionRuleRET IRRET;
 
+
+struct InstructionRuleNOP;
+extern InstructionRuleNOP IRNOP;
+
 #else
 #endif

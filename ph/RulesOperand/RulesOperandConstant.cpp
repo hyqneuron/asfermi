@@ -185,3 +185,24 @@ struct OperandRuleS2R: OperandRule
 		csCurrentInstruction.OpcodeWord0 |= result << 26;
 	}
 }OPRS2R;
+
+
+struct OperandRuleImmediate16HexOrInt: OperandRule
+{
+	OperandRuleImmediate16HexOrInt(bool optional): OperandRule(Custom)
+	{
+		if(optional)
+			Type = Optional;
+	}
+	virtual void Process(SubString &component)
+	{
+		unsigned int result;
+		if(component.Length>2 && component[0]=='0' &&(component[1]=='x'||component[1]=='X'))
+			result = component.ToImmediate32FromHexConstant(false);
+		else
+			result = component.ToImmediate32FromInt32();
+		if(result>0xffff)
+			throw 136;//limited to 16 bits
+		WriteToImmediate32(result);
+	}
+}OPRImmediate16HexOrInt(false), OPRImmediate16HexOrIntOptional(true);

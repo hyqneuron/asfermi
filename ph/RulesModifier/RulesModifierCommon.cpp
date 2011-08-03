@@ -101,3 +101,12 @@ struct ModifierRuleSETPComparison: ModifierRule
 	MRSETPComparisonGTU(12),
 	MRSETPComparisonNEU(13),
 	MRSETPComparisonGEU(14);
+
+struct ModifierRuleS: ModifierRule
+{
+	ModifierRuleS(): ModifierRule("S", true, false, false)
+	{
+		Mask0 = 0xffffffff;
+		Bits0 = 1 << 4;
+	}
+}MRS;

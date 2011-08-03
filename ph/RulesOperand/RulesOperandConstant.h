@@ -26,6 +26,9 @@ extern OperandRuleImmediate32FloatConstant OPRImmediate32FloatConstant;
 struct OperandRuleImmediate32AnyConstant;
 extern OperandRuleImmediate32AnyConstant OPRImmediate32AnyConstant;
 
+struct OperandRuleImmediate16HexOrInt;
+extern OperandRuleImmediate16HexOrInt OPRImmediate16HexOrInt, OPRImmediate16HexOrIntOptional;
+
 struct OperandRuleS2R;
 extern OperandRuleS2R OPRS2R;
 

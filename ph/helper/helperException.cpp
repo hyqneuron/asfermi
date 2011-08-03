@@ -134,6 +134,10 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 134:	message = "Negative sign not allowed here.";
 		break;
+	case 135:	message = "Incorrect NOP operand";
+		break;
+	case 136:	message = "Value limited to 16 bits";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};

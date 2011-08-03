@@ -22,4 +22,7 @@ extern OperandRuleF2I OPRF2I, OPRI2F;
 struct OperandRuleISCADDShift;
 extern OperandRuleISCADDShift OPRISCADDShift;
 
+struct OperandRuleNOPCC;
+extern OperandRuleNOPCC OPRNOPCC;
+
 #endif

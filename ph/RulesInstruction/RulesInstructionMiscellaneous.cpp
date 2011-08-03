@@ -9,14 +9,6 @@
 #include "..\RulesOperand.h"
 
 
-struct InstructionRuleNOP: InstructionRule
-{
-	InstructionRuleNOP(): InstructionRule("NOP", 0, true, false)
-	{
-		SetOperands(1, &OPRIgnored);
-		hpBinaryStringToOpcode8("0010 011110 111000000000000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
-	}
-}IRNOP;
 
 
 struct InstructionRuleS2R: InstructionRule

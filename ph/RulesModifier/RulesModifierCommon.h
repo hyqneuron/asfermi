@@ -22,6 +22,7 @@ extern ModifierRuleSETPComparison
 	MRSETPComparisonNEU,
 	MRSETPComparisonGEU;
 
+struct ModifierRuleS;
+extern ModifierRuleS MRS;
 
-#else
 #endif

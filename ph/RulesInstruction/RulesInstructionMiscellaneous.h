@@ -2,8 +2,6 @@
 #define RulesInstructionMiscellaneousDefined
 
 
-struct InstructionRuleNOP;
-extern InstructionRuleNOP IRNOP;
 
 
 struct InstructionRuleS2R;
