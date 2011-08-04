@@ -98,7 +98,7 @@ CCTLL.Op1 reg0, [reg1 + 0xabcd];
 0xabcd should can be at most 24 bits long and should be a multiple of 4.
 Template opcode
 {{{
-1010 000000 1110 000000 000000 000000000000000000000000 00000000 011001
+1010 000000 1110 000000 000000 000000000000000000000000 00000000 001011
         mod        reg0   reg1                   0xabcd 
 }}}
 
