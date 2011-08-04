@@ -1,10 +1,10 @@
 #summary List of instructions to be supported.
 
 To include:
-  * Data movement: LDLK, LDSLK, STUL, STSUL
-  * Execution control: SSY, ATOM, RED, BAR, MEMBAR, PBK, BRK, PCNT, CONT, VOTE, JMP, JCAL, LONGJMP, PLONGJMP
+
+  * Execution control: SSY, ATOM, RED, BAR, MEMBAR, VOTE, JMP, JCAL, LONGJMP, PLONGJMP
   * Conversion: PSET, PSETP, B2R
-  * Others: CCTL, CCTLL
+
 
 May include:
   * ALD, AST, LD_LDU, LDS_LDU
