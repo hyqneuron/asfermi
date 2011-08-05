@@ -48,11 +48,13 @@ struct DirectiveRuleEndKernel: DirectiveRule
 		
 		csCurrentKernel.KernelInstructions = csInstructions;
 		csCurrentKernel.TextSize = csInstructionOffset;
-		csCurrentKernel.RegCount = csMaxReg + 1;
+		csMaxReg+=1;
+		csCurrentKernel.RegCount = csMaxReg>csCurrentKernel.RegCount? csMaxReg: csCurrentKernel.RegCount;
 		csKernelList.push_back(csCurrentKernel);
 
 		csInstructions.clear();
 		csInstructionOffset = 0;
+		csMaxReg = 0;
 		csCurrentKernel.Reset();
 		csCurrentKernelOpened = false;
 	}
@@ -248,6 +250,89 @@ struct DirectiveRuleEndConstant: DirectiveRule //!Constant type offset
 		csLineParserStack.pop();
 	}
 }DREndConstant;
+
+
+struct DirectiveRuleRegCount: DirectiveRule 
+{
+	DirectiveRuleRegCount()
+	{
+		Name = "RegCount";
+	}
+	virtual void Process()//!RegCount count
+	{
+		if(!csCurrentKernelOpened)
+			throw 1006; //only definable inside kernels
+		if(csCurrentDirective.Parts.size()!=2)
+			throw 1002; //incorrect no. of arguments
+
+		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
+		currentArg++;//currentArg is on count
+		int count;
+		if((*currentArg).Length>2 && (*currentArg)[0]=='0' && ((*currentArg)[1]=='x')||(*currentArg)[1]=='X')
+			count = currentArg->ToImmediate32FromHexConstant(false);
+		else
+			count = currentArg->ToImmediate32FromInt32(); //issue: what's the error message that it's gonna give?
+		if(count>63)
+			throw 1019;//no larger than 63
+		csCurrentKernel.RegCount = count;
+	}
+}DRRegCount;
+
+
+struct DirectiveRuleBarCount: DirectiveRule 
+{
+	DirectiveRuleBarCount()
+	{
+		Name = "BarCount";
+	}
+	virtual void Process()//!BarCount count
+	{
+		if(!csCurrentKernelOpened)
+			throw 1006; //only definable inside kernels
+		if(csCurrentDirective.Parts.size()!=2)
+			throw 1002; //incorrect no. of arguments
+
+		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
+		currentArg++;//currentArg is on count
+		int count;
+		if((*currentArg).Length>2 && (*currentArg)[0]=='0' && ((*currentArg)[1]=='x')||(*currentArg)[1]=='X')
+			count = currentArg->ToImmediate32FromHexConstant(false);
+		else
+			count = currentArg->ToImmediate32FromInt32(); //issue: what's the error message that it's gonna give?
+		if(count>127)
+			throw 1020;//no larger than 127
+		if(count>16)
+			hpWarning(13); //warn for large count
+		csCurrentKernel.BarCount = count;
+	}
+}DRBarCount;
+
+struct DirectiveRuleRawInstruction: DirectiveRule
+{
+	DirectiveRuleRawInstruction()
+	{
+		Name = "RawInstruction";
+	}
+	virtual void Process()//!RawInstruction 0xabcd (0xabcd)
+	{
+		if(csCurrentDirective.Parts.size()<2 || csCurrentDirective.Parts.size()>3)
+			throw 1002; //incorrect no. of arguments
+		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
+		currentArg++;//currentArg is on first hex
+		Instruction inst;
+		inst.Reset(csCurrentDirective.DirectiveString, csInstructionOffset, csLineNumber); //issue: csLineNumber is not being updated anywhere
+		inst.Is8 = csCurrentDirective.Parts.size()==3;
+		inst.OpcodeWord0 = currentArg->ToImmediate32FromHexConstant(false);
+		csInstructionOffset+=4;
+		if(inst.Is8)
+		{
+			currentArg++;
+			inst.OpcodeWord1 = currentArg->ToImmediate32FromHexConstant(false);
+			csInstructionOffset+=4;
+		}
+		csInstructions.push_back(inst);
+	}
+}DRRawInstruction;
 
 
 struct DirectiveRuleArch: DirectiveRule

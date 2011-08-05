@@ -35,6 +35,14 @@ extern DirectiveRuleConstant DRConstant;
 struct DirectiveRuleEndConstant;
 extern DirectiveRuleEndConstant DREndConstant;
 
+struct DirectiveRuleRegCount;
+extern DirectiveRuleRegCount DRRegCount;
+
+struct DirectiveRuleBarCount;
+extern DirectiveRuleBarCount DRBarCount;
+
+struct DirectiveRuleRawInstruction;
+extern DirectiveRuleRawInstruction DRRawInstruction;
 
 struct DirectiveRuleArch;
 extern DirectiveRuleArch DRArch;

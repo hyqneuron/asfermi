@@ -195,6 +195,10 @@ void hpDirectiveErrorHandler(int e)
 		break;
 	case 1018:	message = "Next directive can only be EndConstant.";
 		break;
+	case 1019:	message = "RegCount should not be larger than 63.";
+		break;
+	case 1020:	message = "BarCount should not be larger than 127.";
+		break;
 	default:	message = "Unknown error.";
 		break;
 	};
@@ -218,6 +222,8 @@ void hpWarning(int e)
 	case 12:	message = "Some instructions before the kernel section are not included in any kernel.";
 		break;
 	default:	message = "No warning message available.";
+		break;
+	case 13:	message = "RegCount usually should be limited to 16. Values larger than 16 and lower than 128 is allowed only for the sake of experimentation.";
 		break;
 	}
 	char *line = csCurrentLine.LineString.ToCharArrayStopOnCR();

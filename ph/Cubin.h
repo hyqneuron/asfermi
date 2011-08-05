@@ -86,5 +86,4 @@ struct Kernel
 
 	void Reset();
 };
-#else
 #endif

@@ -9,7 +9,8 @@ all functions are prefixed with 'hpCubin'
 */
 #include "helperCubin.h"
 #include "../GlobalVariables.h"
-
+#include "..\Cubin.h"
+#include "..\DataTypes.h"
 #include "stdafx.h"
 
 
@@ -403,7 +404,7 @@ void hpCubinStage3()
 //	4
 //-----Stage4 and later functions
 
-void hpCubinSetELFSectionHeader1(ELFSection &section, unsigned int type, unsigned int alignment, unsigned int &offset)
+void hpCubinSetELFSectionHeader1(ELFSection &section, unsigned int type, unsigned int alignment, unsigned int &offset, bool moveOffset)
 {
 	memset(&section.SectionHeader, 0, sizeof(ELFSectionHeader));
 	section.SectionHeader.NameIndex = section.SHStrTabOffset;
@@ -415,7 +416,12 @@ void hpCubinSetELFSectionHeader1(ELFSection &section, unsigned int type, unsigne
 	//Link, Info remains 0
 	section.SectionHeader.Alignment = alignment;
 	//Entry size remains 0
-	offset += section.SectionSize;
+	if(moveOffset)
+		offset += section.SectionSize;
+}
+void hpCubinSetELFSectionHeader1(ELFSection &section, unsigned int type, unsigned int alignment, unsigned int &offset)
+{
+	hpCubinSetELFSectionHeader1(section, type, alignment,offset, true);
 }
 
 //Stage4: Setup all section headers
@@ -455,14 +461,14 @@ void hpCubinStage4()
 		//.shared
 		if(kernel->SharedSize>0)
 		{
-			hpCubinSetELFSectionHeader1(kernel->SharedSection, 8, 4, fileOffset);
+			hpCubinSetELFSectionHeader1(kernel->SharedSection, 8, 4, fileOffset, false);
 			kernel->SharedSection.SectionHeader.Flags = 3;
 			kernel->SharedSection.SectionHeader.Info = kernel->TextSection.SectionIndex;
 		}
 		//.local
 		if(kernel->LocalSize>0)
 		{
-			hpCubinSetELFSectionHeader1(kernel->LocalSection, 8, 4, fileOffset);
+			hpCubinSetELFSectionHeader1(kernel->LocalSection, 8, 4, fileOffset, false);
 			kernel->LocalSection.SectionHeader.Flags = 3;
 			kernel->LocalSection.SectionHeader.Info = kernel->TextSection.SectionIndex;
 		}
