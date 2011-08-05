@@ -12,5 +12,8 @@ extern ModifierRuleLDCop MRLDCopCG,MRLDCopCS,MRLDCopCV, MRLDCopLU;
 struct ModifierRuleSTCop;
 extern ModifierRuleSTCop MRSTCopCG,MRSTCopCS,MRSTCopWT;
 
+struct ModifierRuleE;
+extern ModifierRuleE MRE;
+
 #else
 #endif

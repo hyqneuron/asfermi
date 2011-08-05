@@ -36,5 +36,17 @@ extern InstructionRuleSTL IRSTL;
 struct InstructionRuleSTS;
 extern InstructionRuleSTS IRSTS;
 
+struct InstructionRuleLDLK;
+extern InstructionRuleLDLK IRLDLK;
+
+struct InstructionRuleLDSLK;
+extern InstructionRuleLDSLK IRLDSLK;
+
+struct InstructionRuleSTUL;
+extern InstructionRuleSTUL IRSTUL;
+
+struct InstructionRuleSTSUL;
+extern InstructionRuleSTSUL IRSTSUL;
+
 #else
 #endif

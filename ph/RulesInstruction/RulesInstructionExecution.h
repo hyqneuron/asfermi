@@ -17,6 +17,18 @@ extern InstructionRulePRET IRPRET;
 struct InstructionRuleRET;
 extern InstructionRuleRET IRRET;
 
+struct InstructionRulePBK;
+extern InstructionRulePBK IRPBK;
+
+struct InstructionRuleBRK;
+extern InstructionRuleBRK IRBRK;
+
+struct InstructionRulePCNT;
+extern InstructionRulePCNT IRPCNT;
+
+struct InstructionRuleCONT;
+extern InstructionRuleCONT IRCONT;
+
 
 struct InstructionRuleNOP;
 extern InstructionRuleNOP IRNOP;

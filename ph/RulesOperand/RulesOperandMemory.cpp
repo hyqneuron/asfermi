@@ -32,6 +32,7 @@ struct OperandRuleSharedMemoryWithImmediate20: OperandRule
 	{
 		unsigned int memory; int register1;
 		component.ToGlobalMemory(register1, memory);
+
 		if(memory>=1<<20) //issue: not sure if negative hex is gonna work
 			throw 130; //cannot be longer than 20 bits
 		//Check max reg when register is not RZ(63)
@@ -64,3 +65,24 @@ struct OperandRuleConstantMemory: OperandRule
 	}
 }OPRConstantMemory;
 
+
+struct OperandRuleGlobalMemoryWithLastWithoutLast2Bits: OperandRule
+{
+	OperandRuleGlobalMemoryWithLastWithoutLast2Bits(): OperandRule(OperandType::GlobalMemoryWithImmediate32)
+	{
+	}
+	virtual void Process(SubString &component)
+	{
+		unsigned int memory;
+		int reg1;
+		component.ToGlobalMemory(reg1, memory);
+		if(memory%4!=0)
+			throw 138;//address must be multiple of 4
+
+		if(reg1!=63)
+			csMaxReg = (reg1 > csMaxReg)? reg1: csMaxReg;
+		csCurrentInstruction.OpcodeWord0 |= reg1<<20; //RE1
+		WriteToImmediate32(memory);
+
+	}
+}OPRGlobalMemoryWithLastWithoutLast2Bits;

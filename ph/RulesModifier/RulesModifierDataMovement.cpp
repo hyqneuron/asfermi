@@ -74,3 +74,13 @@ struct ModifierRuleSTCop: ModifierRule
 			Name = "WT";
 	}
 }MRSTCopCG(1),MRSTCopCS(2),MRSTCopWT(3);
+
+
+struct ModifierRuleE: ModifierRule
+{
+	ModifierRuleE(): ModifierRule("E", false, true, false)
+	{
+		hpBinaryStringToOpcode4("11111111111111111111111111111111", Mask1);
+		Bits1 = 1 << 26;
+	}
+}MRE;

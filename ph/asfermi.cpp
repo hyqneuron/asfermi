@@ -343,6 +343,10 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRST);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRSTL);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRSTS);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRLDLK);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRLDSLK);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRSTUL);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRSTSUL);
 	//conversion
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRF2I);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRF2F);
@@ -354,6 +358,11 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRPRET);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRRET);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IREXIT);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRPBK);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRBRK);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRPCNT);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRCONT);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRNOP);
 	//floating point op
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFADD);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFADD32I);
@@ -386,7 +395,10 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRSEL);
 	//miscellaneous
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRS2R);
-	csInstructionRulePrepList.push_back((InstructionRule*)&IRNOP);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRLEPC);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRCCTL);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRCCTLL);
+	
 
 	//load directive rules
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRKernel);

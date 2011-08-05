@@ -137,7 +137,10 @@ struct OperandRulePredicate: OperandRule
 		else
 			csCurrentInstruction.OpcodeWord1 |= result;
 	}
-}OPRPredicate1(14, true, true), OPRPredicate0(17, true, false), OPRPredicate2NotNegatable(17, false, true);
+}	OPRPredicate1(14, true, true), 
+	OPRPredicate0(17, true, false), 
+	OPRPredicate2NotNegatable(17, false, true),
+	OPRPredicateForLDSLK(18, false, false);
 
 //Some predicate registers expressions can be negated with !
 //this kind of operand is processed separately
@@ -162,6 +165,30 @@ struct OperandRulePredicate2: OperandRule
 		}
 	}
 }OPRPredicate2;
+
+struct OperandRulePredicateForLDLK: OperandRule
+{
+	OperandRulePredicateForLDLK(): OperandRule(OperandType::Predicate)
+	{
+	}
+	virtual void Process(SubString &component)
+	{		
+		unsigned int result;
+		if(component.Length<2 || (component[0] != 'p' && component[0] != 'P'))
+			throw 126; //incorrect predicate
+		if(component[1]=='t' || component[1] == 'T')
+			result = 7;
+		else
+		{
+			result = component[1] - 48;
+			if(result<0 || result > 7)
+				throw 126;
+		}
+		//p is split into p_0 and p_1
+		csCurrentInstruction.OpcodeWord0 |= (result&0xfffffffb)<<8;
+		csCurrentInstruction.OpcodeWord1 |= (result&0xfffffffc)<<24;
+	}
+}OPRPredicateForLDLK;
 
 
 struct OperandRuleFADD32IReg1: OperandRule

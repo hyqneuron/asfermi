@@ -20,4 +20,7 @@ extern OperandRuleIAllowNegative OPRISCADDAllowNegative;
 struct OperandRuleFADDCompositeWithOperator;
 extern OperandRuleFADDCompositeWithOperator OPRFADDCompositeWithOperator;
 
+struct OperandRuleInstructionAddress;
+extern OperandRuleInstructionAddress OPRInstructionAddress;
+
 #endif

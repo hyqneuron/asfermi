@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include "RulesInstructionExecution.h"
+#include "..\RulesOperand\RulesOperandComposite.h"
 #include "..\RulesModifier.h"
 #include "..\RulesOperand.h"
 
@@ -31,7 +32,7 @@ struct InstructionRuleBRA: InstructionRule
 	InstructionRuleBRA() : InstructionRule("BRA", 1, true, false)
 	{
 		hpBinaryStringToOpcode8("1110 011110111000000000000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
-		SetOperands(1, &OPRImmediate24HexConstant);
+		SetOperands(1, &OPRInstructionAddress);
 		ModifierGroups[0].Initialize(true, 1, &MRBRAU);
 	}
 }IRBRA;
@@ -41,7 +42,7 @@ struct InstructionRulePRET: InstructionRule
 	InstructionRulePRET() : InstructionRule("PRET", 1, true, false)
 	{
 		hpBinaryStringToOpcode8("1110 000000000001000000000000000000000000000000000000000000011110", OpcodeWord0, OpcodeWord1);
-		SetOperands(1, &OPRImmediate24HexConstant);
+		SetOperands(1, &OPRInstructionAddress);
 		ModifierGroups[0].Initialize(true, 1, &MRCALNOINC);
 	}
 }IRPRET;
@@ -55,6 +56,42 @@ struct InstructionRuleRET: InstructionRule
 		hpBinaryStringToOpcode8("1110 011110111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
 	}
 }IRRET;
+
+struct InstructionRulePBK: InstructionRule
+{
+	InstructionRulePBK() : InstructionRule("PBK", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 000000 1110 0 00000 000000 000000000000000000000000 00000000 010110", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRInstructionAddress);
+	}
+}IRPBK;
+
+
+struct InstructionRuleBRK: InstructionRule
+{
+	InstructionRuleBRK() : InstructionRule("BRK", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 01110 1110 000000 000000 00000000000000000000000000000000 010101", OpcodeWord0, OpcodeWord1);
+	}
+}IRBRK;
+
+struct InstructionRulePCNT: InstructionRule
+{
+	InstructionRulePCNT() : InstructionRule("PCNT", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 000000 1110 0 00000 000000 000000000000000000000000 00000000 001110", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRInstructionAddress);
+	}
+}IRPCNT;
+
+
+struct InstructionRuleCONT: InstructionRule
+{
+	InstructionRuleCONT() : InstructionRule("CONT", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 011110 1110 000000 000000 00000000000000000000000000000000 001101", OpcodeWord0, OpcodeWord1);
+	}
+}IRCONT;
 
 
 struct InstructionRuleNOP: InstructionRule

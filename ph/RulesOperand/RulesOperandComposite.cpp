@@ -7,6 +7,7 @@
 
 #include "..\RulesOperand.h"
 #include "RulesOperandRegister.h"
+#include "RulesOperandConstant.h"
 #include "RulesOperandComposite.h"
 
 
@@ -228,3 +229,28 @@ struct OperandRuleFADDCompositeWithOperator: OperandRule
 	}
 }OPRFADDCompositeWithOperator;
 
+struct OperandRuleInstructionAddress: OperandRule
+{
+	OperandRuleInstructionAddress(): OperandRule(Custom)
+	{
+	}
+	virtual void Process(SubString &component)
+	{
+		//constant memory
+		if(component[0]=='c'||component[0]=='C')
+		{
+			csCurrentInstruction.OpcodeWord0 |= 1 << 14;
+			unsigned int bank, memory;
+			int reg;
+			component.ToConstantMemory(bank, reg, memory);
+			if(reg!=63)
+				throw 137; //does not accept register
+			csCurrentInstruction.OpcodeWord1 |= bank<<10;
+			WriteToImmediate32(memory);
+		}
+		else
+		{
+			((OperandRule*)&OPRImmediate24HexConstant)->Process(component);
+		}
+	}
+}OPRInstructionAddress;

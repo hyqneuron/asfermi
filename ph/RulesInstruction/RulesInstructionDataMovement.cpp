@@ -32,19 +32,20 @@ struct InstructionRuleMOV32I: InstructionRule
 
 struct InstructionRuleLD: InstructionRule
 {
-	InstructionRuleLD() : InstructionRule("LD", 2, true, false)
+	InstructionRuleLD() : InstructionRule("LD", 3, true, false)
 	{
 		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
 		//2 operands
 		SetOperands(2, 
 					&OPRRegister0,					 //register
 					&OPRGlobalMemoryWithImmediate32);//global memory
-		//2 modifier groups
-		ModifierGroups[0].Initialize(true, 3, //3 modifiers in this group
+		//3 modifier groups
+		ModifierGroups[0].Initialize(true, 1, &MRE);
+		ModifierGroups[1].Initialize(true, 3, //3 modifiers in this group
 					&MRLDCopCG, //.CG
 					&MRLDCopCS, //.CS
 					&MRLDCopCV);//.CV
-		ModifierGroups[1].Initialize(true, 6, //6 modifiers in this group
+		ModifierGroups[2].Initialize(true, 6, //6 modifiers in this group
 					&MRLDU8,  //.U8
 					&MRLDS8,  //.S8
 					&MRLDU16,
@@ -57,13 +58,14 @@ struct InstructionRuleLD: InstructionRule
 
 struct InstructionRuleLDU: InstructionRule
 {
-	InstructionRuleLDU() : InstructionRule("LDU", 1, true, false)
+	InstructionRuleLDU() : InstructionRule("LDU", 2, true, false)
 	{
 		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000010001", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,					
 					&OPRGlobalMemoryWithImmediate32);
-		ModifierGroups[0].Initialize(true, 6,
+		ModifierGroups[0].Initialize(true, 1, &MRE);
+		ModifierGroups[1].Initialize(true, 6,
 					&MRLDU8,
 					&MRLDS8,
 					&MRLDU16,
@@ -134,17 +136,18 @@ struct InstructionRuleLDC : InstructionRule
 
 struct InstructionRuleST: InstructionRule
 {
-	InstructionRuleST() : InstructionRule("ST", 2, true, false)
+	InstructionRuleST() : InstructionRule("ST", 3, true, false)
 	{
 		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRGlobalMemoryWithImmediate32,
 					&OPRRegister0);
-		ModifierGroups[0].Initialize(true, 3,
+		ModifierGroups[0].Initialize(true, 1, &MRE);
+		ModifierGroups[1].Initialize(true, 3,
 					&MRSTCopCG,
 					&MRSTCopCS,
 					&MRSTCopWT);
-		ModifierGroups[1].Initialize(true, 6,
+		ModifierGroups[2].Initialize(true, 6,
 					&MRLDU8, 
 					&MRLDS8, 
 					&MRLDU16, 
@@ -194,3 +197,79 @@ struct InstructionRuleSTS : InstructionRule
 					&MRLD128);
 	}
 }IRSTS;
+
+
+struct InstructionRuleLDLK: InstructionRule
+{
+	InstructionRuleLDLK(): InstructionRule("LDLK", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("1010 0001  00 1110 000000 000000 00000000000000000000000000000000   0 00101", OpcodeWord0, OpcodeWord1);
+		SetOperands(3, 
+					&OPRPredicateForLDLK,
+					&OPRRegister0,
+					&OPRGlobalMemoryWithImmediate32);
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8, 
+					&MRLDS8,
+					&MRLDU16,
+					&MRLDS16,
+					&MRLD64,
+					&MRLD128);
+	}
+}IRLDLK;
+
+struct InstructionRuleLDSLK: InstructionRule
+{
+	InstructionRuleLDSLK(): InstructionRule("LDSLK", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("1010 000100 1110 000000 000000 000000000000000000000000 000 00000 100011", OpcodeWord0, OpcodeWord1);
+		SetOperands(3, 
+					&OPRPredicateForLDSLK,
+					&OPRRegister0,
+					&OPRGlobalMemoryWithImmediate32);
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8, 
+					&MRLDS8,
+					&MRLDU16,
+					&MRLDS16,
+					&MRLD64,
+					&MRLD128);
+	}
+}IRLDSLK;
+
+
+struct InstructionRuleSTUL: InstructionRule
+{
+	InstructionRuleSTUL() : InstructionRule("STUL", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("1010 000100 1110 000000 000000 0000000000000000 0000000000000000 010111", OpcodeWord0, OpcodeWord1);
+		SetOperands(2, 
+					&OPRGlobalMemoryWithImmediate32,
+					&OPRRegister0);
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8, 
+					&MRLDS8, 
+					&MRLDU16, 
+					&MRLDS16, 
+					&MRLD64, 
+					&MRLD128);
+	}
+}IRSTUL;
+
+struct InstructionRuleSTSUL : InstructionRule
+{
+	InstructionRuleSTSUL(): InstructionRule("STSUL", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("1010 000100 1110 000000 000000 0000000000000000 0000000000000000 110011", OpcodeWord0, OpcodeWord1);
+		SetOperands(2,
+					&OPRSharedMemoryWithImmediate20,
+					&OPRRegister0);
+		ModifierGroups[0].Initialize(true, 6,
+					&MRLDU8, 
+					&MRLDS8, 
+					&MRLDU16, 
+					&MRLDS16, 
+					&MRLD64, 
+					&MRLD128);
+	}
+}IRSTSUL;

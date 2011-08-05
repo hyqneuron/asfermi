@@ -138,6 +138,10 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 136:	message = "Value limited to 16 bits";
 		break;
+	case 137:	message = "This operand does not accept constant memory address with a register.";
+		break;
+	case 138:	message = "The address must be a multiple of 4.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};

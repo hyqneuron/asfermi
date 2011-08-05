@@ -6,6 +6,9 @@
 struct OperandRuleGlobalMemoryWithImmediate32;
 extern OperandRuleGlobalMemoryWithImmediate32 OPRGlobalMemoryWithImmediate32;
 
+struct OperandRuleGlobalMemoryWithLastWithoutLast2Bits;
+extern OperandRuleGlobalMemoryWithLastWithoutLast2Bits OPRGlobalMemoryWithLastWithoutLast2Bits;
+
 //SharedMemory operand
 struct OperandRuleSharedMemoryWithImmediate20;
 extern OperandRuleSharedMemoryWithImmediate20 OPRSharedMemoryWithImmediate20;

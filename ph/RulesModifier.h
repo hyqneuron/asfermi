@@ -5,3 +5,4 @@
 #include "RulesModifier\RulesModifierCommon.h"
 #include "RulesModifier\RulesModifierExecution.h"
 #include "RulesModifier\RulesModifierLogic.h"
+#include "RulesModifier\RulesModifierOthers.h"
