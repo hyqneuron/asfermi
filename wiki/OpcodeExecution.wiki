@@ -241,3 +241,64 @@ Template opcode
 ||mod2 1||meaning for tcount||
 ||0     ||use reg2||
 ||1     ||use reg2(0xabc)||
+
+----
+==== MEMBAR ====
+Instruction usage:
+{{{
+MEMBAR.Lvl;
+}}}
+Template opcode
+{{{
+1010 000000 1110 000000 000000 000000000000000000000000000000 000111
+        mod
+}}}
+
+||mod 3:4||.Lvl||
+||00     ||.CTA||
+||10     ||.GL ||
+||01     ||.SYS||
+||11     ||invalid||
+
+----
+==== ATOM ====
+Instruction usage:
+{{{
+ATOM(.E).Op(.Type) reg3, [reg1+0xabcd], reg0 (,reg4);
+}}}
+0xabcd can be at most 20-bit long.
+
+Template opcode
+{{{
+1010 000000 1110 000000 000000 00000000000000000 000000 000000      000 0010 10
+        mod        reg0   reg1          0xabcd_0   reg3   reg4 0xabcd_1 mod2
+}}}
+0xabcd_0 and abcd_1 together gives 0xabcd.
+
+||mod 1:4 value||.Type||
+||0            ||.ADD ||
+||1            ||.MIN ||
+||2            ||.MAX ||
+||3            ||.DEC ||
+||4            ||.INC ||
+||5            ||.AND ||
+||6            ||.OR  ||
+||7            ||.XOR ||
+||8            ||.CAS ||
+||9 and above  ||invalid||
+
+||mod2 3||meaning||
+||0     ||default||
+||1     ||.E     ||
+
+mod 0 together with mod2 0:2 gives mod3
+
+||mod3 value||meaning||
+||4         ||default||
+||5         ||.U64   ||
+||7         ||.S32   ||
+||11        ||.F32.FTZ.RN||
+||others    ||invalid||
+
+
+.FTZ.RN (flush subnormal numbers to sign-preserved zero, round to nearest even) is the default operation mode for ATOM.ADD.F32. While cuobjdump always outputs .FTZ.RN along with .F32 for ATOM, when working with asfermi, .FTZ.RN can oitted.
