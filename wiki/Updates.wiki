@@ -3,7 +3,7 @@
 ==== 5th August, 2011 ====
 Somehow the code commit yesterday seems to have not actually reached the svn repository. I'll do it again later.
 
-Update: The commit is done. rev 515.
+Update: The commit is done. r515.
 
 ==== 4th August, 2011 ====
 Added support for LEPC, CCTL, CCTLL, LDLK, LDSLK, STUL, STSUL, PBK, BRK, PCNT and CONT.
