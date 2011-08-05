@@ -202,3 +202,42 @@ Template opcode
 {{{
 1110 011110 1110 000000 000000 00000000000000000000000000000000 001101
 }}}
+
+----
+==== BAR ====
+Instruction usage:
+{{{
+bar.sync:         BAR.RED.POPC RZ,    bar (,tcount);
+bar.red.popc.u32: BAR.RED.POPC reg0,  bar (,tcount), (!)c;
+bar.red.op.pred:  BAR.RED.Op   RZ, p, bar (,tcount), (!)c;
+bar.arrive:       BAR.ARV             bar, tcount;
+}}}
+
+  * reg0: the register to which the number of true predicates is to be stored at the end of the reduction operation.
+  * bar: A numerical(0xa)/register expression that identifies the barrier (0 to 15).
+  * tcount: A numerical(0xabc)/register expression indicating the number of threads to reach the instruction before reinitialization of barrier. When unspecified, all threads of the block will have to reach the barrier before the barrier is reinitialized.
+  * p,c: please refer to ptx manual for more information.
+
+Template opcode
+{{{
+0010 000000 1110 000000 000000 111111000000 00000000   00 0 1110 111 00 001010 
+        mod        reg0    bar       tcount          mod2      c   p
+}}}
+
+||mod 2||meaning||
+||0    ||default||
+||1    ||.ARV   ||
+
+||mod 3:4||meaning||
+||00     ||.POPC  ||
+||10     ||Op: AND||
+||01     ||Op: OR ||
+||11     ||invalid||
+
+||mod2 0||meaning for bar||
+||0     ||use reg1||
+||1     ||use reg1(0xa)||
+
+||mod2 1||meaning for tcount||
+||0     ||use reg2||
+||1     ||use reg2(0xabc)||
