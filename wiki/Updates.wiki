@@ -1,13 +1,19 @@
 #summary A development log
 
+==== 6th August, 2011 ====
+Added support for more directives. Documentation is [Directives here].
+
+----
 ==== 5th August, 2011 ====
 Somehow the code commit yesterday seems to have not actually reached the svn repository. I'll do it again later.
 
 Update: The commit is done. r515.
 
+----
 ==== 4th August, 2011 ====
 Added support for LEPC, CCTL, CCTLL, LDLK, LDSLK, STUL, STSUL, PBK, BRK, PCNT and CONT.
 
+----
 ==== 2nd August, 2011 ====
 Added support for BFE, BFI, SEL and MUFU.
 
