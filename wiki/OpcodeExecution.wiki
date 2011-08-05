@@ -304,3 +304,16 @@ mod 0 together with mod2 0:2 gives mod3
 Note that:
   * For CAS and EXCH, b64 is just U64.
   * .FTZ.RN (flush subnormal numbers to sign-preserved zero, round to nearest even) is the default operation mode for ATOM.ADD.F32. While cuobjdump always outputs .FTZ.RN along with .F32 for ATOM, when working with asfermi, .FTZ.RN can omitted.
+
+----
+==== RED ====
+Instruction usage:
+{{{
+RED(.E).Op(.Type) [reg1+0xabcd], reg0;
+}}}
+Template opcode
+{{{
+1010 000000 1110 000000 000000 00000000000000000000000000000000 0010 00
+        mod        reg0   reg1                           0xabcd mod2
+}}}
+All the modifier bits are the same as in ATOM. The only difference is that .EXCH and .CAS are not applicable to RED.
