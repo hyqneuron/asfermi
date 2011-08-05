@@ -300,5 +300,6 @@ mod 0 together with mod2 0:2 gives mod3
 ||11        ||.F32.FTZ.RN||
 ||others    ||invalid||
 
-
-.FTZ.RN (flush subnormal numbers to sign-preserved zero, round to nearest even) is the default operation mode for ATOM.ADD.F32. While cuobjdump always outputs .FTZ.RN along with .F32 for ATOM, when working with asfermi, .FTZ.RN can oitted.
+Note that:
+  * For CAS and EXCH, b64 is just U64.
+  * .FTZ.RN (flush subnormal numbers to sign-preserved zero, round to nearest even) is the default operation mode for ATOM.ADD.F32. While cuobjdump always outputs .FTZ.RN along with .F32 for ATOM, when working with asfermi, .FTZ.RN can omitted.
