@@ -317,3 +317,28 @@ Template opcode
         mod        reg0   reg1                           0xabcd mod2
 }}}
 All the modifier bits are the same as in ATOM. The only difference is that .EXCH and .CAS are not applicable to RED.
+
+----
+==== VOTE ====
+Instruction usage:
+[{{
+vote.all:    VOTE.ALL RZ,   p0, (!)p1;
+vote.any:    VOTE.ANY RZ,   p0, (!)p1;
+vote.uni:    VOTE.EQ  reg0, pt,    p1;
+Unconfirmed modes:
+VOTE.VTG.R  0xabcd;
+VOTE.VTG.A  0xabcd;
+VOTE.VTG.RA 0xabcd;
+}}}
+Template opcode
+{{{
+1010 000000 1110 000000 0000 00 0000000000000000000000000000 000 0 010010
+        mod        reg0   p1                          0xabcd  p0
+}}}
+||mod 2:4 value||.Mode  ||
+||0            ||.ALL   ||
+||1            ||.ANY   ||
+||2            ||.EQ(.uni)||
+||5            ||.VTG.R ||
+||6            ||.VTG.A ||
+||7            ||.VTG.RA||
