@@ -284,8 +284,9 @@ Template opcode
 ||5            ||.AND ||
 ||6            ||.OR  ||
 ||7            ||.XOR ||
-||8            ||.CAS ||
-||9 and above  ||invalid||
+||8            ||.EXCH||
+||9            ||.CAS ||
+||10 and above ||invalid||
 
 ||mod2 3||meaning||
 ||0     ||default||
