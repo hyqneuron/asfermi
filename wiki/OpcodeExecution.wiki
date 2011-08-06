@@ -204,6 +204,7 @@ Template opcode
 }}}
 
 ----
+=== Synchronization, Atomic Instructions ===
 ==== BAR ====
 Instruction usage:
 {{{
