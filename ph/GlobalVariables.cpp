@@ -19,6 +19,7 @@ fstream csOutput;
 char *csSource;
 int csSourceSize;
 int csMaxReg = 0;
+int csMaxBar = 0;
 
 OperationMode csOperationMode = Undefined;
 char* csSourceFilePath;

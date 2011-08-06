@@ -280,6 +280,8 @@ struct OperandRuleBAR: OperandRule
 			if(result>63)
 				throw 139;//too large barrier identifier
 			csCurrentInstruction.OpcodeWord1|= 1<<15;
+			if(result>csMaxBar)
+				csMaxBar = result;
 		}
 		csCurrentInstruction.OpcodeWord0 |= result << 20;
 	}

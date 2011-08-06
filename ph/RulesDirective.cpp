@@ -48,13 +48,16 @@ struct DirectiveRuleEndKernel: DirectiveRule
 		
 		csCurrentKernel.KernelInstructions = csInstructions;
 		csCurrentKernel.TextSize = csInstructionOffset;
-		csMaxReg+=1;
-		csCurrentKernel.RegCount = csMaxReg>csCurrentKernel.RegCount? csMaxReg: csCurrentKernel.RegCount;
+		if(csMaxReg>=csCurrentKernel.RegCount)
+			csCurrentKernel.RegCount = csMaxReg+1;
+		if(csMaxBar>=csCurrentKernel.BarCount)
+			csCurrentKernel.BarCount = csMaxBar+1;
 		csKernelList.push_back(csCurrentKernel);
 
 		csInstructions.clear();
 		csInstructionOffset = 0;
 		csMaxReg = 0;
+		csMaxBar = 0;
 		csCurrentKernel.Reset();
 		csCurrentKernelOpened = false;
 	}
