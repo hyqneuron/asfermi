@@ -226,7 +226,7 @@ Template opcode
 }}}
 
 ||mod 2||meaning||
-||0    ||default||
+||0    ||.RED   ||
 ||1    ||.ARV   ||
 
 ||mod 3:4||meaning||
