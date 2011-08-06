@@ -86,3 +86,32 @@ struct OperandRuleGlobalMemoryWithLastWithoutLast2Bits: OperandRule
 
 	}
 }OPRGlobalMemoryWithLastWithoutLast2Bits;
+
+struct OperandRuleMemoryForATOM: OperandRule
+{
+	OperandRuleMemoryForATOM(): OperandRule(Custom){}
+	virtual void Process(SubString &component)
+	{
+		unsigned int memory;
+		int reg1;
+		bool negative = false;
+		component.ToGlobalMemory(reg1, memory);
+		if(memory&0x80000000)
+		{
+			memory--;
+			memory ^= 0xFFFFFFFF;
+		}
+		if(memory>0x7ffff)
+			throw 141; //20-bit signed integer
+		if(negative)
+		{
+			memory ^= 0xFFFFFFFF;
+			memory++;
+			memory &= 0x000fffff;
+		}
+		csCurrentInstruction.OpcodeWord0 |= memory << 26;
+		csCurrentInstruction.OpcodeWord1 |= (memory&0x0001ffff)>>6;
+		csCurrentInstruction.OpcodeWord1 |= (memory&0x000e0000)<<6;
+		csCurrentInstruction.OpcodeWord0 |= reg1<<20;
+	}
+}OPRMemoryForATOM;

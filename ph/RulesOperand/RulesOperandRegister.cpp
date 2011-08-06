@@ -29,16 +29,20 @@ struct OperandRuleRegister: OperandRule
 		result = result<<Offset;
 		csCurrentInstruction.OpcodeWord0 |= result;
 	}
-};
-OperandRuleRegister OPRRegister0(14), OPRRegister1(20), OPRRegister2(26);
+}	OPRRegister0(14), 
+	OPRRegister1(20), 
+	OPRRegister2(26);
 
 //reg3 used a separate rule because it applies it result to OpcodeWord1 instead of 0
 struct OperandRuleRegister3: OperandRule
 {
 	bool AllowNegative;
-	OperandRuleRegister3(bool allowNegative):OperandRule(Register)
+	int Offset;
+	OperandRuleRegister3(bool allowNegative, int offset, bool optional):OperandRule(Register)
 	{
+		if(optional)Type = Optional;
 		AllowNegative = allowNegative;
+		Offset = offset;
 	}
 	virtual void Process(SubString &component)
 	{
@@ -56,7 +60,8 @@ struct OperandRuleRegister3: OperandRule
 		int result = component.ToRegister();
 		csMaxReg = (result > csMaxReg)? result: csMaxReg;
 		//apply result
-		result = result<<17;
+		result = result<<Offset;
+		csCurrentInstruction.OpcodeWord1 &= ~(63<<Offset);
 		csCurrentInstruction.OpcodeWord1 |=result;
 		if(negative)
 		{
@@ -64,7 +69,10 @@ struct OperandRuleRegister3: OperandRule
 			component.Length++;
 		}
 	}
-}OPRRegister3ForMAD(true), OPRRegister3ForCMP(false);
+}	OPRRegister3ForMAD(true, 17, false), 
+	OPRRegister3ForCMP(false, 17, false),
+	OPRRegister3ForATOM(false, 11, false),
+	OPRRegister4ForATOM(false, 17, true);
 
 //Note that some operands can have modifiers
 //This rule deals with registers that can have the .CC modifier
@@ -130,41 +138,60 @@ struct OperandRulePredicate: OperandRule
 		}
 		result <<= Offset;
 		//clear the bit field
-		csCurrentInstruction.OpcodeWord0 &= ~(7<<Offset);
 		//apply result
 		if(Word0)
+		{
+			csCurrentInstruction.OpcodeWord0 &= ~(7<<Offset);
 			csCurrentInstruction.OpcodeWord0 |= result;
+		}
 		else
+		{
+			csCurrentInstruction.OpcodeWord1 &= ~(7<<Offset);
 			csCurrentInstruction.OpcodeWord1 |= result;
+		}
 	}
 }	OPRPredicate1(14, true, true), 
 	OPRPredicate0(17, true, false), 
 	OPRPredicate2NotNegatable(17, false, true),
-	OPRPredicateForLDSLK(18, false, false);
+	OPRPredicateForLDSLK(18, false, false),
+	OPRPredicateForBAR(21, false, false),
+	OPRPredicate0ForVOTE(22, false, false),
+	OPRPredicate1ForVOTENotNegatable(20, true, true);
 
 //Some predicate registers expressions can be negated with !
 //this kind of operand is processed separately
 struct OperandRulePredicate2: OperandRule
 {
-	OperandRulePredicate2(): OperandRule(Optional){}
+	OperandRule* PredRule;
+	int NegateOffset;
+	bool OnWord0;
+	OperandRulePredicate2(OperandRule* predRule, int negateOffset, bool onWord0): OperandRule(Optional)
+	{
+		OnWord0 = onWord0;
+		NegateOffset = negateOffset;
+		PredRule = predRule;
+	}
 	virtual void Process(SubString &component)
 	{
 		int startPos = 0;
 		if(component[0]=='!')
 		{
 			startPos = 1;
-			csCurrentInstruction.OpcodeWord1 |= 1<<20;
+			if(OnWord0)
+				csCurrentInstruction.OpcodeWord0 |= 1<<NegateOffset;
+			else
+				csCurrentInstruction.OpcodeWord1 |= 1<<NegateOffset;
 			component.Start++;
 			component.Length--;
 		}
-		OPRPredicate2NotNegatable.Process(component);
+		PredRule->Process(component);
 		if(startPos)
 		{
 			component.Start--;
 			component.Length++;
 		}
 	}
-}OPRPredicate2;
+}OPRPredicate2(&OPRPredicate2NotNegatable, 20, false), OPRPredicate1ForVOTE(&OPRPredicate1ForVOTENotNegatable, 23, true);
 
 struct OperandRulePredicateForLDLK: OperandRule
 {

@@ -6,10 +6,8 @@
 struct OperandRuleIgnored;
 extern OperandRuleIgnored OPRIgnored;
 
-
 struct OperandRule32I;
 extern OperandRule32I OPR32I;
-
 
 struct OperandRuleLOP;
 extern OperandRuleLOP OPRLOP1, OPRLOP2;

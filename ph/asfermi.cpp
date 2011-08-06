@@ -363,6 +363,11 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRPCNT);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRCONT);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRNOP);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRBAR);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRMEMBAR);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRATOM);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRRED);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRVOTE);
 	//floating point op
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFADD);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRFADD32I);

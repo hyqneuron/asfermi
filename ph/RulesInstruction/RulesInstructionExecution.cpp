@@ -5,6 +5,7 @@
 
 #include "RulesInstructionExecution.h"
 #include "..\RulesOperand\RulesOperandComposite.h"
+#include "..\RulesOperand\RulesOperandRegister.h"
 #include "..\RulesModifier.h"
 #include "..\RulesOperand.h"
 
@@ -113,3 +114,210 @@ struct InstructionRuleNOP: InstructionRule
 		ModifierGroups[2].Initialize(true, 1, &MRS);
 	}
 }IRNOP;
+
+struct InstructionRuleBAR: InstructionRule
+{
+	InstructionRuleBAR(): InstructionRule("BAR", 0, true, true)
+	{
+		hpBinaryStringToOpcode8("0010 000000 1110 000000 000000 111111000000 00000000   00 0 1110 111 00 001010", OpcodeWord0, OpcodeWord1);
+	}
+	virtual void CustomProcess()
+	{
+		int nComp = csCurrentInstruction.Components.size();
+		int nMod = csCurrentInstruction.Modifiers.size();
+		std::list<SubString>::iterator component = csCurrentInstruction.Components.begin();
+		
+		//skip instruction name/predicate
+		nComp--;
+		component++;
+		if(csCurrentInstruction.Predicated)
+		{
+			nComp--;
+			component++;
+		}
+
+		//start reading modifier to determine whether it's ARV or RED
+		if(nMod==0)
+			throw 127; //insufficient number of modifiers
+		std::list<SubString>::iterator modifier = csCurrentInstruction.Modifiers.begin();
+		//.arrive. single modifier, 3 components
+		if(modifier->Compare("ARV"))
+		{
+			if(nMod>1)
+				throw 122;//too many modifiers present
+			if(nComp>2)
+				throw 102;//too many operands
+			else if(nComp<2)
+				throw 103;//insufficient number of operands
+
+			//start processing for ARV
+			csCurrentInstruction.OpcodeWord0 |= 1 << 7; //mod 2
+			//reg0
+			csCurrentInstruction.OpcodeWord0 |= 63 << 14;
+			//bar, tcount
+			((OperandRule*)&OPRBAR)->Process(*component);
+			component++;
+			((OperandRule*)&OPRTCount)->Process(*component);
+		}
+		//.RED.POPC: 2 - 4 operands
+		//.RED.LogicOp: 3-5 operands
+		else if(modifier->Compare("RED"))
+		{
+			if(nMod<2)
+				throw 127;
+			else if(nMod>2)
+				throw 122;
+			//number of operands will depend on .Op
+			modifier++;
+			unsigned int Op;
+			bool popc = false;
+			//POPC
+			if(modifier->Compare("POPC"))
+			{
+				popc = true;
+				Op = 0;
+				if(nComp<2)
+					throw 103;
+				if(nComp>4)
+					throw 102;
+
+			}
+			//AND and OR
+			else if(modifier->Compare("AND"))
+				Op = 1;
+			else if(modifier->Compare("OR"))
+				Op = 2;
+			else
+				throw 101;
+			//reg0
+			((OperandRule*)&OPRRegister0)->Process(*component);
+			component++;
+			nComp--;
+
+
+			if(!popc)
+			{
+				if(nComp<3)
+					throw 103;
+				if(nComp>5)
+					throw 102;
+				//p
+				((OperandRule*)&OPRPredicateForBAR)->Process(*component);
+				component++;
+				nComp--;
+			}
+			//bar (,tcount) (,(!)c)
+			((OperandRule*)&OPRBAR)->Process(*component);
+			component++;
+			nComp--;
+			if(nComp!=0&&(*component)[0]!='!'&&(*component)[0]!='p'&&(*component)[0]!='P')
+			{
+				((OperandRule*)&OPRTCount)->Process(*component);
+				component++;
+				nComp--;
+			}
+			if(nComp!=0)
+			{
+				((OperandRule*)&OPRPredicate2)->Process(*component);
+				component++;
+				nComp--;
+			}
+			if(nComp!=0)
+				throw 1021; //unrecognised operand at the end
+
+			//set .Op
+			csCurrentInstruction.OpcodeWord0 |= Op << 5;
+		}
+		else throw 101;//unsupported modifier
+	}
+}IRBAR;
+
+struct InstructionRuleMEMBAR: InstructionRule
+{
+	InstructionRuleMEMBAR(): InstructionRule("MEMBAR", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("1010 000000 1110 000000 000000 00000000000000000000000000000000 000111", OpcodeWord0, OpcodeWord1);
+		ModifierGroups[0].Initialize(false, 3, &MRMEMBARCTA, &MRMEMBARGL, &MRMEMBARSYS);
+	}
+
+}IRMEMBAR;
+
+struct InstructionRuleATOM: InstructionRule
+{
+	InstructionRuleATOM(): InstructionRule("ATOM", 5, true, false)
+	{
+		hpBinaryStringToOpcode8("1010 000000 1110 000000 000000 00000000000000000 000000 111111 000 0010 10", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,
+					&OPRRegister3ForATOM,
+					&OPRMemoryForATOM,
+					&OPRRegister0,
+					&OPRRegister4ForATOM);
+		ModifierGroups[0].Initialize(true, 1, &MRE);
+		ModifierGroups[1].Initialize(false, 10,
+										&MRATOMADD,	
+										&MRATOMMIN,
+										&MRATOMMAX,
+										&MRATOMINC,
+										&MRATOMDEC,
+										&MRATOMAND,
+										&MRATOMOR,
+										&MRATOMXOR,
+										&MRATOMEXCH,
+										&MRATOMCAS);
+		ModifierGroups[2].Initialize(true, 3, 
+										&MRATOMTypeU64,
+										&MRATOMTypeS32,
+										&MRATOMTypeF32);
+		ModifierGroups[3].Initialize(true, 1, &MRATOMIgnoredFTZ);
+		ModifierGroups[4].Initialize(true, 1, &MRATOMIgnoredRN);
+	}
+}IRATOM;
+
+
+struct InstructionRuleRED: InstructionRule
+{
+	InstructionRuleRED(): InstructionRule("RED", 5, true, false)
+	{
+		hpBinaryStringToOpcode8("1010 000000 1110 000000 000000 00000000000000000000000000000000 0010 00", OpcodeWord0, OpcodeWord1);
+		SetOperands(2,
+					&OPRGlobalMemoryWithImmediate32,
+					&OPRRegister0);
+		ModifierGroups[0].Initialize(true, 1, &MRE);
+		ModifierGroups[1].Initialize(false, 8,
+										&MRATOMADD,	
+										&MRATOMMIN,
+										&MRATOMMAX,
+										&MRATOMINC,
+										&MRATOMDEC,
+										&MRATOMAND,
+										&MRATOMOR,
+										&MRATOMXOR);
+		ModifierGroups[2].Initialize(true, 3, 
+										&MRATOMTypeU64,
+										&MRATOMTypeS32,
+										&MRATOMTypeF32);
+		ModifierGroups[3].Initialize(true, 1, &MRATOMIgnoredFTZ);
+		ModifierGroups[4].Initialize(true, 1, &MRATOMIgnoredRN);
+	}
+}IRRED;
+
+struct InstructionRuleVOTE: InstructionRule
+{
+	InstructionRuleVOTE(): InstructionRule("VOTE", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("0010 000000 1110 000000 0000 00 0000000000000000000000000000 000 0 010010", OpcodeWord0, OpcodeWord1);
+		SetOperands(3, 
+					&OPRRegister0,
+					&OPRPredicate0ForVOTE,
+					&OPRPredicate1ForVOTE);
+		ModifierGroups[0].Initialize(false, 4,
+										&MRVOTEALL,
+										&MRVOTEANY,
+										&MRVOTEEQ);
+										//&MRVOTEVTG);
+		/*ModifierGroups[1].Initialize(true, 3,
+										&MRVOTEVTGR,
+										&MRVOTEVTGA,
+										&MRVOTEVTGRA);*/
+	}
+}IRVOTE;

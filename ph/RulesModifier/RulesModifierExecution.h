@@ -20,4 +20,36 @@ extern ModifierRuleNOPOP MRNOPFMA64,
 						 MRNOPFU   ,
 						 MRNOPFMUL ;
 
+struct ModifierRuleMEMBAR;
+extern ModifierRuleMEMBAR MRMEMBARCTA, MRMEMBARGL, MRMEMBARSYS;
+
+struct ModifierRuleATOM;
+extern ModifierRuleATOM
+						MRATOMADD,	
+						MRATOMMIN,
+						MRATOMMAX,
+						MRATOMDEC,
+						MRATOMINC,
+						MRATOMAND,
+						MRATOMOR,
+						MRATOMXOR,
+						MRATOMEXCH,
+						MRATOMCAS;
+
+
+struct ModifierRuleATOMType;
+extern ModifierRuleATOMType 
+						MRATOMTypeU64,
+						MRATOMTypeS32,
+						MRATOMTypeF32;
+
+struct ModifierRuleATOMIgnored;
+extern ModifierRuleATOMIgnored MRATOMIgnoredFTZ, MRATOMIgnoredRN;
+
+struct ModifierRuleVOTE;
+extern ModifierRuleVOTE MRVOTEALL, MRVOTEANY, MRVOTEEQ, MRVOTEVTG;
+
+struct ModifierRuleVOTEVTG;
+extern ModifierRuleVOTEVTG MRVOTEVTGR, MRVOTEVTGA, MRVOTEVTGRA;
+
 #endif

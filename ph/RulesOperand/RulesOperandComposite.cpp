@@ -254,3 +254,63 @@ struct OperandRuleInstructionAddress: OperandRule
 		}
 	}
 }OPRInstructionAddress;
+
+
+
+struct OperandRuleBAR: OperandRule
+{
+	OperandRuleBAR(): OperandRule(Custom){}
+	virtual void Process(SubString &component)
+	{
+		unsigned int result;
+		//register
+		if(component[0]=='R')
+		{
+			result = component.ToRegister();
+		}
+		//numerical expression
+		else
+		{
+			//hex
+			if(component.Length>2&&component[0]=='0'&&(component[1]=='x'||component[1]=='X'))
+				result = component.ToImmediate32FromHexConstant(false);
+			//int
+			else
+				result = component.ToImmediate32FromInt32();
+			if(result>63)
+				throw 139;//too large barrier identifier
+			csCurrentInstruction.OpcodeWord1|= 1<<15;
+		}
+		csCurrentInstruction.OpcodeWord0 |= result << 20;
+	}
+}OPRBAR;
+
+struct OperandRuleTCount: OperandRule
+{
+	OperandRuleTCount(): OperandRule(Custom){}
+	virtual void Process(SubString &component)
+	{
+		unsigned int result;
+		//register
+		if(component[0]=='R')
+		{
+			result = component.ToRegister();
+		}
+		//numerical expression
+		else
+		{
+			//hex
+			if(component.Length>2&&component[0]=='0'&&(component[1]=='x'||component[1]=='X'))
+				result = component.ToImmediate32FromHexConstant(false);
+			//int
+			else
+				result = component.ToImmediate32FromInt32();
+			if(result>0xfff)
+				throw 140;//thread count should be no larger than 4095
+			csCurrentInstruction.OpcodeWord1|= 1<<14;
+		}
+		csCurrentInstruction.OpcodeWord0 &= 0x03ffffff;
+		csCurrentInstruction.OpcodeWord0 |= result << 26;		
+		csCurrentInstruction.OpcodeWord0 |= result >> 6;
+	}
+}OPRTCount;

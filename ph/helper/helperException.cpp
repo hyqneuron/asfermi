@@ -142,11 +142,17 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 138:	message = "The address must be a multiple of 4.";
 		break;
+	case 139:	message = "barrier identifier greater than 63 is not supported. Barrier identifier should normally be less than 16.";
+		break;
+	case 140:	message = "Thread count should be no larger than 4095.";
+		break;
+	case 141:	message = "The memory offset is a 20-bit signed integer.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};
 	char *line = csCurrentInstruction.InstructionString.ToCharArrayStopOnCR();
-	cout<<"Error Line "<<csCurrentInstruction.LineNumber<<": "<<line<<": "<<message<<endl;
+	cout<<"Error Line "<<csCurrentInstruction.LineNumber<<": "<<line<<endl<<"	"<<message<<endl;
 	delete[] line;
 }
 void hpDirectiveErrorHandler(int e)
@@ -199,12 +205,14 @@ void hpDirectiveErrorHandler(int e)
 		break;
 	case 1020:	message = "BarCount should not be larger than 127.";
 		break;
+	case 1021:	message = "Unrecognised operand present at the end.";
+		break;
 	default:	message = "Unknown error.";
 		break;
 	};
 	
 	char *line = csCurrentDirective.DirectiveString.ToCharArrayStopOnCR();
-	cout<<"Error Line "<<csCurrentDirective.LineNumber<<": "<<line<<": "<<message<<endl;
+	cout<<"Error Line "<<csCurrentDirective.LineNumber<<": "<<line<<endl<<"	"<<message<<endl;
 	delete[] line;
 }
 
@@ -227,6 +235,6 @@ void hpWarning(int e)
 		break;
 	}
 	char *line = csCurrentLine.LineString.ToCharArrayStopOnCR();
-	cout<<"Warning Line "<<csCurrentInstruction.LineNumber<<": "<<line<<": "<<message<<endl;
+	cout<<"Warning Line "<<csCurrentInstruction.LineNumber<<": "<<line<<endl<<"	"<<message<<endl;
 	delete[] line;
 }

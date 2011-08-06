@@ -23,4 +23,10 @@ extern OperandRuleFADDCompositeWithOperator OPRFADDCompositeWithOperator;
 struct OperandRuleInstructionAddress;
 extern OperandRuleInstructionAddress OPRInstructionAddress;
 
+struct OperandRuleBAR;
+extern OperandRuleBAR OPRBAR;
+
+struct OperandRuleTCount;
+extern OperandRuleTCount OPRTCount;
+
 #endif
