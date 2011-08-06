@@ -3,6 +3,8 @@
 ==== 6th August, 2011 ====
 Added support for more directives. Documentation is [Directives here].
 
+2pm: added support for BAR, MEMBAR, ATOM, RED and VOTE.
+
 ----
 ==== 5th August, 2011 ====
 Somehow the code commit yesterday seems to have not actually reached the svn repository. I'll do it again later.
