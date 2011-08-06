@@ -77,13 +77,23 @@ Format
 !BarCount 0x10;
 }}}
 
-==== [Features#State_Numbers 0]: RawInstruction ====
+==== [Features#State_Numbers 0]: `RawInstruction` ====
 This directive can be used to directly insert 4-byte words into a kernel, allowing the user to add instructions opcodes that are not yet supported by asfermi. 1 to 2 arguments are accepted. Each argument should be a 4-byte hexadecimal expression.
 
 Format
 {{{
 !RawInstruction 0xabcd   //4 bytes
 !RawInstruction 0xabcd 0xdef0 //8 bytes
+}}}
+
+==== [Features#State_Numbers 0]: Machine ====
+Specifies whether the cubin output will be 32-bit of 64-bit.
+
+Format:
+{{{
+!Machine 32
+//or
+!Machine 64
 }}}
 
 ==== [Features#State_Numbers 0]: Arch ====
