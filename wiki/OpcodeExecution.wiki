@@ -322,7 +322,7 @@ All the modifier bits are the same as in ATOM. The only difference is that .EXCH
 ----
 ==== VOTE ====
 Instruction usage:
-[{{
+{{{
 vote.all:    VOTE.ALL RZ,   p0, (!)p1;
 vote.any:    VOTE.ANY RZ,   p0, (!)p1;
 vote.uni:    VOTE.EQ  reg0, pt,    p1;
