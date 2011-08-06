@@ -7,6 +7,7 @@ Added support for more directives. Documentation is [Directives here].
 
 6pm: Uploaded a new cubinEditor to the Downloads page. 64-bit cubin can now be viewed using the cubinEditor v5.
 
+11pm: Changed all backward slashes to forward slashes. Added support for 64-bit cubin generation in asfermi. See [Usage]. Please note that it is most likely that the 64-bit cubin generated would not work as expected, even though cuobjdump now correctly identifies it. I'll need better Internet connection than what I'm having now to test things on a server.
 ----
 ==== 5th August, 2011 ====
 Somehow the code commit yesterday seems to have not actually reached the svn repository. I'll do it again later.
