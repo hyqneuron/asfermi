@@ -5,6 +5,8 @@ Added support for more directives. Documentation is [Directives here].
 
 2pm: added support for BAR, MEMBAR, ATOM, RED and VOTE.
 
+6pm: Uploaded a new cubinEditor to the Downloads page. 64-bit cubin can now be viewed using the cubinEditor v5.
+
 ----
 ==== 5th August, 2011 ====
 Somehow the code commit yesterday seems to have not actually reached the svn repository. I'll do it again later.
