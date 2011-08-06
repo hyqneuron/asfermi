@@ -3,6 +3,8 @@
 ==== 6th August, 2011 ====
 Added support for more directives. Documentation is [Directives here].
 
+10am: oops, my backup HDD is damaged by a shutdown error. Now I must fix my main drive that went down quite some time ago. Hope I can get things in order in less than one day.
+
 ----
 ==== 5th August, 2011 ====
 Somehow the code commit yesterday seems to have not actually reached the svn repository. I'll do it again later.
