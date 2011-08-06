@@ -22,11 +22,11 @@ inline void MarkRegisterForImmediate32()
 {
 }
 
-#include "RulesOperand\RulesOperandConstant.h"
-#include "RulesOperand\RulesOperandRegister.h"
-#include "RulesOperand\RulesOperandMemory.h"
-#include "RulesOperand\RulesOperandComposite.h"
-#include "RulesOperand\RulesOperandOthers.h"
+#include "RulesOperand/RulesOperandConstant.h"
+#include "RulesOperand/RulesOperandRegister.h"
+#include "RulesOperand/RulesOperandMemory.h"
+#include "RulesOperand/RulesOperandComposite.h"
+#include "RulesOperand/RulesOperandOthers.h"
 
 #else
 #endif

@@ -1,7 +1,7 @@
 #include "SpecificParsers.h"
 #include "GlobalVariables.h"
-#include "helper\helperException.h"
-#include "helper\helperParse.h"
+#include "helper/helperException.h"
+#include "helper/helperParse.h"
 
 #include "stdafx.h"
 using namespace std;

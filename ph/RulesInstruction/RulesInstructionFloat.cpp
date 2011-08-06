@@ -1,11 +1,11 @@
-#include "..\DataTypes.h"
-#include "..\helper\helperMixed.h"
+#include "../DataTypes.h"
+#include "../helper/helperMixed.h"
 
 #include "stdafx.h"
 
 #include "RulesInstructionFloat.h"
-#include "..\RulesModifier.h"
-#include "..\RulesOperand.h"
+#include "../RulesModifier.h"
+#include "../RulesOperand.h"
 
 
 struct InstructionRuleFADD: InstructionRule

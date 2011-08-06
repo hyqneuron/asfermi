@@ -1,13 +1,13 @@
-#include "..\DataTypes.h"
-#include "..\helper\helperMixed.h"
+#include "../DataTypes.h"
+#include "../helper/helperMixed.h"
 
 #include "stdafx.h"
 
 #include "RulesInstructionExecution.h"
-#include "..\RulesOperand\RulesOperandComposite.h"
-#include "..\RulesOperand\RulesOperandRegister.h"
-#include "..\RulesModifier.h"
-#include "..\RulesOperand.h"
+#include "../RulesOperand/RulesOperandComposite.h"
+#include "../RulesOperand/RulesOperandRegister.h"
+#include "../RulesModifier.h"
+#include "../RulesOperand.h"
 
 
 struct InstructionRuleEXIT: InstructionRule

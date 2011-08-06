@@ -9,10 +9,30 @@ all functions are prefixed with 'hpCubin'
 */
 #include "helperCubin.h"
 #include "../GlobalVariables.h"
-#include "..\Cubin.h"
-#include "..\DataTypes.h"
+#include "../Cubin.h"
+#include "../DataTypes.h"
 #include "stdafx.h"
 
+
+void hpCubinSet64(bool set64)
+{
+	if(set64)
+	{
+		ELFHeaderSize = 0x40;
+		ELFSectionHeaderSize=0x40;
+		ELFSegmentHeaderSize=0x38;
+		ELFSymbolEntrySize=0x18;
+		cubin64Bit = true;
+	}
+	else
+	{
+		ELFHeaderSize = 0x34;
+		ELFSectionHeaderSize=0x28;
+		ELFSegmentHeaderSize=0x20;
+		ELFSymbolEntrySize=0x10;
+		cubin64Bit = false;
+	}
+}
 
 
 //	1
@@ -189,61 +209,58 @@ inline void hpCubinStage2SetStrTabSectionContent()
 	}
 }
 
-inline void hpCubinStage2AddSectionSymbol(ELFSection &section, ELFSymbolEntry &entry, int &offset, unsigned int size)
+inline void hpCubinStage2AddSectionSymbol(ELFSection &section, ELFSymbolEntry &entry, int &index, unsigned int size)
 {
 		entry.Reset();
 		entry.Size = size;
 		entry.Info = 3;
 		entry.SHIndex = section.SectionIndex;
-		*(ELFSymbolEntry*)(cubinSectionSymTab.SectionContent + offset) = entry;
-		section.SymbolIndex = offset / 0x10;
-
-		offset += 0x10;
+		((ELFSymbolEntry*)cubinSectionSymTab.SectionContent)[index] = entry;
+		section.SymbolIndex = index++;
 }
 inline void hpCubinStage2SetSymTabSectionContent()
 {		
 	int entryCount = cubinCurrentSectionIndex + csKernelList.size() + 2; //1 for each section, 1 for each kernel, 2 empty entries
-	cubinSectionSymTab.SectionSize = entryCount * 0x10;
-	cubinSectionSymTab.SectionContent = new unsigned char[cubinSectionSymTab.SectionSize];
+	cubinSectionSymTab.SectionSize = entryCount * ELFSymbolEntrySize;
+	ELFSymbolEntry* entries = new ELFSymbolEntry[cubinSectionSymTab.SectionSize];
+	cubinSectionSymTab.SectionContent = (unsigned char*)entries;
 
 	//first 6 entries
 	memset(cubinSectionSymTab.SectionContent, 0, cubinSectionSymTab.SectionSize); //clear everything to 0 first
 	//jump over the entry 0 (null), to directly to entry 1
 	//set symbol for head sections
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x1E) = 1; //only setting section index and info, leaving other things zero
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x1C) = 3;
+	entries[1].SHIndex = 1; //only setting section index and info, leaving other things zero
+	entries[2].SHIndex = 2;
+	entries[3].SHIndex = 3;
 
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x2E) = 2;
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x2C) = 3;
-
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x3E) = 3;
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x3C) = 3;
-
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x4C) = 3;
-	*(unsigned short int*)(cubinSectionSymTab.SectionContent + 0x5C) = 3;
+	entries[1].Info = 3;
+	entries[2].Info = 3;
+	entries[3].Info = 3;
+	entries[4].Info = 3;
+	entries[5].Info = 3;
 
 	//one entry per kern section	
-	int offset = 0x60; //jump over entry 4 and 5 which are empty
+	int index = 6; //jump over entry 4 and 5 which are empty
 	ELFSymbolEntry entry;
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
 	{
 		//text
-		hpCubinStage2AddSectionSymbol(kernel->TextSection, entry, offset, kernel->TextSize);
+		hpCubinStage2AddSectionSymbol(kernel->TextSection, entry, index, kernel->TextSize);
 		//constant0
-		hpCubinStage2AddSectionSymbol(kernel->Constant0Section, entry, offset, 0);
+		hpCubinStage2AddSectionSymbol(kernel->Constant0Section, entry, index, 0);
 		//info
-		hpCubinStage2AddSectionSymbol(kernel->InfoSection, entry, offset, 0);
+		hpCubinStage2AddSectionSymbol(kernel->InfoSection, entry, index, 0);
 		//shared section
 		if(kernel->SharedSize>0)
-			hpCubinStage2AddSectionSymbol(kernel->SharedSection, entry, offset, 0);
+			hpCubinStage2AddSectionSymbol(kernel->SharedSection, entry, index, 0);
 		//local section
 		if(kernel->LocalSize>0)
-			hpCubinStage2AddSectionSymbol(kernel->LocalSection, entry, offset, 0);
+			hpCubinStage2AddSectionSymbol(kernel->LocalSection, entry, index, 0);
 	}
 	//tail sections
 	if(cubinConstant2Size)
-		hpCubinStage2AddSectionSymbol(cubinSectionConstant2, entry, offset, 0);
-	hpCubinStage2AddSectionSymbol(cubinSectionNVInfo, entry, offset, 0);
+		hpCubinStage2AddSectionSymbol(cubinSectionConstant2, entry, index, 0);
+	hpCubinStage2AddSectionSymbol(cubinSectionNVInfo, entry, index, 0);
 
 	//one entry per __global__ function
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
@@ -254,9 +271,8 @@ inline void hpCubinStage2SetSymTabSectionContent()
 		entry.Info = 0x12;
 		entry.Other = 0x10;
 		entry.SHIndex = kernel->TextSection.SectionIndex;
-		*(ELFSymbolEntry*)(cubinSectionSymTab.SectionContent + offset) = entry;
-		kernel->GlobalSymbolIndex = offset / 0x10;
-		offset += 0x10;
+		entries[index] = entry;
+		kernel->GlobalSymbolIndex = index++;
 	}
 
 	//one entry per constant symbol
@@ -409,13 +425,9 @@ void hpCubinSetELFSectionHeader1(ELFSection &section, unsigned int type, unsigne
 	memset(&section.SectionHeader, 0, sizeof(ELFSectionHeader));
 	section.SectionHeader.NameIndex = section.SHStrTabOffset;
 	section.SectionHeader.Type = type;
-	//Flags remains 0
-	//MemImgAddr remains 0
 	section.SectionHeader.FileOffset = offset;
 	section.SectionHeader.Size = section.SectionSize;
-	//Link, Info remains 0
 	section.SectionHeader.Alignment = alignment;
-	//Entry size remains 0
 	if(moveOffset)
 		offset += section.SectionSize;
 }
@@ -427,7 +439,8 @@ void hpCubinSetELFSectionHeader1(ELFSection &section, unsigned int type, unsigne
 //Stage4: Setup all section headers
 void hpCubinStage4()
 {
-	unsigned int fileOffset = (cubin64Bit?0x40:0x34) + 0x28 * cubinCurrentSectionIndex; //start of the shstrtab section content
+	//unsigned int fileOffset = (cubin64Bit?0x40:0x34) + 0x28 * cubinCurrentSectionIndex; //start of the shstrtab section content
+	unsigned int fileOffset = ELFHeaderSize + ELFSectionHeaderSize * cubinCurrentSectionIndex; //start of the shstrtab section content
 
 	//---head sections
 	//empty
@@ -438,7 +451,7 @@ void hpCubinStage4()
 	hpCubinSetELFSectionHeader1(cubinSectionStrTab, 3, 1, fileOffset);
 	//symtab
 	hpCubinSetELFSectionHeader1(cubinSectionSymTab, 2, 1, fileOffset);
-	cubinSectionSymTab.SectionHeader.EntrySize = 0x10;
+	cubinSectionSymTab.SectionHeader.EntrySize = ELFSymbolEntrySize;
 	cubinSectionSymTab.SectionHeader.Info = cubinCurrentSectionIndex+2; //info is number of local symbols
 	cubinSectionSymTab.SectionHeader.Link = 2;
 
@@ -538,74 +551,147 @@ void hpCubinStage5()
 	cubinSegmentHeaderPHTSelf.Flags = 5;
 	cubinSegmentHeaderPHTSelf.Alignment = 4;
 	cubinSegmentHeaderPHTSelf.Offset = cubinPHTOffset;
-	cubinSegmentHeaderPHTSelf.FileSize = 0x20 * cubinPHCount;
+	cubinSegmentHeaderPHTSelf.FileSize = ELFSegmentHeaderSize * cubinPHCount;
 	cubinSegmentHeaderPHTSelf.MemSize = cubinSegmentHeaderPHTSelf.FileSize;
 	cubinSegmentHeaderPHTSelf.VirtualMemAddr = 0;
 	cubinSegmentHeaderPHTSelf.PhysicalMemAddr = 0;
-	//constant2 not implemented
 }
 
 //Stage6: Setup ELF header
 void hpCubinStage6()
 {
-	if(!cubin64Bit)
-	{
-		ELFH32.PHTOffset = cubinPHTOffset;
-		ELFH32.PHCount = cubinPHCount;
-		ELFH32.SHCount = cubinCurrentSectionIndex;
-		if(cubinArchitecture == sm_20)
-			ELFH32.Flags = ELFFlagsForsm_20;
-		else //issue: supports only sm_20 and sm_21
-			ELFH32.Flags = ELFFlagsForsm_21;
-	}
+	if(cubin64Bit)
+		ELFH32.FileClass = 2;
 	else
-	{
-		ELFH64.PHTOffset = cubinPHTOffset;
-		ELFH64.PHCount = cubinPHCount;
-		ELFH64.SHCount = cubinCurrentSectionIndex;
-		if(cubinArchitecture == sm_20)
-			ELFH64.Flags = ELFFlagsForsm_20;
-		else //issue: supports only sm_20 and sm_21
-			ELFH64.Flags = ELFFlagsForsm_21;
-	}
+		ELFH32.FileClass = 1;
+
+	ELFH32.PHTOffset = cubinPHTOffset;
+	ELFH32.SHTOffset = ELFHeaderSize;
+	
+	if(cubinArchitecture == sm_20)
+		ELFH32.Flags = ELFFlagsForsm_20;
+	else //issue: supports only sm_20 and sm_21
+		ELFH32.Flags = ELFFlagsForsm_21;
+
+	ELFH32.HeaderSize = ELFHeaderSize;
+	ELFH32.PHSize = ELFSegmentHeaderSize;
+	ELFH32.PHCount = cubinPHCount;
+	ELFH32.SHSize = ELFSectionHeaderSize;
+	ELFH32.SHCount = cubinCurrentSectionIndex;
+	
+	
+	
 }
 
+unsigned int pad0 = 0;
 //Stage7: Write to cubin
+void hpCubinWriteSectionHeader(ELFSectionHeader &header)
+{
+	if(!cubin64Bit)
+		csOutput.write((char*)&header, sizeof(ELFSectionHeader));
+	else
+	{
+		csOutput.write((char*)&header,			0x8); //name and type
+		csOutput.write((char*)&header.Flags,	0x4); //flags
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.MemImgAddr,0x4); //vaddr
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.FileOffset,0x4); //offset
+		csOutput.write((char*)&pad0,			0x4);
+		
+		csOutput.write((char*)&header.Size,		0x4); //size
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.Link,		0x8);//link and info
+		csOutput.write((char*)&header.Alignment,0x4); //alignment
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.EntrySize,0x4); //entry size
+		csOutput.write((char*)&pad0,			0x4);
+	}
+}
+void hpCubinWriteSegmentHeader(ELFSegmentHeader &header)
+{
+	if(!cubin64Bit)
+		csOutput.write((char*)&header, sizeof(ELFSegmentHeader));
+	else
+	{
+		csOutput.write((char*)&header.Type,		0x4);//type
+		csOutput.write((char*)&header.Flags,	0x4);//flags
+		csOutput.write((char*)&header.Offset,	0x4);//offset
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.VirtualMemAddr, 0x4);//vaddr
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.PhysicalMemAddr,0x4);//paddr
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.FileSize, 0x4);//file size
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.MemSize,  0x4);//mem size
+		csOutput.write((char*)&pad0,			0x4);
+		csOutput.write((char*)&header.Alignment,0x4);//alignment
+		csOutput.write((char*)&pad0,			0x4);
+	}
+}
 void hpCubinStage7()
 {
 	//---Header
 	if(!cubin64Bit)
 		csOutput.write((char*)&ELFH32, sizeof(ELFH32));
 	else
-		csOutput.write((char*)&ELFH64, sizeof(ELFH64));
+	{
+		csOutput.write((char*)&ELFH32,				0x18); //all the way to version
+		csOutput.write((char*)&ELFH32.EntryPoint,	0x4);//entry
+		csOutput.write((char*)&pad0,				0x4);
+		csOutput.write((char*)&ELFH32.PHTOffset,	0x4);//PHTOffset
+		csOutput.write((char*)&pad0,				0x4);
+		csOutput.write((char*)&ELFH32.SHTOffset,	0x4);//SHTOffset
+		csOutput.write((char*)&pad0,				0x4);
+		//csOutput.write((char*)&ELFH32.PHTOffset,	0x4);//PHTOffset
+		csOutput.write((char*)&ELFH32.Flags,		0x10);//Flags and all the way down
+
+	}
 
 	//---SHT
 	//head
-	csOutput.write((char*)&cubinSectionEmpty.SectionHeader, 0x28);
-	csOutput.write((char*)&cubinSectionSHStrTab.SectionHeader, 0x28);
-	csOutput.write((char*)&cubinSectionStrTab.SectionHeader, 0x28);
-	csOutput.write((char*)&cubinSectionSymTab.SectionHeader, 0x28);
+	hpCubinWriteSectionHeader(cubinSectionEmpty.SectionHeader);
+	hpCubinWriteSectionHeader(cubinSectionSHStrTab.SectionHeader);
+	hpCubinWriteSectionHeader(cubinSectionStrTab.SectionHeader);
+	hpCubinWriteSectionHeader(cubinSectionSymTab.SectionHeader);
 	//kern
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
 	{
-		csOutput.write((char*)&kernel->TextSection.SectionHeader, 0x28);
-		csOutput.write((char*)&kernel->Constant0Section.SectionHeader, 0x28);
-		csOutput.write((char*)&kernel->InfoSection.SectionHeader, 0x28);
+		hpCubinWriteSectionHeader(kernel->TextSection.SectionHeader);
+		hpCubinWriteSectionHeader(kernel->Constant0Section.SectionHeader);
+		hpCubinWriteSectionHeader(kernel->InfoSection.SectionHeader);
 		if(kernel->SharedSize != 0)
-			csOutput.write((char*)&kernel->SharedSection.SectionHeader, 0x28);
+			hpCubinWriteSectionHeader(kernel->SharedSection.SectionHeader);
 		if(kernel->LocalSize !=0)
-			csOutput.write((char*)&kernel->LocalSection.SectionHeader, 0x28);
+			hpCubinWriteSectionHeader(kernel->LocalSection.SectionHeader);
 	}
 	//tail
 	if(cubinConstant2Size)
-		csOutput.write((char*)&cubinSectionConstant2.SectionHeader, 0x28);
-	csOutput.write((char*)&cubinSectionNVInfo.SectionHeader, 0x28);
+		hpCubinWriteSectionHeader(cubinSectionConstant2.SectionHeader);
+	hpCubinWriteSectionHeader(cubinSectionNVInfo.SectionHeader);
 
 	//---Sections
 	//head
 	csOutput.write((char*)cubinSectionSHStrTab.SectionContent, cubinSectionSHStrTab.SectionSize);
 	csOutput.write((char*)cubinSectionStrTab.SectionContent, cubinSectionStrTab.SectionSize);
-	csOutput.write((char*)cubinSectionSymTab.SectionContent, cubinSectionSymTab.SectionSize);
+	//..symtab
+	if(!cubin64Bit)
+		csOutput.write((char*)cubinSectionSymTab.SectionContent, cubinSectionSymTab.SectionSize);
+	else
+	{
+		int entryCount = cubinSectionSymTab.SectionSize / ELFSymbolEntrySize;
+		ELFSymbolEntry* entries = (ELFSymbolEntry*)cubinSectionSymTab.SectionContent;
+		for(int i =0; i<entryCount; i++)
+		{
+			csOutput.write((char*)&entries[i].Name, 0x4); //name
+			csOutput.write((char*)&entries[i].Info, 0x4); //info, other, SHIndex
+			csOutput.write((char*)&entries[i].Value, 0x4); //value
+			csOutput.write((char*)&pad0, 0x4);
+			csOutput.write((char*)&entries[i].Size, 0x4); //Size
+			csOutput.write((char*)&pad0, 0x4);
+		}
+	}
 	//kern
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
 	{
@@ -619,17 +705,18 @@ void hpCubinStage7()
 	csOutput.write((char*)cubinSectionNVInfo.SectionContent, cubinSectionNVInfo.SectionSize);
 
 	//---PHT
-	csOutput.write((char*)&cubinSegmentHeaderPHTSelf, 0x20);
+
+	hpCubinWriteSegmentHeader(cubinSegmentHeaderPHTSelf);
 	//kernel segments
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
 	{
-		csOutput.write((char*)&kernel->KernelSegmentHeader, 0x20);
+		hpCubinWriteSegmentHeader(kernel->KernelSegmentHeader);
 		if(kernel->SharedSize || kernel->LocalSize)
-			csOutput.write((char*)&kernel->MemorySegmentHeader, 0x20);
+			hpCubinWriteSegmentHeader(kernel->MemorySegmentHeader);
 	}
 	//ending segments
 	if(cubinConstant2Size)
-		csOutput.write((char*)&cubinSegmentHeaderConstant2, 0x20);
+		hpCubinWriteSegmentHeader(cubinSegmentHeaderConstant2);
 
 	//end
 	csOutput.flush();

@@ -1,10 +1,10 @@
 
-#include "..\DataTypes.h"
-#include "..\GlobalVariables.h"
+#include "../DataTypes.h"
+#include "../GlobalVariables.h"
 
 #include "stdafx.h"
 
-#include "..\RulesOperand.h"
+#include "../RulesOperand.h"
 #include "RulesOperandMemory.h"
 
 //Global Memory Operand

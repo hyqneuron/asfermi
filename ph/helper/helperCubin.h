@@ -13,6 +13,8 @@ all functions are prefixed with 'hpCubin'
 //---code starts ---
 #include "../Cubin.h"
 
+void hpCubinSet64(bool is64);
+
 //	1
 //-----Stage1 functions
 //SectionIndex, SectionSize, OffsetFromFirst, SHStrTabOffset 

@@ -10,6 +10,11 @@
 extern const unsigned int ELFFlagsForsm_20;
 extern const unsigned int ELFFlagsForsm_21;
 
+extern int ELFHeaderSize;
+extern int ELFSectionHeaderSize;
+extern int ELFSegmentHeaderSize;
+extern int ELFSymbolEntrySize;
+
 struct ELFHeader32
 {
 	unsigned char Byte0, Byte1, Byte2, Byte3, FileClass, Encoding, FileVersion, Padding[9];
@@ -17,27 +22,16 @@ struct ELFHeader32
 	unsigned int Version, EntryPoint, PHTOffset, SHTOffset, Flags;
 	unsigned short int HeaderSize, PHSize, PHCount, SHSize, SHCount, SHStrIdx;
 	ELFHeader32();
-};
+}; //size: 0x34
 extern ELFHeader32 ELFH32;
 
-struct ELFHeader64
-{
-	unsigned char Byte0, Byte1, Byte2, Byte3, FileClass, Encoding, FileVersion, Padding[9];
-	unsigned short int FileType, Machine;
-	unsigned int Version;
-	unsigned long long EntryPoint, PHTOffset, SHTOffset;
-	unsigned int Flags;
-	unsigned short int HeaderSize, PHSize, PHCount, SHSize, SHCount, SHStrIdx;
-	ELFHeader64();
-};
-extern ELFHeader64 ELFH64;
 
 enum SectionType{KernelText, KernelInfo, KernelShared, KernelLocal, KernelConstant0, KernelConstant16, Constant2, NVInfo, SHStrTab, StrTab, SymTab };
 struct ELFSectionHeader
 {
 	unsigned int NameIndex, Type, Flags, MemImgAddr, FileOffset, Size, Link, Info, Alignment, EntrySize;
-};
-
+}; //size: 0x28
+//64 size: 0x40
 struct ELFSection
 {
 	ELFSectionHeader SectionHeader;
@@ -55,12 +49,13 @@ struct ELFSymbolEntry
 	unsigned char Info, Other;
 	unsigned short int SHIndex;
 	void Reset();
-};
+}; //size: 0x10|0x18
 
 struct ELFSegmentHeader
 {
 	unsigned int Type, Offset, VirtualMemAddr, PhysicalMemAddr, FileSize, MemSize, Flags, Alignment;
-};
+}; //size: 0x20
+//size: 0x0x38
 
 struct KernelParameter
 {

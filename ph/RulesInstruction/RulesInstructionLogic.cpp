@@ -1,12 +1,12 @@
 
-#include "..\DataTypes.h"
-#include "..\helper\helperMixed.h"
+#include "../DataTypes.h"
+#include "../helper/helperMixed.h"
 
 #include "stdafx.h"
 
 #include "RulesInstructionLogic.h"
-#include "..\RulesModifier.h"
-#include "..\RulesOperand.h"
+#include "../RulesModifier.h"
+#include "../RulesOperand.h"
 
 
 struct InstructionRuleLOP: InstructionRule

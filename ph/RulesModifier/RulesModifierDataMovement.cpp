@@ -1,6 +1,6 @@
 
-#include "..\DataTypes.h"
-#include "..\helper\helperMixed.h"
+#include "../DataTypes.h"
+#include "../helper/helperMixed.h"
 
 #include "stdafx.h"
 #include "RulesModifierDataMovement.h"

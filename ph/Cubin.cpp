@@ -8,6 +8,13 @@
 const unsigned int ELFFlagsForsm_20 = 0x00140114;
 const unsigned int ELFFlagsForsm_21 = 0x00140115;
 
+
+//default is 32-bit
+int ELFHeaderSize = 0x34;
+int ELFSectionHeaderSize=0x28;
+int ELFSegmentHeaderSize=0x20;
+int ELFSymbolEntrySize=0x10;
+
 //ELFHeader32
 ELFHeader32::ELFHeader32()
 {
@@ -49,6 +56,7 @@ ELFHeader32::ELFHeader32()
 }
 ELFHeader32 ELFH32;
 
+/*
 //ELFHeader64
 ELFHeader64::ELFHeader64()
 {
@@ -87,6 +95,7 @@ ELFHeader64::ELFHeader64()
 }
 ELFHeader64 ELFH64;
 
+*/
 
 //ELFSection
 ELFSection::ELFSection()

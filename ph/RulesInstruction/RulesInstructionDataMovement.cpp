@@ -1,10 +1,10 @@
-#include "..\DataTypes.h"
-#include "..\helper\helperMixed.h"
+#include "../DataTypes.h"
+#include "../helper/helperMixed.h"
 
 #include "stdafx.h"
 #include "RulesInstructionDataMovement.h"
-#include "..\RulesModifier.h"
-#include "..\RulesOperand.h"
+#include "../RulesModifier.h"
+#include "../RulesOperand.h"
 
 struct InstructionRuleMOV: InstructionRule
 {

@@ -1,11 +1,11 @@
 
-#include "..\DataTypes.h"
-#include "..\GlobalVariables.h"
-#include "..\helper\helperMixed.h"
+#include "../DataTypes.h"
+#include "../GlobalVariables.h"
+#include "../helper/helperMixed.h"
 
 #include "stdafx.h"
 
-#include "..\RulesOperand.h"
+#include "../RulesOperand.h"
 #include "RulesOperandRegister.h"
 #include "RulesOperandConstant.h"
 #include "RulesOperandComposite.h"

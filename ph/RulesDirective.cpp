@@ -1,7 +1,7 @@
 
 #include "DataTypes.h"
 #include "GlobalVariables.h"
-#include "helper\helperException.h"
+#include "helper/helperException.h"
 #include "SpecificParsers.h"
 
 #include "stdafx.h"
@@ -50,7 +50,7 @@ struct DirectiveRuleEndKernel: DirectiveRule
 		csCurrentKernel.TextSize = csInstructionOffset;
 		if(csMaxReg>=csCurrentKernel.RegCount)
 			csCurrentKernel.RegCount = csMaxReg+1;
-		if(csMaxBar>=csCurrentKernel.BarCount)
+		if(csMaxBar&&csMaxBar>=csCurrentKernel.BarCount)
 			csCurrentKernel.BarCount = csMaxBar+1;
 		csKernelList.push_back(csCurrentKernel);
 
