@@ -40,7 +40,7 @@ Ctrl+Down = go to box below
 *Note*: 
   # You will need [http://www.go-mono.com/mono-downloads/download.html Mono] if your OS does not already support .NET 3.5. 
   # May contain bug, as most of it was written while I was half-asleep. This program is written with minimal complexity so you could expect crashes whenever you do something I did not expect.
-[http://code.google.com/p/asfermi/downloads/detail?name=CUBINEditor%20v5.zip Download]
+[http://code.google.com/p/asfermi/downloads/detail?name=cubinEditor%20v5.zip Download]
 
 ====Change log====
   # v2: Added support for command-line argument.
