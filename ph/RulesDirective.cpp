@@ -361,9 +361,36 @@ struct DirectiveRuleArch: DirectiveRule
 			cubinArchitecture = sm_21;
 		}
 		else
-			throw 0;// unsupported argument
+			throw 1021;// unsupported argument
 	}
 }DRArch;
+
+struct DirectiveRuleMachine: DirectiveRule
+{
+	DirectiveRuleMachine()
+	{
+		Name = "Machine";
+	}
+	virtual void Process()
+	{
+		if(csCurrentDirective.Parts.size()!=2)
+			throw 1002;
+		list<SubString>::iterator part = csCurrentDirective.Parts.begin();
+		part++;
+		char zeroSaver = part->Start[part->Length];
+		part->Start[part->Length] = 0;
+		if(strcmp("64", part->Start)==0)
+		{
+			hpCubinSet64(true);
+		}
+		else if(strcmp("32", part->Start)==0)
+		{
+			hpCubinSet64(false);
+		}
+		else
+			throw 1021;// unsupported argument
+	}
+}DRMachine;
 
 
 struct DirectiveRuleSelfDebug: DirectiveRule

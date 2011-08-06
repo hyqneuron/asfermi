@@ -47,6 +47,8 @@ extern DirectiveRuleRawInstruction DRRawInstruction;
 struct DirectiveRuleArch;
 extern DirectiveRuleArch DRArch;
 
+struct DirectiveRuleMachine;
+extern DirectiveRuleMachine DRMachine;
 
 struct DirectiveRuleSelfDebug;
 extern DirectiveRuleSelfDebug DRSelfDebug;

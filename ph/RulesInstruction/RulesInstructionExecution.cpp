@@ -223,7 +223,7 @@ struct InstructionRuleBAR: InstructionRule
 				nComp--;
 			}
 			if(nComp!=0)
-				throw 1021; //unrecognised operand at the end
+				throw 142; //unrecognised operand at the end
 
 			//set .Op
 			csCurrentInstruction.OpcodeWord0 |= Op << 5;

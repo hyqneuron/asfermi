@@ -415,7 +415,9 @@ void Initialize() //set up the various lists
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRRegCount);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRBarCount);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRRawInstruction);
-	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRSelfDebug);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRArch);
+	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRMachine);
+	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRSelfDebug);
+	
 	OrganiseRules();
 }

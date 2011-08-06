@@ -148,6 +148,8 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 141:	message = "The memory offset is a 20-bit signed integer.";
 		break;
+	case 142:	message = "Unrecognised operand present at the end.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};
@@ -205,7 +207,7 @@ void hpDirectiveErrorHandler(int e)
 		break;
 	case 1020:	message = "BarCount should not be larger than 127.";
 		break;
-	case 1021:	message = "Unrecognised operand present at the end.";
+	case 1021:	message = "Unsupported mode.";
 		break;
 	default:	message = "Unknown error.";
 		break;
