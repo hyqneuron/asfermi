@@ -325,7 +325,7 @@ Instruction usage:
 {{{
 vote.all:    VOTE.ALL RZ,   p0, (!)p1;
 vote.any:    VOTE.ANY RZ,   p0, (!)p1;
-vote.uni:    VOTE.EQ  reg0, pt,    p1;
+vote.uni:    VOTE.EQ  reg0, pt, (!)p1;
 Unconfirmed modes:
 VOTE.VTG.R  0xabcd;
 VOTE.VTG.A  0xabcd;
