@@ -4,7 +4,7 @@
 #include "helperMixed.h"
 
 #include "../stdafx.h"
-//#include "stdafx.h" //SMark
+#include "stdafx.h" //SMark
 
 
 //	1

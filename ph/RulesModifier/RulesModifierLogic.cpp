@@ -4,7 +4,7 @@
 
 
 #include "../stdafx.h"
-//#include "stdafx.h" //SMark
+#include "stdafx.h" //SMark
 
 #include "RulesModifierLogic.h"
 

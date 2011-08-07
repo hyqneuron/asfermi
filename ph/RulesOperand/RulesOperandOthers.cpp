@@ -2,7 +2,7 @@
 #include "../GlobalVariables.h"
 
 #include "../stdafx.h"
-//#include "stdafx.h" //SMark
+#include "stdafx.h" //SMark
 
 #include "../RulesOperand.h"
 #include "RulesOperandComposite.h"

@@ -13,7 +13,7 @@ all functions are prefixed with 'hpCubin'
 #include "../DataTypes.h"
 
 #include "../stdafx.h"
-//#include "stdafx.h" //SMark
+#include "stdafx.h" //SMark
 
 
 void hpCubinSet64(bool set64)

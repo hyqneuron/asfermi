@@ -4,7 +4,7 @@
 #include "helperParse.h"
 
 #include "../stdafx.h"
-//#include "stdafx.h" //SMark
+#include "stdafx.h" //SMark
 
 
 //Break a directive line into its parts (directive name, arguments)
