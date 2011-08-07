@@ -1,5 +1,9 @@
 #summary A development log
 
+==== 7th August, 2011 ====
+  # Fixed a few things that didn't go through with g++.
+  # Added a makefile(generated.txt) as well as the makefile used to generate it(genmake.txt).
+
 ==== 6th August, 2011 ====
 Added support for more directives. Documentation is [Directives here].
 
