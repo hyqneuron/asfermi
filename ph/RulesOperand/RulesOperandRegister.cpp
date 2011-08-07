@@ -1,7 +1,8 @@
 #include "../DataTypes.h"
 #include "../GlobalVariables.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 #include "../RulesOperand.h"
 #include "RulesOperandRegister.h"
@@ -115,7 +116,7 @@ struct OperandRulePredicate: OperandRule
 	{
 		//some predicate operands can be optional
 		if(optional)
-			Type = OperandType::Optional; //issue: doesn't work for predicate1 as operands in the middle cannot be optional
+			Type = Optional; //issue: doesn't work for predicate1 as operands in the middle cannot be optional
 		Word0 = word0;
 		Offset = offset;
 	}
@@ -195,7 +196,7 @@ struct OperandRulePredicate2: OperandRule
 
 struct OperandRulePredicateForLDLK: OperandRule
 {
-	OperandRulePredicateForLDLK(): OperandRule(OperandType::Predicate)
+	OperandRulePredicateForLDLK(): OperandRule(Predicate)
 	{
 	}
 	virtual void Process(SubString &component)
@@ -230,7 +231,8 @@ struct OperandRuleFADD32IReg1: OperandRule
 			csCurrentInstruction.OpcodeWord0 |= 1<<7;
 		else startPos = 0;
 		//leave the operator out when processing it using a general-purpose operand rule
-		OPRRegister1.Process(component.SubStr(startPos, component.Length - startPos));
+		SubString s = component.SubStr(startPos, component.Length - startPos);
+		OPRRegister1.Process(s);
 	}
 }OPRFADD32IReg1;
 

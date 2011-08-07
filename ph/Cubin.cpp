@@ -2,7 +2,7 @@
 #include "Cubin.h"
 #include "SubString.h"
 
-#include "stdafx.h"
+#include "stdafx.h" //Mark
 
 
 const unsigned int ELFFlagsForsm_20 = 0x00140114;

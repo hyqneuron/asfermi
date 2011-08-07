@@ -3,7 +3,8 @@
 #include "../GlobalVariables.h"
 #include "../helper/helperMixed.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 #include "../RulesOperand.h"
 #include "RulesOperandRegister.h"
@@ -225,7 +226,8 @@ struct OperandRuleFADDCompositeWithOperator: OperandRule
 		else if(component[0]=='|')
 			csCurrentInstruction.OpcodeWord0 |= 1<<6;
 		else startPos = 0;
-		OPRFMULStyle.Process(component.SubStr(startPos, component.Length - startPos));
+		SubString s = component.SubStr(startPos, component.Length - startPos);
+		OPRFMULStyle.Process(s);
 	}
 }OPRFADDCompositeWithOperator;
 

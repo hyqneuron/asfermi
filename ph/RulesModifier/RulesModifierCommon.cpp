@@ -1,8 +1,9 @@
-	
 #include "../DataTypes.h"
 #include "../helper/helperMixed.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
+
 #include "RulesModifierCommon.h"
 
 
@@ -84,7 +85,7 @@ struct ModifierRuleSETPComparison: ModifierRule
 			Name = "GEU";
 			break;
 		default:
-			throw exception("Unknown SETP comparison modifier");
+			throw exception();
 		};
 	}
 }	MRSETPComparisonLT(1),

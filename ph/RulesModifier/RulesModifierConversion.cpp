@@ -2,7 +2,8 @@
 #include "../DataTypes.h"
 #include "../helper/helperMixed.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 #include "RulesModifierConversion.h"
 
@@ -26,7 +27,7 @@ struct ModifierRuleF2IDest: ModifierRule
 			else if(type==3)
 				Name = "S64";
 			else
-				throw exception("Wrong type");
+				throw exception();
 		}
 		else
 		{
@@ -39,7 +40,7 @@ struct ModifierRuleF2IDest: ModifierRule
 			else if(type==3)
 				Name = "U64";
 			else
-				throw exception("Wrong type");
+				throw exception();
 		}
 	}
 }	MRF2IDestU8(0, false), 
@@ -78,7 +79,7 @@ struct ModifierRuleF2ISource: ModifierRule
 			Name = "F32";
 		else if(type==3)
 			Name = "F64";
-		else throw exception("Wrong type");
+		else throw exception();
 	}
 }MRF2ISourceF16(1),MRF2ISourceF32(2),MRF2ISourceF64(3);
 
@@ -96,7 +97,7 @@ struct ModifierRuleF2IRound: ModifierRule
 				Name = "CEIL";
 			else if(type==3)
 				Name = "TRUNC";
-			else throw exception("Wrong type");
+			else throw exception();
 		}
 		else
 		{
@@ -106,7 +107,7 @@ struct ModifierRuleF2IRound: ModifierRule
 				Name = "RP";
 			else if(type==3)
 				Name = "RZ";
-			else throw exception("Wrong type");
+			else throw exception();
 		}
 	}
 }MRF2IFLOOR(1, false), MRF2ICEIL(2, false), MRF2ITRUNC(3, false),
@@ -141,7 +142,7 @@ struct ModifierRuleI2FSource: ModifierRule
 			else if(type==3)
 				Name = "S64";
 			else
-				throw exception("Wrong type");
+				throw exception();
 		}
 		else
 		{
@@ -154,7 +155,7 @@ struct ModifierRuleI2FSource: ModifierRule
 			else if(type==3)
 				Name = "U64";
 			else
-				throw exception("Wrong type");
+				throw exception();
 		}
 	}
 }	MRI2FSourceU8(0, false),
@@ -178,7 +179,7 @@ struct ModifierRuleI2FDest: ModifierRule
 			Name = "F32";
 		else if(type==3)
 			Name = "F64";
-		else throw exception("Wrong type");
+		else throw exception();
 	}
 }MRI2FDestF16(1),MRI2FDestF32(2),MRI2FDestF64(3);
 
@@ -194,6 +195,6 @@ struct ModifierRuleI2FRound: ModifierRule
 			Name = "RP";
 		else if(type==3)
 			Name = "RZ";
-		else throw exception("Wrong type");
+		else throw exception();
 	}
 }MRI2FRM(1), MRI2FRP(2), MRI2FRZ(3);

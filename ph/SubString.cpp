@@ -3,7 +3,7 @@
 extern char* csSource;
 extern void hpWarning(int e);
 
-#include "stdafx.h"
+#include "stdafx.h" //Mark
 
 
 char str_zerosaver;

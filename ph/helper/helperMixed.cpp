@@ -3,7 +3,8 @@
 #include "../GlobalVariables.h"
 #include "helperMixed.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 
 //	1
@@ -333,7 +334,7 @@ void hpBinaryStringToOpcode4(char* string, unsigned int &word0, int &i) //little
 		}
 	}
 	if(i==200)
-		throw exception("Error in binary string.");
+		throw exception(); //error in binary string
 }
 void hpBinaryStringToOpcode4(char* string, unsigned int &word0)
 {

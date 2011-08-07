@@ -1,0 +1,59 @@
+VPATH=	helper\
+	RulesModifier\
+	RulesOperand\
+	RulesInstruction
+
+main =	asfermi\
+	Cubin\
+	DataTypes\
+	GlobalVariables\
+	RulesDirective\
+	SpecificParsers\
+	SubString
+
+helper= helperCubin\
+	helperException\
+	helperMixed\
+	helperParse
+
+instructions = \
+	RulesInstructionConversion\
+	RulesInstructionDataMovement\
+	RulesInstructionExecution\
+	RulesInstructionFloat\
+	RulesInstructionInteger\
+	RulesInstructionLogic\
+	RulesInstructionMiscellaneous
+
+operands = \
+	RulesOperandComposite\
+	RulesOperandConstant\
+	RulesOperandMemory\
+	RulesOperandOthers\
+	RulesOperandRegister
+
+modifiers = \
+	RulesModifierCommon\
+	RulesModifierConversion\
+	RulesModifierDataMovement\
+	RulesModifierExecution\
+	RulesModifierFloat\
+	RulesModifierInteger\
+	RulesModifierLogic\
+	RulesModifierOthers
+
+allnames = $(main) $(helper) $(instructions) $(operands) $(modifiers)
+allobjects = $(allnames:%=%.o)
+
+CXX = g++
+CXXFLAGS = -w
+TARGET = asfermi.exe
+
+all: $(allobjects)
+	g++ $(allobjects) -o $(TARGET)
+
+
+clean:
+	del *.o
+	del $(TARGET)
+

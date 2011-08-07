@@ -3,7 +3,8 @@
 #include "../GlobalVariables.h"
 #include "helperParse.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 
 //Break a directive line into its parts (directive name, arguments)

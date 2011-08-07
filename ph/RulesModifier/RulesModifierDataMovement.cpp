@@ -2,7 +2,9 @@
 #include "../DataTypes.h"
 #include "../helper/helperMixed.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
+
 #include "RulesModifierDataMovement.h"
 
 
@@ -33,7 +35,7 @@ struct ModifierRuleLDType: ModifierRule
 			Name = "128";
 			break;
 		default:
-			throw exception("Unsupported modifier");
+			throw exception();
 			break;
 		}
 	}

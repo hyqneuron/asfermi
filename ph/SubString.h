@@ -1,7 +1,7 @@
 #ifndef SubStringDefined //prevent multiple inclusion
 #define SubStringDefined
 
-
+ 
 struct SubString
 {
 	int Length; 

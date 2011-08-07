@@ -2,8 +2,11 @@
 #include "../DataTypes.h"
 #include "../helper/helperMixed.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
+
 #include "RulesModifierOthers.h"
+
 
 struct ModiferRuleCCTLOp1: ModifierRule
 {

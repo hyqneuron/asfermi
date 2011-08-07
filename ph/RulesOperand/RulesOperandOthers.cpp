@@ -1,7 +1,8 @@
 #include "../DataTypes.h"
 #include "../GlobalVariables.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 #include "../RulesOperand.h"
 #include "RulesOperandComposite.h"
@@ -11,7 +12,7 @@
 //ignored operand: currently used for NOP
 struct OperandRuleIgnored: OperandRule
 {
-	OperandRuleIgnored() : OperandRule(OperandType::Optional){}
+	OperandRuleIgnored() : OperandRule(Optional){}
 	virtual void Process(SubString &component)
 	{
 		//do nothing
@@ -29,13 +30,14 @@ struct OperandRule32I: OperandRule
 	virtual void Process(SubString &component)
 	{
 		unsigned int result;
+		int startPos = 0;
 		//floating point number expression
 		if(component[0]=='F')
 		{
 			result = component.ToImmediate32FromFloatConstant();
 			goto write;
 		}
-		int startPos = 0;
+
 		//'-' here is not operator. It's part of a constant expression
 		if(component[0]=='-')
 			startPos=1;
@@ -67,10 +69,10 @@ struct OperandRuleLOP: OperandRule
 	}
 	virtual void Process(SubString &component)
 	{
-		bool not = false;
+		bool negate = false;
 		if(component[0]=='~')
 		{
-			not = true;
+			negate = true;
 			component.Start++;
 			component.Length--;
 		}
@@ -80,7 +82,7 @@ struct OperandRuleLOP: OperandRule
 			((OperandRule*)&OPRMOVStyle)->Process(component);
 		else
 			((OperandRule*)&OPRRegister1)->Process(component);
-		if(not)
+		if(negate)
 		{
 			csCurrentInstruction.OpcodeWord0 |= 1<<ModShift;
 			component.Start--;

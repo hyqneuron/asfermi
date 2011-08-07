@@ -1,7 +1,9 @@
 #include "../DataTypes.h"
 #include "../helper/helperMixed.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
+
 #include "RulesInstructionDataMovement.h"
 #include "../RulesModifier.h"
 #include "../RulesOperand.h"

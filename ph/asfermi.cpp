@@ -17,7 +17,7 @@ using namespace std;
 #include "helper.h"
 #include "SpecificParsers.h"
 
-#include "stdafx.h"
+#include "stdafx.h" //Mark
 
 #include "RulesModifier.h"
 #include "RulesOperand.h"

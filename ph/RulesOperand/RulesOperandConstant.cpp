@@ -2,7 +2,8 @@
 #include "../DataTypes.h"
 #include "../GlobalVariables.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 #include "../RulesOperand.h"
 #include "RulesOperandConstant.h"
@@ -118,7 +119,7 @@ struct OperandRuleImmediate32AnyConstant: OperandRule
 }OPRImmediate32AnyConstant;
 struct OperandRuleS2R: OperandRule
 {
-	OperandRuleS2R(): OperandRule(OperandType::Custom){}
+	OperandRuleS2R(): OperandRule(Custom){}
 	virtual void Process(SubString &component)
 	{
 		unsigned int result;

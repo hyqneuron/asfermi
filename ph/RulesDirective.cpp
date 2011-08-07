@@ -4,7 +4,7 @@
 #include "helper/helperException.h"
 #include "SpecificParsers.h"
 
-#include "stdafx.h"
+#include "stdafx.h" //Mark
 
 #include "RulesDirective.h"
 
@@ -33,6 +33,7 @@ struct DirectiveRuleKernel: DirectiveRule
 		csCurrentKernel.KernelName = *csCurrentDirective.Parts.rbegin();
 	}
 }DRKernel;
+
 
 //EndKernel
 struct DirectiveRuleEndKernel: DirectiveRule

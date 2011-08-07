@@ -11,7 +11,9 @@ all functions are prefixed with 'hpCubin'
 #include "../GlobalVariables.h"
 #include "../Cubin.h"
 #include "../DataTypes.h"
-#include "stdafx.h"
+
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 
 void hpCubinSet64(bool set64)
@@ -48,19 +50,19 @@ void hpCubinStage1SetSection(ELFSection &section, SectionType nvType, unsigned i
 	cubinCurrentSHStrTabOffset += kernelNameLength;
 	switch(nvType)
 	{
-	case SectionType::KernelText:
+	case KernelText:
 		cubinCurrentSHStrTabOffset += 7; //".text." + 0
 		break;
-	case SectionType::KernelConstant0:
+	case KernelConstant0:
 		cubinCurrentSHStrTabOffset += 15; //".nv.constant0." + 0
 		break;
-	case SectionType::KernelInfo:
+	case KernelInfo:
 		cubinCurrentSHStrTabOffset += 10; //".nv.info."  + 0
 		break;
-	case SectionType::KernelShared:
+	case KernelShared:
 		cubinCurrentSHStrTabOffset += 12; //".nv.shared." + 0
 		break;
-	case SectionType::KernelLocal:
+	case KernelLocal:
 		cubinCurrentSHStrTabOffset += 11; //".nv.local." + 0
 		break;
 	default:
@@ -95,20 +97,20 @@ void hpCubinStage1()
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
 	{
 		//Text
-		hpCubinStage1SetSection(kernel->TextSection, SectionType::KernelText, kernel->KernelName.Length);
+		hpCubinStage1SetSection(kernel->TextSection, KernelText, kernel->KernelName.Length);
 		//Constant0
-		hpCubinStage1SetSection(kernel->Constant0Section, SectionType::KernelConstant0, kernel->KernelName.Length);
+		hpCubinStage1SetSection(kernel->Constant0Section, KernelConstant0, kernel->KernelName.Length);
 		//Info
 		int infoSize = 12;
 		if(kernel->Parameters.size()!=0)
 			infoSize = 0x14 * (kernel->Parameters.size()+1);
-		hpCubinStage1SetSection(kernel->InfoSection, SectionType::KernelInfo, kernel->KernelName.Length);
+		hpCubinStage1SetSection(kernel->InfoSection, KernelInfo, kernel->KernelName.Length);
 		//Shared
 		if(kernel->SharedSize!=0)
-			hpCubinStage1SetSection(kernel->SharedSection, SectionType::KernelShared, kernel->KernelName.Length);
+			hpCubinStage1SetSection(kernel->SharedSection, KernelShared, kernel->KernelName.Length);
 		//Local
 		if(kernel->LocalSize!=0)
-			hpCubinStage1SetSection(kernel->LocalSection, SectionType::KernelLocal, kernel->KernelName.Length);
+			hpCubinStage1SetSection(kernel->LocalSection, KernelLocal, kernel->KernelName.Length);
 		//StrTaboffset
 		kernel->StrTabOffset = cubinCurrentStrTabOffset;
 		cubinCurrentStrTabOffset += kernel->KernelName.Length + 1;//increment by length of kernel name + length of endng zero
@@ -321,8 +323,7 @@ void hpCubinStage3()
 		int didsize = (unsigned char*)offset - kernel->TextSection.SectionContent;
 		if( (didsize) != kernel->TextSection.SectionSize)
 		{
-			exception up("assembled kernel size incorrect");
-			throw up;
+			throw;
 		}
 
 		//.constant0

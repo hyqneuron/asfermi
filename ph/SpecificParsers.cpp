@@ -3,7 +3,7 @@
 #include "helper/helperException.h"
 #include "helper/helperParse.h"
 
-#include "stdafx.h"
+#include "stdafx.h" //Mark
 using namespace std;
 
 struct MasterParserDefault: MasterParser
@@ -273,7 +273,8 @@ struct LineParserConstant2 : LineParser
 				int lastfoundpos = line.LineString.Find(',', startPos); //search for ';', starting at startPos
 				while(lastfoundpos!=-1)
 				{
-					cubinCurrentConstant2Parser(line.LineString.SubStr(startPos, lastfoundpos - startPos));
+					SubString s = line.LineString.SubStr(startPos, lastfoundpos - startPos);
+					cubinCurrentConstant2Parser(s);
 					if(cubinCurrentConstant2Offset>cubinConstant2Size)
 					{
 						cubinConstant2Overflown = true;
@@ -285,7 +286,8 @@ struct LineParserConstant2 : LineParser
 				}
 				if(startPos < line.LineString.Length)
 				{
-					cubinCurrentConstant2Parser(line.LineString.SubStr(startPos, line.LineString.Length - startPos));
+					SubString s = line.LineString.SubStr(startPos, line.LineString.Length - startPos);
+					cubinCurrentConstant2Parser(s);
 					if(cubinCurrentConstant2Offset>cubinConstant2Size)
 					{
 						cubinConstant2Overflown = true;

@@ -2,7 +2,8 @@
 #include "../DataTypes.h"
 #include "../GlobalVariables.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 #include "../RulesOperand.h"
 #include "RulesOperandMemory.h"
@@ -68,7 +69,7 @@ struct OperandRuleConstantMemory: OperandRule
 
 struct OperandRuleGlobalMemoryWithLastWithoutLast2Bits: OperandRule
 {
-	OperandRuleGlobalMemoryWithLastWithoutLast2Bits(): OperandRule(OperandType::GlobalMemoryWithImmediate32)
+	OperandRuleGlobalMemoryWithLastWithoutLast2Bits(): OperandRule(GlobalMemoryWithImmediate32)
 	{
 	}
 	virtual void Process(SubString &component)

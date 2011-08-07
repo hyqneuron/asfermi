@@ -2,7 +2,8 @@
 #include "../helper/helperMixed.h"
 
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
 
 #include "RulesInstructionConversion.h"
 #include "../RulesModifier.h"

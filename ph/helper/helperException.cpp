@@ -2,7 +2,9 @@
 #include "../GlobalVariables.h"
 #include "helperException.h"
 
-#include "stdafx.h"
+#include "../stdafx.h"
+//#include "stdafx.h" //SMark
+
 #include <exception>
 
 
