@@ -25,7 +25,8 @@ struct OperandRuleRegister: OperandRule
 		int result = component.ToRegister();
 		//Check if this register is the highest register used so far
 		//issue: .128 and .64 will cause the highest register used be higher than the register indicated in the expression
-		csMaxReg = (result > csMaxReg)? result: csMaxReg;
+		if(result!=64)
+			csMaxReg = (result > csMaxReg)? result: csMaxReg;
 		//apply result to OpcodeWord0
 		result = result<<Offset;
 		csCurrentInstruction.OpcodeWord0 |= result;
@@ -59,7 +60,8 @@ struct OperandRuleRegister3: OperandRule
 			csCurrentInstruction.OpcodeWord0|= 1<<8;
 		}
 		int result = component.ToRegister();
-		csMaxReg = (result > csMaxReg)? result: csMaxReg;
+		if(result!=63)
+			csMaxReg = (result > csMaxReg)? result: csMaxReg;
 		//apply result
 		result = result<<Offset;
 		csCurrentInstruction.OpcodeWord1 &= ~(63<<Offset);
@@ -89,7 +91,8 @@ struct OperandRuleRegisterWithCC: OperandRule
 	{
 		//parse the register expression
 		int result = component.ToRegister();
-		csMaxReg = (result > csMaxReg)? result: csMaxReg;
+		if(result!=63)
+			csMaxReg = (result > csMaxReg)? result: csMaxReg;
 		//apply result
 		result = result<<Offset;
 		csCurrentInstruction.OpcodeWord0 |= result;
