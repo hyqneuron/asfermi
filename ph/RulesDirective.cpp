@@ -56,6 +56,9 @@ struct DirectiveRuleEndKernel: DirectiveRule
 		csKernelList.push_back(csCurrentKernel);
 
 		csInstructions.clear();
+#ifdef DebugMode
+		cout<<"MaxReg:"<<csMaxReg<<endl;
+#endif
 		csInstructionOffset = 0;
 		csMaxReg = 0;
 		csMaxBar = 0;

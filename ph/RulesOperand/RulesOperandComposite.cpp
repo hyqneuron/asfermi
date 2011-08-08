@@ -72,7 +72,7 @@ struct OperandRuleMOVStyle: OperandRule
 	if(component[0]=='R' || component[0]=='r')\
 	{\
 		int register2 = component.ToRegister();\
-		csMaxReg = (register2 > csMaxReg)? register2: csMaxReg;\
+		if(register2!=63)csMaxReg = (register2 > csMaxReg)? register2: csMaxReg;\
 		csCurrentInstruction.OpcodeWord0 |= register2 << 26;\
 		MarkRegisterForImmediate32();\
 	}		\
