@@ -2,7 +2,7 @@
 
 To include:
 
-  * Execution control: SSY, ATOM, RED, BAR, MEMBAR, VOTE, JMP, JCAL, LONGJMP, PLONGJMP
+  * Execution control: SSY, JMP, JCAL, LONGJMP, PLONGJMP
   * Conversion: PSET, PSETP, B2R
 
 
