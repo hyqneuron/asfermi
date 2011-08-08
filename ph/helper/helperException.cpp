@@ -56,7 +56,9 @@ void hpExceptionHandler(int e)		//===
 	cout<<message<<endl;
 	if(csExceptionPrintUsage)
 		hpUsage();
+#ifdef DebugMode
 	getchar();
+#endif
 }
 void hpInstructionErrorHandler(int e)
 {
@@ -210,6 +212,8 @@ void hpDirectiveErrorHandler(int e)
 	case 1020:	message = "BarCount should not be larger than 127.";
 		break;
 	case 1021:	message = "Unsupported mode.";
+		break;
+	case 1022:	message = "Mode can only be On or Off.";
 		break;
 	default:	message = "Unknown error.";
 		break;

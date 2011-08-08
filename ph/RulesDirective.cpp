@@ -417,6 +417,6 @@ struct DirectiveRuleSelfDebug: DirectiveRule
 			csSelfDebug = false;
 		}
 		else
-			throw 0;// unsupported argument
+			throw 1022;// unsupported argument
 	}
 }DRSelfDebug;

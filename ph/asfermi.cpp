@@ -333,6 +333,7 @@ void Initialize() //set up the various lists
 	//Load instruction rules
 	//data movement: 13
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRMOV);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRMOV32I);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRLD);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRLDU);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRLDL);
