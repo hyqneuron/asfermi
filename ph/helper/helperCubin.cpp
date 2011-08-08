@@ -368,7 +368,7 @@ void hpCubinStage3()
 				*offset++ = 0x000c1704; //identifier: 04 17 0c 00
 				*offset++ = 0xffffffff; //index, always -0x1
 				*offset++ = ( ordinal-- )| (param->Offset<<16); // aa bb cc dd: bbaa is ordinal, ddcc is offset
-				*offset++ = 0x0011f000; //issue: only works for param size of 4 bytes
+				*offset++ = (((param->Size+3)/4)<<20)|0x0001f000; //aaa b c b dd: aaa is size of param/4, bb is cbank, c is space, dd is logAlignment
 			}
 		}
 
