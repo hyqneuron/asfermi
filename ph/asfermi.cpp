@@ -72,7 +72,9 @@ int main(int argc, char** args)
 
 	//---Normal exit
 	hpCleanUp();
+#ifdef DebugMode
 	getchar();
+#endif
 	return 0;
 }
 
