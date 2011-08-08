@@ -44,7 +44,10 @@ ELFHeader32::ELFHeader32()
 
 	//0x24
 	Flags = 0x00140114; //default sm_20
-	//0x0014 is the ptx target architecture
+	//00aabbcc
+	//aa: ptx target architecture
+	//bb: ptx address size 01: 32-bit, 05:64-bit
+	//cc: architecture: 14: sm_20, 15: sm_21
 		
 	//0x28
 	HeaderSize = 0x34;

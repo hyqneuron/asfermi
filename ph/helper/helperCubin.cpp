@@ -561,18 +561,23 @@ void hpCubinStage5()
 //Stage6: Setup ELF header
 void hpCubinStage6()
 {
+	
+	if(cubinArchitecture == sm_20)
+		ELFH32.Flags = ELFFlagsForsm_20;
+	else //issue: supports only sm_20 and sm_21
+		ELFH32.Flags = ELFFlagsForsm_21;
+
 	if(cubin64Bit)
+	{
 		ELFH32.FileClass = 2;
+		ELFH32.Flags |= 0x00000400; //change to 0x0014051x
+	}
 	else
 		ELFH32.FileClass = 1;
 
 	ELFH32.PHTOffset = cubinPHTOffset;
 	ELFH32.SHTOffset = ELFHeaderSize;
 	
-	if(cubinArchitecture == sm_20)
-		ELFH32.Flags = ELFFlagsForsm_20;
-	else //issue: supports only sm_20 and sm_21
-		ELFH32.Flags = ELFFlagsForsm_21;
 
 	ELFH32.HeaderSize = ELFHeaderSize;
 	ELFH32.PHSize = ELFSegmentHeaderSize;
