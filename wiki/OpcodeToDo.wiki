@@ -2,12 +2,11 @@
 
 To include:
 
-  * Conversion: PSET, PSETP, B2R
-
 
 May include:
+  * BPT
   * ALD, AST, LD_LDU, LDS_LDU
-  * P2R, R2P,
+  * P2R, R2P, PSET, CSETP, CSET
   * IMNMX, FMNMX, DMNMX, FCCO, FLO, FSWZ, ISAD, IMAD32I, FFMA32I, ISCADD32I
   * POPC, PRMT
   * Most of the [nanb#4-Byte 4-byte instructions]
