@@ -1,5 +1,10 @@
 #summary A development log
 
+==== 10th August, 2011 ====
+  # Added support of more Special Registers for S2R;
+  # Added a new Directive "Label". Instructions that use instruction offset as argument can now use labels instead of real offset.
+
+----
 ==== 9th August, 2011 ====
   # Added support for SSY, JMP, JCAL, PLONGJMP, LONGJMP, PSETP, B2R.
   # All the must-have instructions are now supported. Going into stage 2 of the project next week.
