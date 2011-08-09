@@ -10,7 +10,7 @@ Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand]
 ==== SSY ====
 Instruction usage
 {{{
-SSY const mem addr/(-)0xabcd;
+SSY const mem addr/(-)0xabcd/!labelName;
 }}}
 Template opcode
 {{{
@@ -26,8 +26,10 @@ Template opcode
 ==== BRA ====
 Instruction usage
 {{{
-BRA(.U)(.LMT)  const mem addr/(-)0xabcd;
+BRA(.U)(.LMT)  const mem addr/(-)0xabcd/!labelName;
 }}}
+For the usage of labels, refer to [Directives#:_Label].
+
 Template opcode 
 {{{
 1110 011110 1110 000000 000000 000000000000000000000000 00000000 000010
@@ -71,7 +73,7 @@ Set return address for the RET instruction
 
 Instruction usage:
 {{{
-PRET  const mem addr/0xabcd;
+PRET  const mem addr/(-)0xabcd/!labelName;
 }}}
 
 Template code
@@ -97,7 +99,7 @@ Template opcode:
 ==== JMP ====
 Instruction usage:
 {{{
-JMP(.U)(.LMT) const mem addr/0xabcd;
+JMP(.U)(.LMT) const mem addr/(-)0xabcd/!labelName;
 }}}
 Template opcode
 {{{
@@ -120,7 +122,7 @@ Template opcode
 ==== JCAL ====
 Instruction usage:
 {{{
-JCAL(.NOINC) const mem addr/0xabcd;
+JCAL(.NOINC) const mem addr/(-)0xabcd/!labelName;
 }}}
 Template opcode
 {{{
