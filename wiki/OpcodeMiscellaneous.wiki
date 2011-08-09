@@ -117,11 +117,11 @@ Template opcode
 ==== PSETP ====
 Instruction usage:
 {{{
-PSETP.(Mainop)(.Logicop) p0, p1, (!)p2, (!)p3, (!)p4;
+PSETP.(Mainop)(.Logicop) p0, p1, (!)p2, (!)p3, ((!)p4);
 }}}
 Template opcode
 {{{
-0010 000000 1110 000 000 0000 00 0000   00 00000000000000000 0000 00000 110000
+0010 000000 1110 000 000 1110 00 0000   00 00000000000000000 0000 00000 110000
                   p1  p0   p4      p3 mod2                     p2  mod3
 }}}
 
