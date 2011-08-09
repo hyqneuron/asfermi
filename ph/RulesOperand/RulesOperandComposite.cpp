@@ -283,13 +283,19 @@ struct OperandRuleInstructionAddress: OperandRule
 
 struct OperandRuleBAR: OperandRule
 {
-	OperandRuleBAR(): OperandRule(Custom){}
+	bool AllowRegister;
+	OperandRuleBAR(bool allowRegister=true): OperandRule(Custom)
+	{
+		AllowRegister= allowRegister;
+	}
 	virtual void Process(SubString &component)
 	{
 		unsigned int result;
 		//register
 		if(component[0]=='R')
 		{
+			if(!AllowRegister)
+				throw 144; //no registers allowed
 			result = component.ToRegister();
 		}
 		//numerical expression
@@ -309,7 +315,7 @@ struct OperandRuleBAR: OperandRule
 		}
 		csCurrentInstruction.OpcodeWord0 |= result << 20;
 	}
-}OPRBAR;
+}OPRBAR, OPRBARNoRegister;
 
 struct OperandRuleTCount: OperandRule
 {

@@ -50,6 +50,9 @@ extern InstructionRuleNOP IRNOP;
 struct InstructionRuleBAR;
 extern InstructionRuleBAR IRBAR;
 
+struct InstructionRuleB2R;
+extern InstructionRuleB2R IRB2R;
+
 struct InstructionRuleMEMBAR;
 extern InstructionRuleMEMBAR IRMEMBAR;
 

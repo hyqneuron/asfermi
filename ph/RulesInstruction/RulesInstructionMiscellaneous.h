@@ -16,4 +16,6 @@ extern InstructionRuleCCTL IRCCTL;
 struct InstructionRuleCCTLL;
 extern InstructionRuleCCTLL IRCCTLL;
 
+struct InstructionRulePSETP;
+extern InstructionRulePSETP IRPSETP;
 #endif

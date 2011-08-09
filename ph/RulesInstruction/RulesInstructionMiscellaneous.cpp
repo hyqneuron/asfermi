@@ -76,3 +76,26 @@ struct InstructionRuleCCTLL: InstructionRule
 									&MRCCTLOp2RS);
 	}
 }IRCCTLL;
+
+struct InstructionRulePSETP: InstructionRule
+{
+	InstructionRulePSETP(): InstructionRule("PSETP", 2, true, false)
+	{
+		hpBinaryStringToOpcode8("0010 000000 1110 000 000 1110 00 0000 00 00000000000000000 0000 00000 110000", OpcodeWord0, OpcodeWord1);
+		SetOperands(5, 
+					&OPRPredicate0,
+					&OPRPredicate1,
+					&OPRPredicate2,
+					&OPRPredicate3ForPSETP,
+					&OPRPredicate1ForVOTE);
+		
+		ModifierGroups[0].Initialize(true, 3,
+					&MRPSETPAND,
+					&MRPSETPOR,
+					&MRPSETPXOR);
+		ModifierGroups[1].Initialize(true, 3,
+					&MRSETPLogicAND,
+					&MRSETPLogicOR,
+					&MRSETPLogicXOR);
+	}
+}IRPSETP;

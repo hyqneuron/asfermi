@@ -67,6 +67,18 @@ struct DirectiveRuleEndKernel: DirectiveRule
 	}
 }DREndKernel;
 
+struct DirectiveRuleLabel: DirectiveRule
+{
+	DirectiveRuleLabel()
+	{
+		Name = "Label";
+	}
+	virtual void Process()
+	{
+		//to be done
+	}
+}DRLabel;
+
 //Param
 struct DirectiveRuleParam: DirectiveRule //!Param Size Count
 {

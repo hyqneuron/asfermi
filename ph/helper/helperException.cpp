@@ -156,6 +156,8 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 143:	message = "The resulting address of the instruction is negative. If this is the intended behaviour, please use relative addressing mode";
 		break;
+	case 144:	message = "Only numerical expression can be used as barrier identifier here.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};

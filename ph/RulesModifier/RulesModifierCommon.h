@@ -25,4 +25,6 @@ extern ModifierRuleSETPComparison
 struct ModifierRuleS;
 extern ModifierRuleS MRS;
 
+struct ModifierRuleALU;
+extern ModifierRuleALU MRALU, MRXLU;
 #endif

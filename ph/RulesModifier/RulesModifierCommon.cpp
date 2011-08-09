@@ -111,3 +111,17 @@ struct ModifierRuleS: ModifierRule
 		Bits0 = 1 << 4;
 	}
 }MRS;
+
+struct ModifierRuleALU: ModifierRule
+{
+	ModifierRuleALU(int type): ModifierRule("", true, false, false)
+	{
+		Mask0 = 0xfffffcff;
+		Bits0 = type << 8;
+		if(type==1)
+			Name = "XLU";
+		else if(type==2)
+			Name = "ALU";
+		else throw exception();
+	}
+}MRALU(2), MRXLU(1);

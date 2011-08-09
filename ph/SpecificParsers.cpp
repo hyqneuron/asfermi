@@ -139,6 +139,7 @@ void InstructionParserDefault:: Parse()
 	}
 
 	csCurrentInstruction.Is8 = csInstructionRules[arrayIndex]->Is8;
+	csCurrentInstruction.Offset = csInstructionOffset;
 	csCurrentInstruction.OpcodeWord0 = csInstructionRules[arrayIndex]->OpcodeWord0;
 	csInstructionOffset += 4;
 	if(csCurrentInstruction.Is8)

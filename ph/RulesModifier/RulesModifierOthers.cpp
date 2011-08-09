@@ -60,3 +60,19 @@ struct ModifierRuleCCTLOp2: ModifierRule
 	MRCCTLOp2IV(5),
 	MRCCTLOp2IVALL(6),
 	MRCCTLOp2RS(7);
+
+struct ModifierRulePSETPMainop: ModifierRule
+{
+	ModifierRulePSETPMainop(int type): ModifierRule("", true, false, false)
+	{
+		Mask0 = 0x3fffffff;
+		Bits0 = type << 30;
+		if(type==0)
+			Name = "AND";
+		else if(type==1)
+			Name = "OR";
+		else if(type == 2)
+			Name= "XOR";
+		else throw exception();
+	}
+}MRPSETPAND(0), MRPSETPOR(1), MRPSETPXOR(2);

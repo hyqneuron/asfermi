@@ -370,6 +370,7 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRLONGJMP);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRNOP);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRBAR);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRB2R);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRMEMBAR);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRATOM);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRRED);
@@ -409,6 +410,7 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRLEPC);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRCCTL);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRCCTLL);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRPSETP);
 	
 
 	//load directive rules

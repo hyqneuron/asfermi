@@ -24,7 +24,7 @@ struct OperandRuleInstructionAddress;
 extern OperandRuleInstructionAddress OPRInstructionAddress;
 
 struct OperandRuleBAR;
-extern OperandRuleBAR OPRBAR;
+extern OperandRuleBAR OPRBAR, OPRBARNoRegister;
 
 struct OperandRuleTCount;
 extern OperandRuleTCount OPRTCount;

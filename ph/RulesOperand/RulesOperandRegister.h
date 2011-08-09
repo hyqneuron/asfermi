@@ -28,7 +28,7 @@ extern OperandRulePredicate OPRPredicate1,
 //Some predicate registers expressions can be negated with !
 //this kind of operand is processed separately
 struct OperandRulePredicate2;
-extern OperandRulePredicate2 OPRPredicate2, OPRPredicate1ForVOTE;
+extern OperandRulePredicate2 OPRPredicate2, OPRPredicate1ForVOTE, OPRPredicate3ForPSETP;
 
 struct OperandRulePredicateForLDLK;
 extern OperandRulePredicateForLDLK OPRPredicateForLDLK;

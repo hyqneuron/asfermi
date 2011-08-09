@@ -288,6 +288,17 @@ struct InstructionRuleBAR: InstructionRule
 	}
 }IRBAR;
 
+struct InstructionRuleB2R: InstructionRule
+{
+	InstructionRuleB2R(): InstructionRule("B2R", 2, true, false)
+	{
+		hpBinaryStringToOpcode8("0010 000000 1110 000000 000000 00000000000000000000000000000000 011100", OpcodeWord0, OpcodeWord1);
+		SetOperands(2, &OPRRegister0, &OPRBARNoRegister);
+		ModifierGroups[0].Initialize(true, 2, &MRXLU, &MRALU);
+		ModifierGroups[1].Initialize(true, 1, &MRS);
+	}
+}IRB2R;
+
 struct InstructionRuleMEMBAR: InstructionRule
 {
 	InstructionRuleMEMBAR(): InstructionRule("MEMBAR", 1, true, false)

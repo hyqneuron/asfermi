@@ -160,7 +160,8 @@ struct OperandRulePredicate: OperandRule
 	OPRPredicateForLDSLK(18, false, false),
 	OPRPredicateForBAR(21, false, false),
 	OPRPredicate0ForVOTE(22, false, false),
-	OPRPredicate1ForVOTENotNegatable(20, true, true);
+	OPRPredicate1ForVOTENotNegatable(20, true, true),
+	OPRPredicate3ForPSETPNotNegatable(26, true, false); //internal
 
 //Some predicate registers expressions can be negated with !
 //this kind of operand is processed separately
@@ -169,8 +170,10 @@ struct OperandRulePredicate2: OperandRule
 	OperandRule* PredRule;
 	int NegateOffset;
 	bool OnWord0;
-	OperandRulePredicate2(OperandRule* predRule, int negateOffset, bool onWord0): OperandRule(Optional)
+	OperandRulePredicate2(OperandRule* predRule, int negateOffset, bool onWord0, bool optional=true): OperandRule(Optional)
 	{
+		if(!optional)
+			Type = Predicate;
 		OnWord0 = onWord0;
 		NegateOffset = negateOffset;
 		PredRule = predRule;
@@ -195,7 +198,9 @@ struct OperandRulePredicate2: OperandRule
 			component.Length++;
 		}
 	}
-}OPRPredicate2(&OPRPredicate2NotNegatable, 20, false), OPRPredicate1ForVOTE(&OPRPredicate1ForVOTENotNegatable, 23, true);
+}	OPRPredicate2(&OPRPredicate2NotNegatable, 20, false),
+	OPRPredicate1ForVOTE(&OPRPredicate1ForVOTENotNegatable, 23, true),
+	OPRPredicate3ForPSETP(&OPRPredicate3ForPSETPNotNegatable, 29, true, false);
 
 struct OperandRulePredicateForLDLK: OperandRule
 {

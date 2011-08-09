@@ -18,4 +18,7 @@ extern ModifierRuleCCTLOp2 MRCCTLOp2QRY1,
 						   MRCCTLOp2RS;
 
 
+struct ModifierRulePSETPMainop;
+extern ModifierRulePSETPMainop MRPSETPAND, MRPSETPOR, MRPSETPXOR;
+
 #endif
