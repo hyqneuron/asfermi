@@ -6,6 +6,23 @@ Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand]
 
 === Execution Control Instructions ===
 <wiki:toc>
+
+==== SSY ====
+Instruction usage
+{{{
+SSY const mem addr/(-)0xabcd;
+}}}
+Template opcode
+{{{
+1110 000000 0000 000000 000000 000000000000000000000000 00000000 000110
+                   mod2           const mem addr/0xabcd
+}}}
+
+||mod2 5||meaning||
+||0     ||0xabcd ||
+||1     ||const mem addr||
+
+----
 ==== BRA ====
 Instruction usage
 {{{
