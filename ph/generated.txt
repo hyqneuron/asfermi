@@ -91,7 +91,8 @@ GlobalVariables.o: GlobalVariables.cpp GlobalVariables.h DataTypes.h \
 RulesDirective.o: RulesDirective.cpp DataTypes.h SubString.h \
  GlobalVariables.h Cubin.h helper/helperException.h SpecificParsers.h \
  stdafx.h helper.h helper/helperMixed.h helper/helperParse.h \
- helper/helperCubin.h helper/../Cubin.h RulesDirective.h
+ helper/helperCubin.h helper/../Cubin.h RulesDirective.h \
+ RulesOperand\RulesOperandComposite.h
 SpecificParsers.o: SpecificParsers.cpp SpecificParsers.h SubString.h \
  DataTypes.h GlobalVariables.h Cubin.h helper/helperException.h \
  helper/helperParse.h stdafx.h helper.h helper/helperMixed.h \
@@ -106,28 +107,30 @@ helperCubin.o: helper/helperCubin.cpp helper/helperCubin.h \
  helper/../stdafx.h helper/../GlobalVariables.h helper/../helper.h \
  helper/../helper/helperMixed.h helper/../helper/helperParse.h \
  helper/../helper/helperCubin.h helper/../helper/helperException.h \
- helper/../SpecificParsers.h
+ helper/../SpecificParsers.h helper/stdafx.h
 helperException.o: helper/helperException.cpp helper/../DataTypes.h \
  helper/../SubString.h helper/../GlobalVariables.h helper/../DataTypes.h \
  helper/../Cubin.h helper/helperException.h helper/../stdafx.h \
  helper/../GlobalVariables.h helper/../helper.h \
  helper/../helper/helperMixed.h helper/../helper/helperParse.h \
  helper/../helper/helperCubin.h helper/../helper/../Cubin.h \
- helper/../helper/helperException.h helper/../SpecificParsers.h
+ helper/../helper/helperException.h helper/../SpecificParsers.h \
+ helper/stdafx.h
 helperMixed.o: helper/helperMixed.cpp helper/../GlobalVariables.h \
  helper/../DataTypes.h helper/../SubString.h helper/../Cubin.h \
  helper/helperMixed.h helper/../stdafx.h helper/../GlobalVariables.h \
  helper/../helper.h helper/../helper/helperMixed.h \
  helper/../helper/helperParse.h helper/../helper/helperCubin.h \
  helper/../helper/../Cubin.h helper/../helper/helperException.h \
- helper/../SpecificParsers.h
+ helper/../SpecificParsers.h helper/stdafx.h
 helperParse.o: helper/helperParse.cpp helper/../SubString.h \
  helper/../GlobalVariables.h helper/../DataTypes.h helper/../SubString.h \
  helper/../Cubin.h helper/helperParse.h helper/../stdafx.h \
  helper/../GlobalVariables.h helper/../helper.h \
  helper/../helper/helperMixed.h helper/../helper/helperParse.h \
  helper/../helper/helperCubin.h helper/../helper/../Cubin.h \
- helper/../helper/helperException.h helper/../SpecificParsers.h
+ helper/../helper/helperException.h helper/../SpecificParsers.h \
+ helper/stdafx.h
 RulesInstructionConversion.o: \
  RulesInstruction/RulesInstructionConversion.cpp \
  RulesInstruction/../DataTypes.h RulesInstruction/../SubString.h \
@@ -139,7 +142,7 @@ RulesInstructionConversion.o: \
  RulesInstruction/../helper/helperCubin.h \
  RulesInstruction/../helper/../Cubin.h \
  RulesInstruction/../helper/helperException.h \
- RulesInstruction/../SpecificParsers.h \
+ RulesInstruction/../SpecificParsers.h RulesInstruction/stdafx.h \
  RulesInstruction/RulesInstructionConversion.h \
  RulesInstruction/../RulesModifier.h \
  RulesInstruction/../RulesModifier/RulesModifierDataMovement.h \
@@ -167,7 +170,7 @@ RulesInstructionDataMovement.o: \
  RulesInstruction/../helper/helperCubin.h \
  RulesInstruction/../helper/../Cubin.h \
  RulesInstruction/../helper/helperException.h \
- RulesInstruction/../SpecificParsers.h \
+ RulesInstruction/../SpecificParsers.h RulesInstruction/stdafx.h \
  RulesInstruction/RulesInstructionDataMovement.h \
  RulesInstruction/../RulesModifier.h \
  RulesInstruction/../RulesModifier/RulesModifierDataMovement.h \
@@ -195,7 +198,7 @@ RulesInstructionExecution.o: \
  RulesInstruction/../helper/helperCubin.h \
  RulesInstruction/../helper/../Cubin.h \
  RulesInstruction/../helper/helperException.h \
- RulesInstruction/../SpecificParsers.h \
+ RulesInstruction/../SpecificParsers.h RulesInstruction/stdafx.h \
  RulesInstruction/RulesInstructionExecution.h \
  RulesInstruction/../RulesOperand/RulesOperandComposite.h \
  RulesInstruction/../RulesOperand/RulesOperandRegister.h \
@@ -224,7 +227,7 @@ RulesInstructionFloat.o: RulesInstruction/RulesInstructionFloat.cpp \
  RulesInstruction/../helper/helperCubin.h \
  RulesInstruction/../helper/../Cubin.h \
  RulesInstruction/../helper/helperException.h \
- RulesInstruction/../SpecificParsers.h \
+ RulesInstruction/../SpecificParsers.h RulesInstruction/stdafx.h \
  RulesInstruction/RulesInstructionFloat.h \
  RulesInstruction/../RulesModifier.h \
  RulesInstruction/../RulesModifier/RulesModifierDataMovement.h \
@@ -251,7 +254,7 @@ RulesInstructionInteger.o: RulesInstruction/RulesInstructionInteger.cpp \
  RulesInstruction/../helper/helperCubin.h \
  RulesInstruction/../helper/../Cubin.h \
  RulesInstruction/../helper/helperException.h \
- RulesInstruction/../SpecificParsers.h \
+ RulesInstruction/../SpecificParsers.h RulesInstruction/stdafx.h \
  RulesInstruction/RulesInstructionInteger.h \
  RulesInstruction/../RulesModifier.h \
  RulesInstruction/../RulesModifier/RulesModifierDataMovement.h \
@@ -278,7 +281,7 @@ RulesInstructionLogic.o: RulesInstruction/RulesInstructionLogic.cpp \
  RulesInstruction/../helper/helperCubin.h \
  RulesInstruction/../helper/../Cubin.h \
  RulesInstruction/../helper/helperException.h \
- RulesInstruction/../SpecificParsers.h \
+ RulesInstruction/../SpecificParsers.h RulesInstruction/stdafx.h \
  RulesInstruction/RulesInstructionLogic.h \
  RulesInstruction/../RulesModifier.h \
  RulesInstruction/../RulesModifier/RulesModifierDataMovement.h \
@@ -306,7 +309,7 @@ RulesInstructionMiscellaneous.o: \
  RulesInstruction/../helper/helperCubin.h \
  RulesInstruction/../helper/../Cubin.h \
  RulesInstruction/../helper/helperException.h \
- RulesInstruction/../SpecificParsers.h \
+ RulesInstruction/../SpecificParsers.h RulesInstruction/stdafx.h \
  RulesInstruction/RulesInstructionMiscellaneous.h \
  RulesInstruction/../RulesModifier.h \
  RulesInstruction/../RulesModifier/RulesModifierDataMovement.h \
@@ -332,7 +335,8 @@ RulesOperandComposite.o: RulesOperand/RulesOperandComposite.cpp \
  RulesOperand/../helper/helperParse.h \
  RulesOperand/../helper/helperCubin.h RulesOperand/../helper/../Cubin.h \
  RulesOperand/../helper/helperException.h \
- RulesOperand/../SpecificParsers.h RulesOperand/../RulesOperand.h \
+ RulesOperand/../SpecificParsers.h RulesOperand/stdafx.h \
+ RulesOperand/../RulesOperand.h \
  RulesOperand/../RulesOperand/RulesOperandConstant.h \
  RulesOperand/../RulesOperand/RulesOperandRegister.h \
  RulesOperand/../RulesOperand/RulesOperandMemory.h \
@@ -349,7 +353,8 @@ RulesOperandConstant.o: RulesOperand/RulesOperandConstant.cpp \
  RulesOperand/../helper/helperParse.h \
  RulesOperand/../helper/helperCubin.h RulesOperand/../helper/../Cubin.h \
  RulesOperand/../helper/helperException.h \
- RulesOperand/../SpecificParsers.h RulesOperand/../RulesOperand.h \
+ RulesOperand/../SpecificParsers.h RulesOperand/stdafx.h \
+ RulesOperand/../RulesOperand.h \
  RulesOperand/../RulesOperand/RulesOperandConstant.h \
  RulesOperand/../RulesOperand/RulesOperandRegister.h \
  RulesOperand/../RulesOperand/RulesOperandMemory.h \
@@ -365,7 +370,8 @@ RulesOperandMemory.o: RulesOperand/RulesOperandMemory.cpp \
  RulesOperand/../helper/helperParse.h \
  RulesOperand/../helper/helperCubin.h RulesOperand/../helper/../Cubin.h \
  RulesOperand/../helper/helperException.h \
- RulesOperand/../SpecificParsers.h RulesOperand/../RulesOperand.h \
+ RulesOperand/../SpecificParsers.h RulesOperand/stdafx.h \
+ RulesOperand/../RulesOperand.h \
  RulesOperand/../RulesOperand/RulesOperandConstant.h \
  RulesOperand/../RulesOperand/RulesOperandRegister.h \
  RulesOperand/../RulesOperand/RulesOperandMemory.h \
@@ -381,7 +387,8 @@ RulesOperandOthers.o: RulesOperand/RulesOperandOthers.cpp \
  RulesOperand/../helper/helperParse.h \
  RulesOperand/../helper/helperCubin.h RulesOperand/../helper/../Cubin.h \
  RulesOperand/../helper/helperException.h \
- RulesOperand/../SpecificParsers.h RulesOperand/../RulesOperand.h \
+ RulesOperand/../SpecificParsers.h RulesOperand/stdafx.h \
+ RulesOperand/../RulesOperand.h \
  RulesOperand/../RulesOperand/RulesOperandConstant.h \
  RulesOperand/../RulesOperand/RulesOperandRegister.h \
  RulesOperand/../RulesOperand/RulesOperandMemory.h \
@@ -398,7 +405,8 @@ RulesOperandRegister.o: RulesOperand/RulesOperandRegister.cpp \
  RulesOperand/../helper/helperParse.h \
  RulesOperand/../helper/helperCubin.h RulesOperand/../helper/../Cubin.h \
  RulesOperand/../helper/helperException.h \
- RulesOperand/../SpecificParsers.h RulesOperand/../RulesOperand.h \
+ RulesOperand/../SpecificParsers.h RulesOperand/stdafx.h \
+ RulesOperand/../RulesOperand.h \
  RulesOperand/../RulesOperand/RulesOperandConstant.h \
  RulesOperand/../RulesOperand/RulesOperandRegister.h \
  RulesOperand/../RulesOperand/RulesOperandMemory.h \
@@ -414,7 +422,8 @@ RulesModifierCommon.o: RulesModifier/RulesModifierCommon.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h RulesModifier/RulesModifierCommon.h
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
+ RulesModifier/RulesModifierCommon.h
 RulesModifierConversion.o: RulesModifier/RulesModifierConversion.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
  RulesModifier/../helper/helperMixed.h RulesModifier/../stdafx.h \
@@ -424,7 +433,7 @@ RulesModifierConversion.o: RulesModifier/RulesModifierConversion.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h \
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
  RulesModifier/RulesModifierConversion.h
 RulesModifierDataMovement.o: RulesModifier/RulesModifierDataMovement.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
@@ -435,7 +444,7 @@ RulesModifierDataMovement.o: RulesModifier/RulesModifierDataMovement.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h \
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
  RulesModifier/RulesModifierDataMovement.h
 RulesModifierExecution.o: RulesModifier/RulesModifierExecution.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
@@ -446,7 +455,7 @@ RulesModifierExecution.o: RulesModifier/RulesModifierExecution.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h \
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
  RulesModifier/RulesModifierExecution.h
 RulesModifierFloat.o: RulesModifier/RulesModifierFloat.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
@@ -457,7 +466,8 @@ RulesModifierFloat.o: RulesModifier/RulesModifierFloat.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h RulesModifier/RulesModifierFloat.h
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
+ RulesModifier/RulesModifierFloat.h
 RulesModifierInteger.o: RulesModifier/RulesModifierInteger.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
  RulesModifier/../helper/helperMixed.h RulesModifier/../stdafx.h \
@@ -467,7 +477,8 @@ RulesModifierInteger.o: RulesModifier/RulesModifierInteger.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h RulesModifier/RulesModifierInteger.h
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
+ RulesModifier/RulesModifierInteger.h
 RulesModifierLogic.o: RulesModifier/RulesModifierLogic.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
  RulesModifier/../helper/helperMixed.h RulesModifier/../stdafx.h \
@@ -477,7 +488,8 @@ RulesModifierLogic.o: RulesModifier/RulesModifierLogic.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h RulesModifier/RulesModifierLogic.h
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
+ RulesModifier/RulesModifierLogic.h
 RulesModifierOthers.o: RulesModifier/RulesModifierOthers.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
  RulesModifier/../helper/helperMixed.h RulesModifier/../stdafx.h \
@@ -487,4 +499,5 @@ RulesModifierOthers.o: RulesModifier/RulesModifierOthers.cpp \
  RulesModifier/../helper/helperParse.h \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
- RulesModifier/../SpecificParsers.h RulesModifier/RulesModifierOthers.h
+ RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
+ RulesModifier/RulesModifierOthers.h
