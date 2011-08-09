@@ -333,7 +333,7 @@ void Initialize() //set up the various lists
 	csDirectiveParser = (DirectiveParser*)&DPDefault;
 	
 	//Load instruction rules
-	//data movement: 13
+	//data movement: 14
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRMOV);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRMOV32I);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRLD);
@@ -353,8 +353,11 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRF2F);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRI2F);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRI2I);
-	//execution control: 15
+	//execution control: 16
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRSSY);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRBRA);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRJMP);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRJCAL);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRCAL);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRPRET);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRRET);
@@ -363,6 +366,8 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRBRK);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRPCNT);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRCONT);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRPLONGJMP);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRLONGJMP);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRNOP);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRBAR);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRMEMBAR);

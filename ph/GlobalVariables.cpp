@@ -20,6 +20,7 @@ char *csSource;
 int csSourceSize;
 int csMaxReg = 0;
 int csMaxBar = 0;
+bool csAbsoluteAddressing = true;
 
 OperationMode csOperationMode = Undefined;
 char* csSourceFilePath;

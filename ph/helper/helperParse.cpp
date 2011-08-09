@@ -110,7 +110,6 @@ PRED:
 	//---instruction name and modifiers
 	mSkipBlank;
 	bool instNameEnded = false;
-	int instNameEndPos;
 INST:
 	if(b_currentPos==b_lineLength)
 	{

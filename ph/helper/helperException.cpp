@@ -154,6 +154,8 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 142:	message = "Unrecognised operand present at the end.";
 		break;
+	case 143:	message = "The resulting address of the instruction is negative. If this is the intended behaviour, please use relative addressing mode";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};

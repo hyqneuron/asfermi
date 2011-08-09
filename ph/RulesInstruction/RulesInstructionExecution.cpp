@@ -23,21 +23,55 @@ struct InstructionRuleCAL: InstructionRule
 {
 	InstructionRuleCAL() : InstructionRule("CAL", 1, true, false)
 	{
-		hpBinaryStringToOpcode8("1110 000000000000100000000000000000000000000000000000000000001010", OpcodeWord0, OpcodeWord1);
-		SetOperands(1, &OPRImmediate24HexConstant);
+		hpBinaryStringToOpcode8("1110 000000 0000 001000 000000 00000000000000000000000000000000 001010", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRInstructionAddress);
 		ModifierGroups[0].Initialize(true, 1, &MRCALNOINC);
 	}
 }IRCAL;
 
+struct InstructionRuleJCAL: InstructionRule
+{
+	InstructionRuleJCAL() : InstructionRule("JCAL", 1, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 000000 0000 001000 000000 000000000000000000000000 00000000 001000", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRImmediate24HexConstant); //absolute address only
+		ModifierGroups[0].Initialize(true, 1, &MRCALNOINC);
+	}
+}IRJCAL;
+
+
+
+struct InstructionRuleSSY: InstructionRule
+{
+	InstructionRuleSSY() : InstructionRule("SSY", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 000000 0000 000000 000000 000000000000000000000000 00000000 000110", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRInstructionAddress);
+	}
+}IRSSY;
+
 struct InstructionRuleBRA: InstructionRule
 {
-	InstructionRuleBRA() : InstructionRule("BRA", 1, true, false)
+	InstructionRuleBRA() : InstructionRule("BRA", 2, true, false)
 	{
-		hpBinaryStringToOpcode8("1110 011110111000000000000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1110 011110 1110 000000 00000000000000000000000000000000000000000010", OpcodeWord0, OpcodeWord1);
 		SetOperands(1, &OPRInstructionAddress);
 		ModifierGroups[0].Initialize(true, 1, &MRBRAU);
+		ModifierGroups[1].Initialize(true, 1, &MRBRALMT);
 	}
 }IRBRA;
+
+struct InstructionRuleJMP: InstructionRule
+{
+	InstructionRuleJMP() : InstructionRule("JMP", 2, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 011110 1110 000000 000000 000000000000000000000000 00000000 000000", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRImmediate24HexConstant); //absolute address only
+		ModifierGroups[0].Initialize(true, 1, &MRBRAU);
+		ModifierGroups[1].Initialize(true, 1, &MRBRALMT);
+	}
+}IRJMP;
+
 
 struct InstructionRulePRET: InstructionRule
 {
@@ -94,6 +128,27 @@ struct InstructionRuleCONT: InstructionRule
 		hpBinaryStringToOpcode8("1110 011110 1110 000000 000000 00000000000000000000000000000000 001101", OpcodeWord0, OpcodeWord1);
 	}
 }IRCONT;
+
+
+struct InstructionRulePLONGJMP: InstructionRule
+{
+	InstructionRulePLONGJMP() : InstructionRule("PLONGJMP", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 000000 1110 000000 000000 000000000000000000000000 00000000 011010", OpcodeWord0, OpcodeWord1);
+		SetOperands(1, &OPRInstructionAddress);
+	}
+}IRPLONGJMP;
+
+
+struct InstructionRuleLONGJMP: InstructionRule
+{
+	InstructionRuleLONGJMP() : InstructionRule("LONGJMP", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 011110 1110 000000 000000 00000000000000000000000000000000 010001", OpcodeWord0, OpcodeWord1);
+	}
+}IRLONGJMP;
+
+
 
 
 struct InstructionRuleNOP: InstructionRule

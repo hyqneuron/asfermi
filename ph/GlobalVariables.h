@@ -28,6 +28,7 @@ extern char *csSource;
 extern int csSourceSize;
 extern int csMaxReg;
 extern int csMaxBar;
+extern bool csAbsoluteAddressing;
 
 enum OperationMode{Replace, Insert, DirectOutput, Undefined };
 extern OperationMode csOperationMode;

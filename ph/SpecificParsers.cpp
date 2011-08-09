@@ -48,7 +48,6 @@ void MasterParserDefault:: Parse(unsigned int startinglinenumber)
 {
 	list<Line>::iterator cLine = csLines.begin(); //current line	
 	
-	int lineLength;
 	//Going through all lines
 	for(unsigned int i =startinglinenumber; i<csLines.size(); i++, cLine++)
 	{
@@ -123,10 +122,9 @@ void InstructionParserDefault:: Parse()
 	list<SubString>::iterator component = csCurrentInstruction.Components.begin();
 	list<SubString>::iterator modifier = csCurrentInstruction.Modifiers.begin();
 	
-	//---predicate
+	//---skip predicate expression first, process later
 	if(csCurrentInstruction.Predicated)
 	{
-		hpParseProcessPredicate();
 		component++; processedComponent++;		
 	}
 
@@ -148,6 +146,8 @@ void InstructionParserDefault:: Parse()
 		csCurrentInstruction.OpcodeWord1 = csInstructionRules[arrayIndex]->OpcodeWord1;
 		csInstructionOffset += 4;
 	}
+	if(csCurrentInstruction.Predicated)
+		hpParseProcessPredicate();
 
 	if(csInstructionRules[arrayIndex]->NeedCustomProcessing)
 	{

@@ -252,7 +252,29 @@ struct OperandRuleInstructionAddress: OperandRule
 		}
 		else
 		{
-			((OperandRule*)&OPRImmediate24HexConstant)->Process(component);
+			//cuobjdump's output gives absolute address
+			//while actually the address stored in the opcode is relative
+			if(csAbsoluteAddressing)
+			{
+				int result = component.ToImmediate32FromHexConstant(false);
+				result = result - (csInstructionOffset);
+				if(result<0)
+				{
+					result = -result;
+					result ^= 0xFFFFFF;
+					result += 1;
+					if(result>0xFFFFFF)
+						throw 131;
+				}
+				else if(result>0x7FFFFF)
+					throw 131; //too large offset
+				WriteToImmediate32((unsigned int)result);
+			}
+			//input is relative
+			else
+			{
+				((OperandRule*)&OPRImmediate24HexConstant)->Process(component);
+			}
 		}
 	}
 }OPRInstructionAddress;

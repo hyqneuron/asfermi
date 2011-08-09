@@ -5,7 +5,7 @@ struct ModifierRuleCALNOINC;
 extern ModifierRuleCALNOINC MRCALNOINC;
 
 struct ModifierRuleBRAU;
-extern ModifierRuleBRAU MRBRAU;
+extern ModifierRuleBRAU MRBRAU, MRBRALMT;
 
 struct ModifierRuleNOPTRIG;
 extern ModifierRuleNOPTRIG MRNOPTRIG;

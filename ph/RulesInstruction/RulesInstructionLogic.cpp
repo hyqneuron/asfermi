@@ -55,7 +55,7 @@ struct InstructionRuleLOP32I: InstructionRule
 
 struct InstructionRuleSHR: InstructionRule
 {
-	InstructionRuleSHR(bool shr) : InstructionRule("", 2, true, false)
+	InstructionRuleSHR(bool shr) : InstructionRule("", 3, true, false)
 	{
 		if(shr)
 		{
@@ -73,6 +73,7 @@ struct InstructionRuleSHR: InstructionRule
 					&OPRIADDStyle);
 		ModifierGroups[0].Initialize(true, 1, &MRSHRU32);
 		ModifierGroups[1].Initialize(true, 1, &MRSHRW);
+		ModifierGroups[2].Initialize(true, 1, &MRS);
 	}
 }IRSHR(true), IRSHL(false);
 

@@ -19,12 +19,18 @@ struct ModifierRuleCALNOINC: ModifierRule
 
 struct ModifierRuleBRAU: ModifierRule
 {
-	ModifierRuleBRAU(): ModifierRule("U", true, false, false)
+	ModifierRuleBRAU(bool u): ModifierRule("U", true, false, false)
 	{
-		hpBinaryStringToOpcode4("11111111111111101111111111111111", Mask0);
-		Bits0 = 1<<15;
+		Mask0 = 0xffffffff;
+		if(u)
+			Bits0 = 1<<15;
+		else 
+		{
+			Bits0 = 1<<16;
+			Name = "LMT";
+		}
 	}
-}MRBRAU;
+}MRBRAU(true), MRBRALMT(false);
 
 struct ModifierRuleNOPTRIG: ModifierRule
 {
