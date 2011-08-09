@@ -17,7 +17,6 @@
     * [HowToStart]
     * [OpcodeToDo]
     * [PTXHelp]
-    * [PTXpriority]
     * [Utilities]
   * Fermi ISA
     * [Opcode]
