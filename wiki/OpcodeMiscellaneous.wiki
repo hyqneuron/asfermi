@@ -46,7 +46,6 @@ BFE VirtId, 0x914 : %smid
 BFE VirtCfg, 0x914: %nsmid
 }}}
 
-
 ----
 ==== LEPC ====
 Instructon usage:
