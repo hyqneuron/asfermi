@@ -2,7 +2,6 @@
 
 To include:
 
-  * Execution control: SSY, JMP, JCAL, LONGJMP, PLONGJMP
   * Conversion: PSET, PSETP, B2R
 
 
