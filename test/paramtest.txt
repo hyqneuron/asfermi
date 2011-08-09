@@ -1,0 +1,47 @@
+!Machine 64
+
+!Kernel kernel
+!Param 8 2
+!Param 4
+
+MOV R1, c [0x1] [0x100];
+NOP CC.T;
+MOV R2, c [0x0] [0x20];
+MOV R3, c [0x0] [0x24];
+MOV32I R7, 0x1;
+MOV32I R6, 0x2;
+MOV R4, c [0x0] [0x28];
+MOV R5, c [0x0] [0x2c];
+MOV R0, c [0x0] [0x30];
+ST.E [R2+0x4], R7;
+ST.E [R2+0x8], R6;
+ST.E [R2], RZ;
+ST.E [R4], R0;
+ST.E [R4+0x4], R0;
+ST.E [R4+0x8], R0;
+EXIT;
+
+!EndKernel
+
+!Kernel kernel2
+!Param 8 2
+!Param 4
+
+MOV R1, c [0x1] [0x100];
+NOP CC.T;
+MOV R2, c [0x0] [0x20];
+MOV R3, c [0x0] [0x24];
+MOV32I R7, 0x1;
+MOV32I R6, 0x2;
+MOV R4, c [0x0] [0x28];
+MOV R5, c [0x0] [0x2c];
+MOV R0, c [0x0] [0x30];
+ST.E [R2+0x4], R7;
+ST.E [R2+0x8], R6;
+ST.E [R2], RZ;
+ST.E [R4], R0;
+ST.E [R4+0x4], R0;
+ST.E [R4+0x8], R0;
+EXIT;
+
+!EndKernel
