@@ -72,14 +72,20 @@ void processLabels()
 		
 		LabelProcessing = true;
 		LabelAbsoluteAddr = offset;
-		list<Instruction>::iterator relatedInstruction = request->InstructionPointer; //on the one before the requesting instruction
-		relatedInstruction++;//now on the requesting instruction
-		csInstructionOffset = relatedInstruction->Offset; //offset of the instruction before it
+		list<Instruction>::iterator relatedInstruction;
+		if(!request->Zero)
+		{
+			relatedInstruction = request->InstructionPointer; //on the one before the requesting instruction
+			relatedInstruction++;//now on the requesting instruction
+		}
+		else
+		{
+			relatedInstruction = csInstructions.begin(); // on the requesting instruction
+		}
+
+		csInstructionOffset = relatedInstruction->Offset+(relatedInstruction->Is8?8:4); //offset of the instruction before it
 		csCurrentInstruction = *relatedInstruction;
-		relatedInstruction++;//the one after it
-		csInstructionOffset += relatedInstruction->Is8? 8:4;
 		((OperandRule*)&OPRInstructionAddress)->Process(request->RequestedLabelName);
-		relatedInstruction--; //on it again
 		relatedInstruction->OpcodeWord0=csCurrentInstruction.OpcodeWord0;
 		relatedInstruction->OpcodeWord1=csCurrentInstruction.OpcodeWord1;
 	}

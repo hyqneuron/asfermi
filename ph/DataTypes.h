@@ -190,6 +190,7 @@ struct LabelRequest
 {
 	list<Instruction>::iterator InstructionPointer;
 	SubString RequestedLabelName;
+	bool Zero;
 };
 //-----End of Label structures
 #else

@@ -213,7 +213,7 @@ struct OperandRuleNOPCC: OperandRule
 			throw 135;
 
 
-		unsigned int type = (unsigned int)found.ExtraInfo;
+		unsigned int type = *((unsigned int*)&found.ExtraInfo);
 		csCurrentInstruction.OpcodeWord0 &= ~(15<<5);
 		csCurrentInstruction.OpcodeWord0 |= type<<5;
 	}

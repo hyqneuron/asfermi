@@ -218,7 +218,7 @@ struct OperandRuleS2R: OperandRule
 				throw 128;
 		}
 		else
-			result = (unsigned int)found.ExtraInfo;
+			result = *((unsigned int*)&found.ExtraInfo);
 		WriteToImmediate32(result);
 		
 	}

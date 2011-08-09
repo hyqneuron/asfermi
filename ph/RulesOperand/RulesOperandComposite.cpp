@@ -258,7 +258,13 @@ struct OperandRuleInstructionAddress: OperandRule
 				throw 145; //empty label name
 			request.RequestedLabelName = labelName;
 			request.InstructionPointer = csInstructions.end();
-			request.InstructionPointer--;
+			if(csInstructions.size()==0)
+				request.Zero = true;
+			else
+			{
+				request.InstructionPointer--;
+				request.Zero = false;
+			}
 			csLabelRequests.push_back(request);
 		}
 		//constant memory
