@@ -52,7 +52,7 @@ Template opcode
 ==== CAL ====
 Instruction usage:
 {{{
-CAL(.NOINC) (-)0xabcd;
+CAL(.NOINC) const mem addr/(-)0xabcd/!labelName;
 }}}
 0xabcd is the address relative to the address of the instruction right after the CAL instruction. Note that the cuobjdump would output the absolute address of the target instruction in the kernel instead of the relative address. 0xabcd cannot 24 bits in length. 
 
