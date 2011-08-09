@@ -327,6 +327,29 @@ Template opcode
 ||0     ||use reg2||
 ||1     ||use reg2(0xabc)||
 
+
+----
+==== B2R ====
+Instruction usage:
+{{{
+B2R(.Op)(.S) reg0, 0xab;
+}}}
+  * 0xab is limited to 6-bit.
+
+Template opcode
+{{{
+0010 000000 1110 000000 000000 00000000000000000000000000000000 011100
+        mod        reg0   0xab
+}}}
+||mod 0:1||.Op||
+||00     ||default||
+||10     ||.XLU   ||
+||01     ||.ALU   ||
+||11     ||invalid||
+
+||mod 5||meaning||
+||0    ||default||
+||1    ||.S     ||
 ----
 ==== MEMBAR ====
 Instruction usage:
