@@ -63,7 +63,7 @@ Template opcode:
 ||3       ||1: default||
 ||        ||.NOINC    ||
 ||5       ||0: default||
-||        ||1: constant memory. Not supported for now.||
+||        ||1: constant memory||
 
 ----
 ==== PRET ====
@@ -92,6 +92,45 @@ Template opcode:
 {{{
 1110 011110 1110 000000 000000 00000000000000000000000000000000 001001
 }}}
+
+----
+==== JMP ====
+Instruction usage:
+{{{
+JMP(.U)(.LMT) const mem addr/0xabcd;
+}}}
+Template opcode
+{{{
+1110 01110 1110 000000 000000 00000000000000000000000 00000000 000000
+                 mod2           const mem addr/0xabcd
+}}}
+||mod2 3||meaning||
+||0     ||default||
+||1     ||.LMT   ||
+
+||mod2 4||meaning||
+||0     ||default||
+||1     ||.U     ||
+
+||mod2 5||meaning||
+||0     ||0xabcd ||
+||1     ||const mem addr||
+
+----
+==== JCAL ====
+Instruction usage:
+{{{
+JCAL(.NOINC) const mem addr/0xabcd;
+}}}
+Template opcode
+{{{
+1110 000000 0000 001000 000000 00000000000000000000000 00000000 001000
+                 mod2            const mem addr/0xabcd
+}}}
+||3       ||1: default||
+||        ||.NOINC    ||
+||5       ||0: default||
+||        ||1: constant memory||
 
 ----
 ==== EXIT ====
@@ -218,6 +257,33 @@ CONT;
 Template opcode
 {{{
 1110 011110 1110 000000 000000 00000000000000000000000000000000 001101
+}}}
+
+----
+==== PLONGJMP ====
+Instruction usage:
+{{{
+PLONGJMP const mem addr/0xabcd;
+}}}
+Template opcode
+{{{
+1110 000000 1110 000000 000000 000000000000000000000000 00000000 011010
+                   mod2               const addr/0xabcd
+}}}
+
+||mod2 5||meaning||
+||0     ||0xabcd ||
+||1     ||const addr||
+----
+==== LONGJMP ====
+Instruction usage:
+{{{
+LONGJMP;
+}}}
+Template opcode
+{{{
+1110 011110 1110 000000 000000 00000000000000000000000000000000 010001
+
 }}}
 
 ----
