@@ -1,6 +1,7 @@
 #ifndef SubStringDefined //prevent multiple inclusion
 #define SubStringDefined
-
+#include <list>
+using namespace std;
  
 struct SubString
 {

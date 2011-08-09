@@ -7,7 +7,7 @@
 #include "stdafx.h" //Mark
 
 #include "RulesDirective.h"
-#include "RulesOperand\RulesOperandComposite.h"
+#include "RulesOperand/RulesOperandComposite.h"
 
 
 //Kernel
