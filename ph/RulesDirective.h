@@ -11,6 +11,9 @@ extern DirectiveRuleKernel DRKernel;
 struct DirectiveRuleEndKernel;
 extern DirectiveRuleEndKernel DREndKernel;
 
+struct DirectiveRuleLabel;
+extern DirectiveRuleLabel DRLabel;
+
 //Param
 struct DirectiveRuleParam;
 extern DirectiveRuleParam DRParam;
@@ -53,5 +56,5 @@ extern DirectiveRuleMachine DRMachine;
 struct DirectiveRuleSelfDebug;
 extern DirectiveRuleSelfDebug DRSelfDebug;
 
-#else
+
 #endif

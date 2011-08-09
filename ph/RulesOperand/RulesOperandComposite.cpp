@@ -231,16 +231,41 @@ struct OperandRuleFADDCompositeWithOperator: OperandRule
 	}
 }OPRFADDCompositeWithOperator;
 
+
+bool LabelProcessing = false;
+int LabelAbsoluteAddr = 0;
 struct OperandRuleInstructionAddress: OperandRule
 {
-	OperandRuleInstructionAddress(): OperandRule(Custom)
+	bool AllowConstantMemory;
+	OperandRuleInstructionAddress(bool allowConstMem): OperandRule(Custom)
 	{
+		AllowConstantMemory = allowConstMem;
 	}
 	virtual void Process(SubString &component)
 	{
-		//constant memory
-		if(component[0]=='c'||component[0]=='C')
+		//Label
+		int result = 0;
+		if(LabelProcessing)
 		{
+			result = LabelAbsoluteAddr;
+			goto labelProcess;
+		}
+		if(component[0]=='!')
+		{
+			LabelRequest request;
+			SubString labelName = component.SubStr(1, component.Length - 1);
+			if(labelName.Length==0)
+				throw 145; //empty label name
+			request.RequestedLabelName = labelName;
+			request.InstructionPointer = csInstructions.end();
+			request.InstructionPointer--;
+			csLabelRequests.push_back(request);
+		}
+		//constant memory
+		else if(component[0]=='c'||component[0]=='C')
+		{
+			if(!AllowConstantMemory)
+				throw 146; //constant not allowed
 			csCurrentInstruction.OpcodeWord0 |= 1 << 14;
 			unsigned int bank, memory;
 			int reg;
@@ -256,8 +281,10 @@ struct OperandRuleInstructionAddress: OperandRule
 			//while actually the address stored in the opcode is relative
 			if(csAbsoluteAddressing)
 			{
-				int result = component.ToImmediate32FromHexConstant(false);
-				result = result - (csInstructionOffset);
+				result = component.ToImmediate32FromHexConstant(false);
+labelProcess:
+				if((csCurrentInstruction.OpcodeWord1>>26&0x3b)!=0) //no JCAL or JMP
+					result = result - (csInstructionOffset);
 				if(result<0)
 				{
 					result = -result;
@@ -269,6 +296,7 @@ struct OperandRuleInstructionAddress: OperandRule
 				else if(result>0x7FFFFF)
 					throw 131; //too large offset
 				WriteToImmediate32((unsigned int)result);
+				LabelProcessing = false;
 			}
 			//input is relative
 			else
@@ -277,8 +305,7 @@ struct OperandRuleInstructionAddress: OperandRule
 			}
 		}
 	}
-}OPRInstructionAddress;
-
+}OPRInstructionAddress(true), OPRInstructionAddressNoConstMem(false);
 
 
 struct OperandRuleBAR: OperandRule

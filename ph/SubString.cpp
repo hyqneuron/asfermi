@@ -410,6 +410,16 @@ void SubString::RemoveBlankAtBeginning()
 	Start += i;
 	Length -= i;
 }
+void SubString::RemoveBlankAtEnd()
+{
+	int i = Length - 1;
+	for(; i>0; i--)
+	{
+		if(Start[i]>32)
+			break;
+	}
+	Length = i + 1;
+}
 
 
 //Compare
@@ -421,6 +431,26 @@ bool SubString::Compare(SubString subString)
 	for(int i =0; i<Length; i++)
 	{
 		if(Start[i]!= subString[i])
+			return false;
+	}
+	return true;
+}
+
+bool SubString::CompareIgnoreEndingBlank(SubString subString)
+{
+	//using subString as the gold standard
+	//so the string in Start could be longer than subString
+	if(Length<subString.Length)
+		return false;
+	int i=0;
+	for(; i<subString.Length;i++)
+	{
+		if(Start[i]!= subString[i])
+			return false;
+	}
+	for(; i<Length; i++)
+	{
+		if(Start[i]>32)
 			return false;
 	}
 	return true;
@@ -484,4 +514,103 @@ char* SubString::ToCharArrayStopOnCR()
 		}
 		result[Length] = (char)0;
 		return result;
+}
+
+
+//======================
+
+
+
+	SortElement::SortElement(void *extraInfo, SubString name)
+	{
+		ExtraInfo = extraInfo;
+		Name = name;
+	}
+
+unsigned int SortComputeIndex(SubString subString)
+{
+	unsigned int result=0;
+	if(subString.Length>=2)
+	{
+		result=((unsigned int)subString[0]+(unsigned int)subString[1])<<24;
+		result += (unsigned int)subString[subString.Length-2];
+		if(subString.Length>=4)
+		{
+			result+=((unsigned int)subString[2]+(unsigned int)subString[3])<<16;
+			if(subString.Length>=8)
+			{
+				result+=((unsigned int)subString[6]+(unsigned int)subString[7])<<8;
+			}
+		}
+	}
+	result+=(unsigned int)subString[subString.Length-1];
+	return result;
+
+}
+void SortInitialize(list<SortElement>elementList, SortElement* &sortedList, unsigned int* &indicesList)
+{
+	int count = elementList.size();
+	sortedList = new SortElement[count];
+	indicesList = new unsigned int[count];
+	int i =0;
+	//copy
+	for(list<SortElement>::iterator element = elementList.begin(); element!= elementList.end(); element++, i++)
+	{
+		sortedList[i] = *element;
+		indicesList[i] = SortComputeIndex(element->Name);
+	}
+	//sort
+	SortElement typeSaver;
+	unsigned int indexsaver;
+	for(int i = count - 1; i >  0; i--)
+	{
+		for(int j =0; j< i; j++)
+		{
+			//larger one behind
+			if(indicesList[j] > indicesList[j+1])
+			{
+				typeSaver = sortedList[j];
+				indexsaver = indicesList[j];
+				sortedList[j] = sortedList[j+1];
+				indicesList[j] = indicesList[j+1];
+				sortedList[j+1] = typeSaver;
+				indicesList[j+1] = indexsaver;
+			}
+		}
+	}	
+}
+
+SortElement SortNotFound((void*)0xFFFFFFFF,"");
+SortElement SortFind(SortElement* sortedList, unsigned int* indicesList, unsigned int count, SubString target)
+{
+	unsigned int index = SortComputeIndex(target);
+	int start = 0; //inclusive
+	int end = count;//exclusive
+	int mid;
+	while(start<end) //still got unchecked numbers
+	{
+		mid = (start+end)/2;
+		if(index > indicesList[mid])
+			start = mid + 1;
+		else if(index < indicesList[mid])
+			end = mid;
+		else
+		{
+			//backtrack
+			while(mid!=0&&indicesList[mid-1]==index)
+			{
+				mid--;
+			}
+			//forward checking
+			do
+			{
+				if(target.Compare(sortedList[mid].Name))
+					return sortedList[mid];
+				mid++;
+			}
+			while(mid!=count&&indicesList[mid]==index);
+			return SortNotFound;
+		}
+	}
+	return SortNotFound;
 }

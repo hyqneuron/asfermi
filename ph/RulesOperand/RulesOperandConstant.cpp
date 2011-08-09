@@ -117,73 +117,118 @@ struct OperandRuleImmediate32AnyConstant: OperandRule
 		//Issue: not yet implemented
 	}	
 }OPRImmediate32AnyConstant;
+
+
+
 struct OperandRuleS2R: OperandRule
 {
-	OperandRuleS2R(): OperandRule(Custom){}
+	bool Initialized;
+	SortElement *SortedList;
+	unsigned int *IndexList;
+	unsigned int ElementCount;
+	OperandRuleS2R(): OperandRule(Custom)
+	{
+		Initialized = false;
+	}
+	void S2RInitialize()
+	{
+		list<SortElement> SRs;
+		SRs.push_back(SortElement((void*)0, "SR_LaneId"));
+		SRs.push_back(SortElement((void*)2, "SR_VirtCfg"));
+		SRs.push_back(SortElement((void*)3, "SR_VirtId"));
+		SRs.push_back(SortElement((void*)4, "SR_PM0"));
+		SRs.push_back(SortElement((void*)5, "SR_PM1"));
+		SRs.push_back(SortElement((void*)6, "SR_PM2"));
+		SRs.push_back(SortElement((void*)7, "SR_PM3"));
+		SRs.push_back(SortElement((void*)8, "SR_PM4"));
+		SRs.push_back(SortElement((void*)9, "SR_PM5"));
+		SRs.push_back(SortElement((void*)10, "SR_PM6"));
+		SRs.push_back(SortElement((void*)11, "SR_PM7"));
+		SRs.push_back(SortElement((void*)16, "SR_PRIM_TYPE"));
+		SRs.push_back(SortElement((void*)17, "SR_INVOCATION_ID"));
+		SRs.push_back(SortElement((void*)18, "SR_Y_DIRECTION"));
+		SRs.push_back(SortElement((void*)24, "SR_MACHINE_ID_0"));
+		SRs.push_back(SortElement((void*)25, "SR_MACHINE_ID_1"));
+		SRs.push_back(SortElement((void*)26, "SR_MACHINE_ID_2"));
+		SRs.push_back(SortElement((void*)27, "SR_MACHINE_ID_3"));
+		SRs.push_back(SortElement((void*)28, "SR_AFFINITY"));
+		SRs.push_back(SortElement((void*)32, "SR_Tid"));
+		SRs.push_back(SortElement((void*)33, "SR_Tid_X"));
+		SRs.push_back(SortElement((void*)34, "SR_Tid_Y"));
+		SRs.push_back(SortElement((void*)35, "SR_Tid_Z"));
+		SRs.push_back(SortElement((void*)36, "SR_CTAParam"));
+		SRs.push_back(SortElement((void*)37, "SR_CTAid_X"));
+		SRs.push_back(SortElement((void*)38, "SR_CTAid_Y"));
+		SRs.push_back(SortElement((void*)39, "SR_CTAid_Z"));
+		SRs.push_back(SortElement((void*)40, "SR_NTid"));
+		SRs.push_back(SortElement((void*)41, "SR_NTid_X"));
+		SRs.push_back(SortElement((void*)42, "SR_NTid_Y"));
+		SRs.push_back(SortElement((void*)43, "SR_NTid_Z"));
+		SRs.push_back(SortElement((void*)44, "SR_GridParam"));
+		SRs.push_back(SortElement((void*)45, "SR_NCTAid_X"));
+		SRs.push_back(SortElement((void*)46, "SR_NCTAid_Y"));
+		SRs.push_back(SortElement((void*)47, "SR_NCTAid_Z"));
+		SRs.push_back(SortElement((void*)48, "SR_SWinLo"));
+		SRs.push_back(SortElement((void*)49, "SR_SWINSZ"));
+		SRs.push_back(SortElement((void*)50, "SR_SMemSz"));
+		SRs.push_back(SortElement((void*)51, "SR_SMemBanks"));
+		SRs.push_back(SortElement((void*)52, "SR_LWinLo"));
+		SRs.push_back(SortElement((void*)53, "SR_LWINSZ"));
+		SRs.push_back(SortElement((void*)54, "SR_LMemLoSz"));
+		SRs.push_back(SortElement((void*)55, "SR_LMemHiOff"));
+		SRs.push_back(SortElement((void*)56, "SR_EqMask"));
+		SRs.push_back(SortElement((void*)57, "SR_LtMask"));
+		SRs.push_back(SortElement((void*)58, "SR_LeMask"));
+		SRs.push_back(SortElement((void*)59, "SR_GtMask"));
+		SRs.push_back(SortElement((void*)60, "SR_GeMask"));
+		SRs.push_back(SortElement((void*)80, "SR_ClockLo"));
+		SRs.push_back(SortElement((void*)81, "SR_ClockHi"));
+		ElementCount = SRs.size();
+		SortInitialize(SRs, SortedList, IndexList);
+		Initialized = true;
+	}
 	virtual void Process(SubString &component)
 	{
+		if(!Initialized)
+			S2RInitialize();
+		component.RemoveBlankAtEnd();
+		if(!component.Length)
+			throw 128;
 		unsigned int result;
-		if(component.Length<8 || component[0]!='S' || component[1]!='R' || component[2]!='_')
-			throw 128; //incorrect special register name
-		//WarpID
-		if(component[3]=='W')
+		SortElement found = SortFind(SortedList, IndexList, ElementCount, component);
+		if(found.ExtraInfo==SortNotFound.ExtraInfo)
 		{
-			if(!component.Compare(SubString("SR_WarpID")))
-				throw 128;
-			result = 0;
-		}
-		//GridParam
-		else if(component[3]=='G')
-		{
-			if(!component.Compare(SubString("SR_GridParam")))
-				throw 128;
-			result = 0x2c;
-		}
-		else if(component[3]=='V')
-		{			
-			if(component.Compare(SubString("SR_VirtId")))
-				result = 3;
-			else if(component.Compare(SubString("SR_VirtCfg")))
-				result = 2;
-			else throw 128;
-		}
-		//Tid
-		else if(component[3]=='T')
-		{
-			if(component.Compare(SubString("SR_Tid_X")))
-				result = 0x21;
-			else if(component.Compare(SubString("SR_Tid_Y")))
-				result = 0x22;
-			else if(component.Compare(SubString("SR_Tid_Z")))
-				result = 0x23;
-			else throw 128;
-		}
-		//CTAID/Clock
-		else if(component[3]=='C')
-		{
-			if(component.Length==10)
+			//try SRnum
+			if(component.Length>=3&&component[0]=='S'&&component[1]=='R'&&component[1]!='_')
 			{
-				if(component.Compare(SubString("SR_CTAid_X")))
-					result = 0x25;
-				else if(component.Compare(SubString("SR_CTAid_Y")))
-					result = 0x26;
-				else if(component.Compare(SubString("SR_CTAid_Z")))
-					result = 0x27;
-				else throw 128;
+				int srnum=0;
+				try
+				{
+					srnum = component.SubStr(2, component.Length-2).ToImmediate32FromInt32();
+				}
+				catch(int e)
+				{
+					throw 128;
+				}
+				if(srnum>255||srnum<0)
+					throw 128;
+				result = (unsigned int)srnum;
 			}
 			else
-			{
-				if(component.Compare(SubString("SR_Clock_Hi")))
-					result = 0x11;
-				else if(component.Compare(SubString("SR_Clock_Lo")))
-					result = 0x10;
-				else throw 128;
-				csCurrentInstruction.OpcodeWord1 |= 1;
-			}
+				throw 128;
 		}
 		else
-			throw 128;
-		csCurrentInstruction.OpcodeWord0 |= result << 26;
+			result = (unsigned int)found.ExtraInfo;
+		WriteToImmediate32(result);
+		
+	}
+	~OperandRuleS2R()
+	{
+		if(Initialized)
+		{
+			delete[] SortedList;
+			delete[] IndexList;
+		}
 	}
 }OPRS2R;
 

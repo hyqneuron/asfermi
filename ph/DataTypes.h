@@ -183,11 +183,12 @@ struct DirectiveParser: Parser
 struct Label
 {
 	SubString Name;
-	int Offset;
+	int LineNumber;
+	unsigned int Offset;
 };
 struct LabelRequest
 {
-	Instruction *RelatedInstruction;
+	list<Instruction>::iterator InstructionPointer;
 	SubString RequestedLabelName;
 };
 //-----End of Label structures

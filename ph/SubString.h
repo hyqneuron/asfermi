@@ -14,7 +14,9 @@ struct SubString
 	int FindBlank(int startPos);
 	SubString SubStr(int startPos, int length);
 	void RemoveBlankAtBeginning();
+	void RemoveBlankAtEnd();
 	bool Compare(SubString subString);
+	bool CompareIgnoreEndingBlank(SubString subString);
 	bool CompareWithCharArray(char* target, int length);
 	char* ToCharArray();
 	void SubEndWithNull();
@@ -35,5 +37,19 @@ struct SubString
 	
 	char* ToCharArrayStopOnCR();	
 };
-#else
+
+
+struct SortElement
+{
+	void *ExtraInfo;
+	SubString Name;
+
+	SortElement(){}
+	SortElement(void *extraInfo, SubString name);
+};
+extern SortElement SortNotFound;
+unsigned int SortComputeIndex(SubString subString);
+void SortInitialize(list<SortElement>elementList, SortElement* &sortedList, unsigned int* &indicesList);
+SortElement SortFind(SortElement* sortedList, unsigned int* indicesList, unsigned int count, SubString target);
+
 #endif

@@ -71,8 +71,8 @@ extern DirectiveParser*	csDirectiveParser;
 extern list<Line> csLines;
 extern list<Instruction> csInstructions;
 extern list<Directive> csDirectives;
-extern list<LabelRequest> csLabelRequests;
 extern list<Label> csLabels;
+extern list<LabelRequest> csLabelRequests;
 
 //=================
 

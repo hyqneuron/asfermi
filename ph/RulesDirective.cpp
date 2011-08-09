@@ -7,6 +7,7 @@
 #include "stdafx.h" //Mark
 
 #include "RulesDirective.h"
+#include "RulesOperand\RulesOperandComposite.h"
 
 
 //Kernel
@@ -35,6 +36,59 @@ struct DirectiveRuleKernel: DirectiveRule
 }DRKernel;
 
 
+void processLabels()
+{
+	list<SortElement> labelList;
+	SortElement element;
+	for(list<Label>::iterator label = csLabels.begin(); label!= csLabels.end(); label++)
+	{
+		element.ExtraInfo = &*label;
+		element.Name = label->Name;
+		labelList.push_back(element);
+	}
+	unsigned int *IndexList;
+	SortElement *SortedList;
+	SortInitialize(labelList, SortedList, IndexList);
+	int count = labelList.size();
+	//check for repeating label name
+	for(int i =1; i<count; i++)
+	{
+		if(IndexList[i]==IndexList[i-1]&&SortedList[i].Name.Compare(SortedList[i-1].Name))
+		{
+			csLineNumber = ((Label*)SortedList[i].ExtraInfo)->LineNumber;
+			throw 1023; //repeating label name
+		}
+	}
+	//process each label request
+	for(list<LabelRequest>::iterator request = csLabelRequests.begin(); request!=csLabelRequests.end(); request++)
+	{
+		SortElement found = SortFind(SortedList, IndexList, count, request->RequestedLabelName);
+		if(found.ExtraInfo == SortNotFound.ExtraInfo)
+		{
+			csLineNumber = request->InstructionPointer->LineNumber;
+			throw 1024;//label not found
+		}
+		int offset = ((Label*)found.ExtraInfo)->Offset;
+		
+		LabelProcessing = true;
+		LabelAbsoluteAddr = offset;
+		list<Instruction>::iterator relatedInstruction = request->InstructionPointer; //on the one before the requesting instruction
+		relatedInstruction++;//now on the requesting instruction
+		csInstructionOffset = relatedInstruction->Offset; //offset of the instruction before it
+		csCurrentInstruction = *relatedInstruction;
+		relatedInstruction++;//the one after it
+		csInstructionOffset += relatedInstruction->Is8? 8:4;
+		((OperandRule*)&OPRInstructionAddress)->Process(request->RequestedLabelName);
+		relatedInstruction--; //on it again
+		relatedInstruction->OpcodeWord0=csCurrentInstruction.OpcodeWord0;
+		relatedInstruction->OpcodeWord1=csCurrentInstruction.OpcodeWord1;
+	}
+	delete[] SortedList;
+	delete[] IndexList;
+	csLabels.clear();
+	csLabelRequests.clear();
+}
+
 //EndKernel
 struct DirectiveRuleEndKernel: DirectiveRule
 {
@@ -47,12 +101,15 @@ struct DirectiveRuleEndKernel: DirectiveRule
 		if(!csCurrentKernelOpened)
 			throw 1005; //without Kernel directive
 		
-		csCurrentKernel.KernelInstructions = csInstructions;
 		csCurrentKernel.TextSize = csInstructionOffset;
+		processLabels();
+		csCurrentKernel.KernelInstructions = csInstructions;
+		
 		if(csMaxReg>=csCurrentKernel.RegCount)
 			csCurrentKernel.RegCount = csMaxReg+1;
-		if(csMaxBar&&csMaxBar>=csCurrentKernel.BarCount)
+		if(csMaxBar>=csCurrentKernel.BarCount)
 			csCurrentKernel.BarCount = csMaxBar+1;
+		
 		csKernelList.push_back(csCurrentKernel);
 
 		csInstructions.clear();
@@ -73,9 +130,20 @@ struct DirectiveRuleLabel: DirectiveRule
 	{
 		Name = "Label";
 	}
-	virtual void Process()
+	virtual void Process() //!Label Name
 	{
-		//to be done
+		if(!csCurrentKernelOpened)
+			throw 1006; //only definable inside kernels
+		if(csCurrentDirective.Parts.size()!=2)
+			throw 1002; //incorrect no. of arguments
+
+		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
+		currentArg++;//currentArg is on Name
+		Label label;
+		label.Name = *currentArg;
+		label.Offset = csInstructionOffset;
+		label.LineNumber = csLineNumber;
+		csLabels.push_back(label);
 	}
 }DRLabel;
 

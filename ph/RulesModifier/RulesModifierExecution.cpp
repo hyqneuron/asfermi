@@ -12,7 +12,7 @@ struct ModifierRuleCALNOINC: ModifierRule
 {
 	ModifierRuleCALNOINC(): ModifierRule("NOINC", true, false, false)
 	{
-		hpBinaryStringToOpcode4("11111111111111110111111111111111", Mask0);
+		hpBinaryStringToOpcode4("1111 111111 1111 110011 111111111111", Mask0);
 		Bits0 = 0;
 	}
 }MRCALNOINC;

@@ -34,7 +34,7 @@ struct InstructionRuleJCAL: InstructionRule
 	InstructionRuleJCAL() : InstructionRule("JCAL", 1, true, false)
 	{
 		hpBinaryStringToOpcode8("1110 000000 0000 001000 000000 000000000000000000000000 00000000 001000", OpcodeWord0, OpcodeWord1);
-		SetOperands(1, &OPRImmediate24HexConstant); //absolute address only
+		SetOperands(1, &OPRInstructionAddress); //absolute address only
 		ModifierGroups[0].Initialize(true, 1, &MRCALNOINC);
 	}
 }IRJCAL;
@@ -66,7 +66,7 @@ struct InstructionRuleJMP: InstructionRule
 	InstructionRuleJMP() : InstructionRule("JMP", 2, true, false)
 	{
 		hpBinaryStringToOpcode8("1110 011110 1110 000000 000000 000000000000000000000000 00000000 000000", OpcodeWord0, OpcodeWord1);
-		SetOperands(1, &OPRImmediate24HexConstant); //absolute address only
+		SetOperands(1, &OPRInstructionAddress); //absolute address only
 		ModifierGroups[0].Initialize(true, 1, &MRBRAU);
 		ModifierGroups[1].Initialize(true, 1, &MRBRALMT);
 	}
@@ -77,7 +77,7 @@ struct InstructionRulePRET: InstructionRule
 {
 	InstructionRulePRET() : InstructionRule("PRET", 1, true, false)
 	{
-		hpBinaryStringToOpcode8("1110 000000000001000000000000000000000000000000000000000000011110", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("1110 000000 0000 001000 00000000000000000000000000000000000000011110", OpcodeWord0, OpcodeWord1);
 		SetOperands(1, &OPRInstructionAddress);
 		ModifierGroups[0].Initialize(true, 1, &MRCALNOINC);
 	}

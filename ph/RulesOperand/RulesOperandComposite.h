@@ -20,8 +20,10 @@ extern OperandRuleIAllowNegative OPRISCADDAllowNegative;
 struct OperandRuleFADDCompositeWithOperator;
 extern OperandRuleFADDCompositeWithOperator OPRFADDCompositeWithOperator;
 
+extern bool LabelProcessing;
+extern int LabelAbsoluteAddr;
 struct OperandRuleInstructionAddress;
-extern OperandRuleInstructionAddress OPRInstructionAddress;
+extern OperandRuleInstructionAddress OPRInstructionAddress, OPRInstructionAddressNoConstMem;
 
 struct OperandRuleBAR;
 extern OperandRuleBAR OPRBAR, OPRBARNoRegister;

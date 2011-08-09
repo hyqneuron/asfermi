@@ -158,6 +158,10 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 144:	message = "Only numerical expression can be used as barrier identifier here.";
 		break;
+	case 145:	message = "Empty label name.";
+		break;
+	case 146:	message = "Constant memory cannot be used with this instruction.";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};
@@ -218,6 +222,10 @@ void hpDirectiveErrorHandler(int e)
 	case 1021:	message = "Unsupported mode.";
 		break;
 	case 1022:	message = "Mode can only be On or Off.";
+		break;
+	case 1023:	message = "Repeating label name.";
+		break;
+	case 1024:	message = "Label not found.";
 		break;
 	default:	message = "Unknown error.";
 		break;
