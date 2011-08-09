@@ -21,57 +21,33 @@ Template opcode:
 0010 000000 1110 000000 000000 00000000 000000000000000000000000 110100
                    reg0          SRName
 }}}
-||SRName value||SRName||
-||0 ||SR_LaneId||
-||2 ||SR_VirtCfg||
-||3 ||SR_VirtId||
-||4 ||SR_PM0||
-||5 ||SR_PM1||
-||6 ||SR_PM2||
-||7 ||SR_PM3||
-||8 ||SR_PM4||
-||9 ||SR_PM5||
-||10||SR_PM6||
-||11||SR_PM7||
-||16||SR_PRIM_TYPE||
-||17||SR_INVOCATION_ID||
-||18||SR_Y_DIRECTION||
-||24||SR_MACHINE_ID_0||
-||25||SR_MACHINE_ID_1||
-||26||SR_MACHINE_ID_2||
-||27||SR_MACHINE_ID_3||
-||28||SR_AFFINITY||
-||32||SR_Tid||
-||33||SR_Tid_X||
-||34||SR_Tid_Y||
-||35||SR_Tid_Z||
-||36||SR_CTAParam||
-||37||SR_CTAid_X||
-||38||SR_CTAid_Y||
-||39||SR_CTAid_Z||
-||40||SR_NTid||
-||41||SR_NTid_X||
-||42||SR_NTid_Y||
-||43||SR_NTid_Z||
-||44||SR_GridParam||
-||45||SR_NCTAid_X||
-||46||SR_NCTAid_Y||
-||47||SR_NCTAid_Z||
-||48||SR_SWinLo||
-||49||SR_SWINSZ||
-||50||SR_SMemSz||
-||51||SR_SMemBanks||
-||52||SR_LWinLo||
-||53||SR_LWINSZ||
-||54||SR_LMemLoSz||
-||55||SR_LMemHiOff||
-||56||SR_EqMask||
-||57||SR_LtMask||
-||58||SR_LeMask||
-||59||SR_GtMask||
-||60||SR_GeMask||
-||80||SR_ClockLo||
-||81||SR_ClockHi||
+
+||SRName value||SRName||SRName value||SRName||
+||0 ||SR_LaneId||		38||SR_CTAid_Y||
+||2 ||SR_VirtCfg||		39||SR_CTAid_Z||
+||3 ||SR_VirtId||		40||SR_NTid||
+||4 ||SR_PM0||			41||SR_NTid_X||
+||5 ||SR_PM1||			42||SR_NTid_Y||
+||6 ||SR_PM2||			43||SR_NTid_Z||
+||7 ||SR_PM3||			44||SR_GridParam||
+||8 ||SR_PM4||			45||SR_NCTAid_X||
+||9 ||SR_PM5||			46||SR_NCTAid_Y||
+||10||SR_PM6||			47||SR_NCTAid_Z||
+||11||SR_PM7||			48||SR_SWinLo||
+||16||SR_PRIM_TYPE||	49||SR_SWINSZ||
+||17||SR_INVOCATION_ID||50||SR_SMemSz||
+||18||SR_Y_DIRECTION||	51||SR_SMemBanks||
+||24||SR_MACHINE_ID_0||	52||SR_LWinLo||
+||25||SR_MACHINE_ID_1||	53||SR_LWINSZ||
+||26||SR_MACHINE_ID_2||	54||SR_LMemLoSz||
+||27||SR_MACHINE_ID_3||	55||SR_LMemHiOff||
+||28||SR_AFFINITY||		56||SR_EqMask||
+||32||SR_Tid||			57||SR_LtMask||
+||33||SR_Tid_X||		58||SR_LeMask||
+||34||SR_Tid_Y||		59||SR_GtMask||
+||35||SR_Tid_Z||		60||SR_GeMask||
+||36||SR_CTAParam||		80||SR_ClockLo||
+||37||SR_CTAid_X||		81||SR_ClockHi||
 
 Related dimensions:
 {{{
