@@ -274,6 +274,7 @@ Template opcode
 ||mod2 5||meaning||
 ||0     ||0xabcd ||
 ||1     ||const addr||
+
 ----
 ==== LONGJMP ====
 Instruction usage:
