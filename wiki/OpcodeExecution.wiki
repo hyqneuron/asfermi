@@ -26,7 +26,7 @@ Template opcode
 ==== BRA ====
 Instruction usage
 {{{
-BRA(.U)  const mem addr/(-)0xabcd;
+BRA(.U)(.LMT)  const mem addr/(-)0xabcd;
 }}}
 Template opcode 
 {{{
@@ -150,7 +150,7 @@ Template opcode:
 0010 011110 1110 000000 000000 0000000000000000 00000000 00000000 000010
         mod                    0xabcd                        mod2
 }}}
-Note: the following modifiers are produced according to the output of cuobjdump. Whether they are meaningful to NOP or not is not confirmed. Conditional code operation seems to be supported by NOP, BRA, RET, EXIT, BRK and CONT.
+Note: the following modifiers are produced according to the output of cuobjdump. Whether they are meaningful to NOP or not is not confirmed. Conditional code operation seems to be supported by NOP, BRA, RET, EXIT, BRK, CONT, JMP, LONGJMP, but such an operand is not supported by the listed instructions apart from NOP.
 
 ||mod 0:4 value||.CCop||
 ||0            ||.F   ||
