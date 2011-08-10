@@ -6,13 +6,41 @@
 #include "stdafx.h" //SMark
 
 #include "RulesModifierConversion.h"
+#include "../RulesModifier.h"
+#include "../RulesOperand.h"
 
+
+void X2XRegCheck(ModifierRule *rule, bool is64, int compPos)
+{
+	ApplyModifierRuleUnconditional(rule);
+	if(!is64)
+		return;
+	if(csCurrentInstruction.Predicated)
+		compPos++;
+	if(csCurrentInstruction.Components.size()<=compPos)
+		throw 103;//insufficient operands
+	list<SubString>::iterator component = csCurrentInstruction.Components.begin();
+	for(int i =0; i<compPos; i++)
+		component++;
+	if(component->IsRegister())
+	{
+		int reg;
+		reg = component->ToRegister();
+		if(reg==63)return;
+		reg++;
+		if(reg==63) //will be wrongly ignored 
+			throw 147; //cannot be used with 64
+		CheckRegCount(reg);
+	}
+}
 
 
 struct ModifierRuleF2IDest: ModifierRule
 {
-	ModifierRuleF2IDest(int type, bool sign): ModifierRule("", true, false, false)
+	bool Is64;
+	ModifierRuleF2IDest(int type, bool sign): ModifierRule("", true, false, true)
 	{
+		Is64 = type==3;
 		hpBinaryStringToOpcode4("11111110111111111111001111111111", Mask0);
 		Bits0 = type << 20;
 		Bits0 |= (int)sign << 7;
@@ -43,6 +71,11 @@ struct ModifierRuleF2IDest: ModifierRule
 				throw exception();
 		}
 	}
+	
+	virtual void CustomProcess()
+	{
+		X2XRegCheck(this, Is64, 1);
+	}
 }	MRF2IDestU8(0, false), 
 	MRF2IDestU16(1, false), 
 	MRF2IDestU32(2, false), 
@@ -69,8 +102,10 @@ struct ModifierRuleF2FPASS: ModifierRule
 
 struct ModifierRuleF2ISource: ModifierRule
 {
-	ModifierRuleF2ISource(int type): ModifierRule("", true, false, false)
+	bool Is64;
+	ModifierRuleF2ISource(int type): ModifierRule("", true, false, true)
 	{
+		Is64 = type==3;
 		hpBinaryStringToOpcode4("1111 111111 1111 111111 111001 111111", Mask0);
 		Bits0 = type<<23;
 		if(type==1)
@@ -80,6 +115,10 @@ struct ModifierRuleF2ISource: ModifierRule
 		else if(type==3)
 			Name = "F64";
 		else throw exception();
+	}	
+	virtual void CustomProcess()
+	{
+		X2XRegCheck(this, Is64, 2);
 	}
 }MRF2ISourceF16(1),MRF2ISourceF32(2),MRF2ISourceF64(3);
 
@@ -126,8 +165,10 @@ struct ModifierRuleF2IFTZ: ModifierRule
 
 struct ModifierRuleI2FSource: ModifierRule
 {
-	ModifierRuleI2FSource(int type, bool sign): ModifierRule("", true, false, false)
+	bool Is64;
+	ModifierRuleI2FSource(int type, bool sign): ModifierRule("", true, false, true)
 	{
+		Is64 = type==3;
 		hpBinaryStringToOpcode4("1111 111110 1111 111111 111001 111111", Mask0);
 		Bits0 = type << 23;
 		Bits0 |= (int)sign << 9;
@@ -158,6 +199,10 @@ struct ModifierRuleI2FSource: ModifierRule
 				throw exception();
 		}
 	}
+	virtual void CustomProcess()
+	{
+		X2XRegCheck(this, Is64, 2);
+	}
 }	MRI2FSourceU8(0, false),
 	MRI2FSourceU16(1, false),
 	MRI2FSourceU32(2, false), 
@@ -169,8 +214,10 @@ struct ModifierRuleI2FSource: ModifierRule
 
 struct ModifierRuleI2FDest: ModifierRule
 {
-	ModifierRuleI2FDest(int type): ModifierRule("", true, false, false)
+	bool Is64;
+	ModifierRuleI2FDest(int type): ModifierRule("", true, false, true)
 	{
+		Is64 = type==3;
 		hpBinaryStringToOpcode4("11111111111111111111001111111111", Mask0);
 		Bits0 = type<<20;
 		if(type==1)
@@ -180,6 +227,10 @@ struct ModifierRuleI2FDest: ModifierRule
 		else if(type==3)
 			Name = "F64";
 		else throw exception();
+	}
+	virtual void CustomProcess()
+	{
+		X2XRegCheck(this, Is64, 1);
 	}
 }MRI2FDestF16(1),MRI2FDestF32(2),MRI2FDestF64(3);
 

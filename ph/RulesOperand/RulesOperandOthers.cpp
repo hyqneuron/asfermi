@@ -79,7 +79,15 @@ struct OperandRuleLOP: OperandRule
 		if(component.Length<1)
 			throw 132; //empty operand
 		if(ModShift==8)
-			((OperandRule*)&OPRMOVStyle)->Process(component);
+		{
+			if(component[0]=='c')
+			{
+				SetConstMem(component, 0x1f, true);
+				MarkConstantMemoryForImmediate32();
+			}
+			else
+				((OperandRule*)&OPRMOVStyle)->Process(component);
+		}
 		else
 			((OperandRule*)&OPRRegister1)->Process(component);
 		if(negate)
@@ -137,7 +145,7 @@ struct OperandRuleISCADDShift: OperandRule
 	virtual void Process(SubString &component)
 	{
 		unsigned int result;
-		if(component.Length>2 && component[0]=='0' && (component[1] == 'x' || component[1] == 'X'))
+		if(component.IsHex())
 			result = component.ToImmediate32FromHexConstant(false);
 		else
 			result = component.ToImmediate32FromInt32();
@@ -225,4 +233,4 @@ struct OperandRuleNOPCC: OperandRule
 			delete[] SortedList;
 		}
 	}
-}OPRNOPCC; //can only have one instance
+}OPRNOPCC;

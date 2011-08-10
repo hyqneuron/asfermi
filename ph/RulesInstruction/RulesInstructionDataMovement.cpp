@@ -39,7 +39,7 @@ struct InstructionRuleLD: InstructionRule
 		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000000001", OpcodeWord0, OpcodeWord1);
 		//2 operands
 		SetOperands(2, 
-					&OPRRegister0,					 //register
+					&OPRRegister0ForMemory,					 //register
 					&OPRGlobalMemoryWithImmediate32);//global memory
 		//3 modifier groups
 		ModifierGroups[0].Initialize(true, 1, &MRE);
@@ -64,7 +64,7 @@ struct InstructionRuleLDU: InstructionRule
 	{
 		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000010001", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
-					&OPRRegister0,					
+					&OPRRegister0ForMemory,					
 					&OPRGlobalMemoryWithImmediate32);
 		ModifierGroups[0].Initialize(true, 1, &MRE);
 		ModifierGroups[1].Initialize(true, 6,
@@ -84,8 +84,8 @@ struct InstructionRuleLDL: InstructionRule
 	{
 		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000000011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
-					&OPRRegister0,					
-					&OPRGlobalMemoryWithImmediate32);
+					&OPRRegister0ForMemory,					
+					&OPRGlobalMemoryWithImmediate24);
 		ModifierGroups[0].Initialize(true, 3,
 					&MRLDCopCG,
 					&MRLDCopLU,
@@ -106,8 +106,8 @@ struct InstructionRuleLDS : InstructionRule
 	{
 		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000010000011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
-					&OPRRegister0,
-					&OPRSharedMemoryWithImmediate20);
+					&OPRRegister0ForMemory,
+					&OPRGlobalMemoryWithImmediate24);
 		ModifierGroups[0].Initialize(true, 6,
 					&MRLDU8, 
 					&MRLDS8, 
@@ -124,7 +124,7 @@ struct InstructionRuleLDC : InstructionRule
 	{
 		hpBinaryStringToOpcode8("0110000100111000000000000000000000000000000000000000000000101000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
-					&OPRRegister0,
+					&OPRRegister0ForMemory,
 					&OPRConstantMemory);
 		ModifierGroups[0].Initialize(true, 6,
 					&MRLDU8, 
@@ -143,7 +143,7 @@ struct InstructionRuleST: InstructionRule
 		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000001001", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRGlobalMemoryWithImmediate32,
-					&OPRRegister0);
+					&OPRRegister0ForMemory);
 		ModifierGroups[0].Initialize(true, 1, &MRE);
 		ModifierGroups[1].Initialize(true, 3,
 					&MRSTCopCG,
@@ -166,8 +166,8 @@ struct InstructionRuleSTL: InstructionRule
 	{
 		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000000010011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
-					&OPRGlobalMemoryWithImmediate32,
-					&OPRRegister0);
+					&OPRGlobalMemoryWithImmediate24,
+					&OPRRegister0ForMemory);
 		ModifierGroups[0].Initialize(true, 3,
 					&MRSTCopCG,
 					&MRSTCopCS,
@@ -188,8 +188,8 @@ struct InstructionRuleSTS : InstructionRule
 	{
 		hpBinaryStringToOpcode8("1010000100111000000000000000000000000000000000000000000010010011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
-					&OPRSharedMemoryWithImmediate20,
-					&OPRRegister0);
+					&OPRGlobalMemoryWithImmediate24,
+					&OPRRegister0ForMemory);
 		ModifierGroups[0].Initialize(true, 6,
 					&MRLDU8, 
 					&MRLDS8, 
@@ -208,7 +208,7 @@ struct InstructionRuleLDLK: InstructionRule
 		hpBinaryStringToOpcode8("1010 0001  00 1110 000000 000000 00000000000000000000000000000000   0 00101", OpcodeWord0, OpcodeWord1);
 		SetOperands(3, 
 					&OPRPredicateForLDLK,
-					&OPRRegister0,
+					&OPRRegister0ForMemory,
 					&OPRGlobalMemoryWithImmediate32);
 		ModifierGroups[0].Initialize(true, 6,
 					&MRLDU8, 
@@ -227,8 +227,8 @@ struct InstructionRuleLDSLK: InstructionRule
 		hpBinaryStringToOpcode8("1010 000100 1110 000000 000000 000000000000000000000000 000 00000 100011", OpcodeWord0, OpcodeWord1);
 		SetOperands(3, 
 					&OPRPredicateForLDSLK,
-					&OPRRegister0,
-					&OPRGlobalMemoryWithImmediate32);
+					&OPRRegister0ForMemory,
+					&OPRGlobalMemoryWithImmediate24);
 		ModifierGroups[0].Initialize(true, 6,
 					&MRLDU8, 
 					&MRLDS8,
@@ -247,7 +247,7 @@ struct InstructionRuleSTUL: InstructionRule
 		hpBinaryStringToOpcode8("1010 000100 1110 000000 000000 0000000000000000 0000000000000000 010111", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRGlobalMemoryWithImmediate32,
-					&OPRRegister0);
+					&OPRRegister0ForMemory);
 		ModifierGroups[0].Initialize(true, 6,
 					&MRLDU8, 
 					&MRLDS8, 
@@ -264,8 +264,8 @@ struct InstructionRuleSTSUL : InstructionRule
 	{
 		hpBinaryStringToOpcode8("1010 000100 1110 000000 000000 0000000000000000 0000000000000000 110011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
-					&OPRSharedMemoryWithImmediate20,
-					&OPRRegister0);
+					&OPRGlobalMemoryWithImmediate24,
+					&OPRRegister0ForMemory);
 		ModifierGroups[0].Initialize(true, 6,
 					&MRLDU8, 
 					&MRLDS8, 

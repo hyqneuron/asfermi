@@ -5,7 +5,10 @@
 #include "../stdafx.h"
 #include "stdafx.h" //SMark
 
+
 #include "RulesModifierExecution.h"
+#include "../RulesOperand.h"
+#include "../RulesModifier.h"
 
 
 struct ModifierRuleCALNOINC: ModifierRule
@@ -129,15 +132,54 @@ struct ModifierRuleATOM: ModifierRule
 
 struct ModifierRuleATOMType: ModifierRule
 {
-	ModifierRuleATOMType(int type, SubString name): ModifierRule("", true, true, false)
+	bool Is64;
+	ModifierRuleATOMType(int type, SubString name): ModifierRule("", true, true, true)
 	{
+		Is64 = type == 5;
 		Mask0 = 0xfffffdff;
 		Mask1 = 0xc7ffffff;
 		Bits0 = (type&0x1)<<9;
 		Bits1 = (type&0xe)<<26;
 		Name = name;
 	}
-}	MRATOMTypeU64(5, "U64"),
+	virtual void CustomProcess()
+	{
+		ApplyModifierRuleUnconditional(this);
+		if(Is64)
+		{
+			int operandCount = csCurrentInstruction.Components.size();
+			int startPos = 1; //skip instruction name
+			if(csCurrentInstruction.Predicated)
+				startPos = 2; //skip predicate expression
+			if(operandCount-startPos<3) //reg3, [], reg0 (, reg4)
+				throw 103;//insufficient
+			if(operandCount-startPos>4)
+				throw 102;//too many
+			list<SubString>::iterator component = csCurrentInstruction.Components.begin();
+			//move to startPos
+			for(int i =0; i<startPos; i++)
+				component++;
+			int reg, localMaxReg=0;
+			reg = component->ToRegister(); //reg3
+			if(reg!=63&&reg>localMaxReg)localMaxReg = reg;
+			//next : memory
+			component++;
+			//skip memory, next: reg0
+			component++;
+			reg = component->ToRegister(); //reg0
+			if(reg!=63&&reg>localMaxReg)localMaxReg = reg;
+			if((startPos+3)<operandCount)
+			{
+				//next: reg4
+				component++;
+				reg = component->ToRegister(); //reg4
+				if(reg!=63&&reg>localMaxReg)localMaxReg = reg;
+			}
+			if(localMaxReg>=csRegCount)
+				csRegCount = localMaxReg+2;
+		}
+	}
+}	MRATOMTypeU64(5, "U64"), //CAS, EXCH, ADD
 	MRATOMTypeS32(7, "S32"),
 	MRATOMTypeF32(11,"F32");
 

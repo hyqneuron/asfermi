@@ -26,8 +26,8 @@ extern std::fstream csInput;
 extern std::fstream csOutput;
 extern char *csSource;
 extern int csSourceSize;
-extern int csMaxReg;
-extern int csMaxBar;
+extern int csRegCount;
+extern int csBarCount;
 extern bool csAbsoluteAddressing;
 
 enum OperationMode{Replace, Insert, DirectOutput, Undefined };

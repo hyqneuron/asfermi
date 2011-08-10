@@ -64,7 +64,7 @@ struct InstructionRuleCCTLL: InstructionRule
 		hpBinaryStringToOpcode8("1010 000000 1110 000000 000000 000000000000000000000000 00000000 001011", OpcodeWord0, OpcodeWord1);
 		SetOperands(2,
 					&OPRRegister0,
-					&OPRGlobalMemoryWithLastWithoutLast2Bits);
+					&OPRGlobalMemoryWithImmediate24);
 		ModifierGroups[0].Initialize(false, 8,
 									&MRCCTLOp2QRY1,
 									&MRCCTLOp2PF1,

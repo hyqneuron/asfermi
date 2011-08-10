@@ -23,7 +23,7 @@ extern OperandRuleFADDCompositeWithOperator OPRFADDCompositeWithOperator;
 extern bool LabelProcessing;
 extern int LabelAbsoluteAddr;
 struct OperandRuleInstructionAddress;
-extern OperandRuleInstructionAddress OPRInstructionAddress, OPRInstructionAddressNoConstMem;
+extern OperandRuleInstructionAddress OPRInstructionAddress;
 
 struct OperandRuleBAR;
 extern OperandRuleBAR OPRBAR, OPRBARNoRegister;

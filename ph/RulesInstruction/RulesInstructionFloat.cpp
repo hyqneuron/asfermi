@@ -177,9 +177,9 @@ struct InstructionRuleDADD: InstructionRule
 	{
 		hpBinaryStringToOpcode8("1000 000000 1110 000000 000000 0000000000000000000000 0000000000 110010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3, 
-					&OPRRegister0,
-					&OPRFADD32IReg1, 
-					&OPRFADDCompositeWithOperator);
+					&OPRRegister0ForDouble,
+					&OPRRegister1ForDoubleWith2OP, 
+					&OPRCompositeForDoubleWith2OP);
 		ModifierGroups[0].Initialize(true, 3, &MRFMULRP, &MRFMULRM, &MRFMULRZ);
 
 	}
@@ -192,9 +192,9 @@ struct InstructionRuleDMUL: InstructionRule
 	{
 		hpBinaryStringToOpcode8("1000 000000 1110 000000 000000 0000000000000000000000 0000000000 001010", OpcodeWord0, OpcodeWord1);
 		SetOperands(3,
-					&OPRRegister0,
-					&OPRRegister1,
-					&OPRFFMAAllowNegative);
+					&OPRRegister0ForDouble,
+					&OPRRegister1ForDouble,
+					&OPRCompositeForDoubleWith1OP);
 		ModifierGroups[0].Initialize(true, 3, &MRFMULRP, &MRFMULRM, &MRFMULRZ);
 	}
 }IRDMUL;
@@ -205,10 +205,10 @@ struct InstructionRuleDFMA: InstructionRule
 	{
 		hpBinaryStringToOpcode8("1000 000000 1110 000000 000000 0000000000000000000000 0 000000  000 000100", OpcodeWord0, OpcodeWord1);
 		SetOperands(4,
-					&OPRRegister0,
-					&OPRRegister1,
-					&OPRFFMAAllowNegative, 
-					&OPRRegister3ForMAD);
+					&OPRRegister0ForDouble,
+					&OPRRegister1ForDouble,
+					&OPRCompositeForDoubleWith1OP, 
+					&OPRRegister3ForDouble);
 		ModifierGroups[0].Initialize(true, 3, &MRFMULRP, &MRFMULRM, &MRFMULRZ);
 	}
 }IRDFMA;
@@ -222,8 +222,8 @@ struct InstructionRuleDSETP: InstructionRule
 		SetOperands(5, 
 					&OPRPredicate0,
 					&OPRPredicate1,
-					&OPRFADD32IReg1, 
-					&OPRFADDCompositeWithOperator,
+					&OPRRegister1ForDoubleWith2OP, 
+					&OPRCompositeForDoubleWith2OP,
 					&OPRPredicate2);
 		ModifierGroups[0].Initialize(false, 14, 
 					&MRSETPComparisonLT,

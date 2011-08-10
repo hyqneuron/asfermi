@@ -19,18 +19,12 @@ struct OperandRuleMOVStyle: OperandRule
 	virtual void Process(SubString &component)
 	{
 		//Register
-		if(component[0] == 'R' || component[0] == 'r')
+		if(component.IsRegister() || component.IsRegister())
 			((OperandRule*)&OPRRegister2)->Process(component);
 		//Constant memory
 		else if(component[0]=='c'||component[0]=='C')
 		{
-			unsigned int bank, memory;
-			int register1;
-			component.ToConstantMemory(bank, register1, memory);
-			if(register1 != 63)
-				throw 112; //register cannot be used in MOV-style constant address
-			csCurrentInstruction.OpcodeWord1 |= bank<<10;
-			WriteToImmediate32(memory);
+			SetConstMem(component);
 			MarkConstantMemoryForImmediate32();
 		}
 		//constant
@@ -50,7 +44,7 @@ struct OperandRuleMOVStyle: OperandRule
 			MarkImmediate20ForImmediate32();
 		}
 	}
-}OPRMOVStyle;
+}OPRMOVStyle; //const fixed
 
 
 #define mArithmeticCommonEnd {if(negative){component.Start--;	component.Length++;	}}
@@ -69,23 +63,17 @@ struct OperandRuleMOVStyle: OperandRule
 			throw 116; \
 	}\
 	/*register*/\
-	if(component[0]=='R' || component[0]=='r')\
+	if(component.IsRegister())\
 	{\
 		int register2 = component.ToRegister();\
-		if(register2!=63)csMaxReg = (register2 > csMaxReg)? register2: csMaxReg;\
+		CheckRegCount(register2);\
 		csCurrentInstruction.OpcodeWord0 |= register2 << 26;\
 		MarkRegisterForImmediate32();\
 	}		\
 	/*constant memory*/\
-	else if(component[0]=='c' || component[0] == 'C') \
+	else if(component.IsConstantMemory()) \
 	{\
-		unsigned int bank, memory;\
-		int register1;\
-		component.ToConstantMemory(bank, register1, memory);\
-		if(register1 != 63)\
-			throw 112;\
-		csCurrentInstruction.OpcodeWord1 |= bank<<10;\
-		WriteToImmediate32(memory);\
+		SetConstMem(component, 0x1f, true);\
 		MarkConstantMemoryForImmediate32();\
 	}
 //FADD: Register, Constant memory without reg, 20-bit Float)
@@ -108,10 +96,10 @@ struct OperandRuleFADDStyle: OperandRule
 		{
 			unsigned int result;
 			//float
-			if(component[0]=='F')
+			if(component.IsFloat())
 				result = component.ToImmediate20FromFloatConstant();
 			//hex
-			else if(component.Length>2 && component[0]=='0' &&(component[1]=='x'||component[1]=='X'))
+			else if(component.IsHex())
 				result = component.ToImmediate20FromHexConstant(true);
 			else
 				throw 116;
@@ -122,6 +110,16 @@ struct OperandRuleFADDStyle: OperandRule
 		mArithmeticCommonEnd;
 	}
 }OPRFADDStyle(true), OPRFMULStyle(false);
+//Confirmed: all use specialLast2
+//FADDStyle: none
+//FMULStyle: FCMP
+/*
+
+	FMULAllowNegative: FMUL
+	FFMAAllowNegative: FFMA, DMUL, DFMA
+	OPRFADDCompositeWithOperator: FADD, FSETP, DADD, DSETP, 
+	OPRF2I: F2I, F2F
+*/
 
 struct OperandRuleFAllowNegative: OperandRule
 {
@@ -172,7 +170,7 @@ struct OperandRuleIADDStyle: OperandRule
 		{
 			unsigned int result;
 			//hex
-			if(component.Length>2 && component[0]=='0' &&(component[1]=='x'||component[1]=='X'))
+			if(component.IsHex())
 				result = component.ToImmediate20FromHexConstant(true);
 			//int
 			else
@@ -183,6 +181,12 @@ struct OperandRuleIADDStyle: OperandRule
 		mArithmeticCommonEnd
 	}
 }OPRIADDStyle(true), OPRIMULStyle(false);
+//IADD: IADD, ISETP, SHR, SHL
+//IMUL: IMUL, IMAD, ICMP, BFE, BFI, SEL
+/*
+OPRISCADDAllowNegative: ISCADD
+OPRI2F: I2F, I2I
+*/
 
 
 struct OperandRuleIAllowNegative: OperandRule
@@ -236,11 +240,8 @@ bool LabelProcessing = false;
 int LabelAbsoluteAddr = 0;
 struct OperandRuleInstructionAddress: OperandRule
 {
-	bool AllowConstantMemory;
-	OperandRuleInstructionAddress(bool allowConstMem): OperandRule(Custom)
-	{
-		AllowConstantMemory = allowConstMem;
-	}
+	OperandRuleInstructionAddress(): OperandRule(Custom)
+	{}
 	virtual void Process(SubString &component)
 	{
 		//Label
@@ -270,16 +271,9 @@ struct OperandRuleInstructionAddress: OperandRule
 		//constant memory
 		else if(component[0]=='c'||component[0]=='C')
 		{
-			if(!AllowConstantMemory)
-				throw 146; //constant not allowed
 			csCurrentInstruction.OpcodeWord0 |= 1 << 14;
-			unsigned int bank, memory;
-			int reg;
-			component.ToConstantMemory(bank, reg, memory);
-			if(reg!=63)
-				throw 137; //does not accept register
-			csCurrentInstruction.OpcodeWord1 |= bank<<10;
-			WriteToImmediate32(memory);
+			SetConstMem(component, 0x1f, false);
+			MarkConstantMemoryForImmediate32();
 		}
 		else
 		{
@@ -311,7 +305,8 @@ labelProcess:
 			}
 		}
 	}
-}OPRInstructionAddress(true), OPRInstructionAddressNoConstMem(false);
+}OPRInstructionAddress;
+//confirmed that all users of OPRInstructionAddress do not use specialLast2. Yet they all support maxBank 31
 
 
 struct OperandRuleBAR: OperandRule
@@ -325,7 +320,7 @@ struct OperandRuleBAR: OperandRule
 	{
 		unsigned int result;
 		//register
-		if(component[0]=='R')
+		if(component.IsRegister())
 		{
 			if(!AllowRegister)
 				throw 144; //no registers allowed
@@ -335,7 +330,7 @@ struct OperandRuleBAR: OperandRule
 		else
 		{
 			//hex
-			if(component.Length>2&&component[0]=='0'&&(component[1]=='x'||component[1]=='X'))
+			if(component.IsHex())
 				result = component.ToImmediate32FromHexConstant(false);
 			//int
 			else
@@ -343,8 +338,8 @@ struct OperandRuleBAR: OperandRule
 			if(result>63)
 				throw 139;//too large barrier identifier
 			csCurrentInstruction.OpcodeWord1|= 1<<15;
-			if(result>csMaxBar)
-				csMaxBar = result;
+			if(result>=csBarCount)
+				csBarCount = result+1;
 		}
 		csCurrentInstruction.OpcodeWord0 |= result << 20;
 	}
@@ -357,7 +352,7 @@ struct OperandRuleTCount: OperandRule
 	{
 		unsigned int result;
 		//register
-		if(component[0]=='R')
+		if(component.IsRegister())
 		{
 			result = component.ToRegister();
 		}
@@ -365,7 +360,7 @@ struct OperandRuleTCount: OperandRule
 		else
 		{
 			//hex
-			if(component.Length>2&&component[0]=='0'&&(component[1]=='x'||component[1]=='X'))
+			if(component.IsHex())
 				result = component.ToImmediate32FromHexConstant(false);
 			//int
 			else

@@ -82,7 +82,7 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 106:	message = "Incorrect hex value.";
 		break;
-	case 107:	message = "Incorrect global memory format.";
+	case 107:	message = "Incorrect memory operand format.";
 		break;
 	case 108:	message = "Instruction not supported.";
 		break;
@@ -92,7 +92,7 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 111:	message = "Memory address for constant memory too large.";
 		break;
-	case 112:	message = "Register cannot be used in MOV-style constant address. Consider using LDC instead.";
+	case 112:	message = "Register cannot be used in composite constant memory operand.";
 		break;
 	case 113:	message = "The immediate value is limited to 20-bit.";
 		break;
@@ -161,6 +161,16 @@ void hpInstructionErrorHandler(int e)
 	case 145:	message = "Empty label name.";
 		break;
 	case 146:	message = "Constant memory cannot be used with this instruction.";
+		break;
+	case 147:	message = "The register number is too large to be used with .64/128.";
+		break;
+	case 148:	message = "Constant memory address should be a multiple of 4. Multiples of 2 are allowed for the same of experimentation.";
+		break;
+	case 149:	message = "The register number is too large to be used with .E";
+		break;
+	case 150:	message = "This immediate offset of this memory operand is limited to 24 bits.";
+		break;
+	case 151:	message = "Register number should be less than 62.";
 		break;
 	default:	message = "Unknown Error.";
 		break;
@@ -249,9 +259,11 @@ void hpWarning(int e)
 		break;
 	case 12:	message = "Some instructions before the kernel section are not included in any kernel.";
 		break;
-	default:	message = "No warning message available.";
+	case 13:	message = "BarCount usually should be limited to 16. Values larger than 16 and lower than 128 is allowed only for the sake of experimentation.";
 		break;
-	case 13:	message = "RegCount usually should be limited to 16. Values larger than 16 and lower than 128 is allowed only for the sake of experimentation.";
+	case 14:	message = "Constant memory address should be a multiple of 4.";
+		break;
+	default:	message = "No warning message available.";
 		break;
 	}
 	char *line = csCurrentLine.LineString.ToCharArrayStopOnCR();

@@ -14,6 +14,8 @@ extern OperandRuleRegister3 OPRRegister3ForMAD, OPRRegister3ForCMP, OPRRegister3
 struct OperandRuleRegisterWithCC;
 extern OperandRuleRegisterWithCC OPRRegisterWithCC4IADD32I, OPRRegisterWithCCAt16;
 
+struct OperandRuleRegister0ForMemory;
+extern OperandRuleRegister0ForMemory OPRRegister0ForMemory;
 
 //Predicate register operand
 struct OperandRulePredicate;
@@ -39,5 +41,22 @@ extern OperandRuleFADD32IReg1 OPRFADD32IReg1;
 
 struct OperandRuleRegister1WithSignFlag;
 extern OperandRuleRegister1WithSignFlag OPRIMADReg1, OPRISCADDReg1;
+
+
+
+//Register&composite operands for D***
+struct OperandRuleRegister0ForDouble;
+extern OperandRuleRegister0ForDouble OPRRegister0ForDouble;
+
+struct OperandRuleRegister1ForDouble;
+extern OperandRuleRegister1ForDouble OPRRegister1ForDoubleWith2OP, OPRRegister1ForDouble;
+
+struct OperandRuleCompositeOperandForDouble;
+extern OperandRuleCompositeOperandForDouble OPRCompositeForDoubleWith2OP, OPRCompositeForDoubleWith1OP;
+
+struct OperandRuleRegister3ForDouble;
+extern OperandRuleRegister3ForDouble OPRRegister3ForDouble;
+
+
 
 #endif

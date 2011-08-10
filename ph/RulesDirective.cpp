@@ -111,20 +111,20 @@ struct DirectiveRuleEndKernel: DirectiveRule
 		processLabels();
 		csCurrentKernel.KernelInstructions = csInstructions;
 		
-		if(csMaxReg>=csCurrentKernel.RegCount)
-			csCurrentKernel.RegCount = csMaxReg+1;
-		if(csMaxBar>=csCurrentKernel.BarCount)
-			csCurrentKernel.BarCount = csMaxBar+1;
+		if(csRegCount>csCurrentKernel.RegCount)
+			csCurrentKernel.RegCount = csRegCount;
+		if(csBarCount>csCurrentKernel.BarCount)
+			csCurrentKernel.BarCount = csBarCount;
 		
 		csKernelList.push_back(csCurrentKernel);
 
 		csInstructions.clear();
 #ifdef DebugMode
-		cout<<"MaxReg:"<<csMaxReg<<endl;
+		cout<<"RegCount:"<<csRegCount<<endl;
 #endif
 		csInstructionOffset = 0;
-		csMaxReg = 0;
-		csMaxBar = 0;
+		csRegCount = 0;
+		csBarCount = 0;
 		csCurrentKernel.Reset();
 		csCurrentKernelOpened = false;
 	}

@@ -92,7 +92,7 @@ RulesDirective.o: RulesDirective.cpp DataTypes.h SubString.h \
  GlobalVariables.h Cubin.h helper/helperException.h SpecificParsers.h \
  stdafx.h helper.h helper/helperMixed.h helper/helperParse.h \
  helper/helperCubin.h helper/../Cubin.h RulesDirective.h \
- RulesOperand\RulesOperandComposite.h
+ RulesOperand/RulesOperandComposite.h
 SpecificParsers.o: SpecificParsers.cpp SpecificParsers.h SubString.h \
  DataTypes.h GlobalVariables.h Cubin.h helper/helperException.h \
  helper/helperParse.h stdafx.h helper.h helper/helperMixed.h \
@@ -406,13 +406,12 @@ RulesOperandRegister.o: RulesOperand/RulesOperandRegister.cpp \
  RulesOperand/../helper/helperCubin.h RulesOperand/../helper/../Cubin.h \
  RulesOperand/../helper/helperException.h \
  RulesOperand/../SpecificParsers.h RulesOperand/stdafx.h \
- RulesOperand/../RulesOperand.h \
+ RulesOperand/RulesOperandRegister.h RulesOperand/../RulesOperand.h \
  RulesOperand/../RulesOperand/RulesOperandConstant.h \
  RulesOperand/../RulesOperand/RulesOperandRegister.h \
  RulesOperand/../RulesOperand/RulesOperandMemory.h \
  RulesOperand/../RulesOperand/RulesOperandComposite.h \
- RulesOperand/../RulesOperand/RulesOperandOthers.h \
- RulesOperand/RulesOperandRegister.h
+ RulesOperand/../RulesOperand/RulesOperandOthers.h
 RulesModifierCommon.o: RulesModifier/RulesModifierCommon.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
  RulesModifier/../helper/helperMixed.h RulesModifier/../stdafx.h \
@@ -434,7 +433,21 @@ RulesModifierConversion.o: RulesModifier/RulesModifierConversion.cpp \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
  RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
- RulesModifier/RulesModifierConversion.h
+ RulesModifier/RulesModifierConversion.h RulesModifier/../RulesModifier.h \
+ RulesModifier/../RulesModifier/RulesModifierDataMovement.h \
+ RulesModifier/../RulesModifier/RulesModifierInteger.h \
+ RulesModifier/../RulesModifier/RulesModifierFloat.h \
+ RulesModifier/../RulesModifier/RulesModifierConversion.h \
+ RulesModifier/../RulesModifier/RulesModifierCommon.h \
+ RulesModifier/../RulesModifier/RulesModifierExecution.h \
+ RulesModifier/../RulesModifier/RulesModifierLogic.h \
+ RulesModifier/../RulesModifier/RulesModifierOthers.h \
+ RulesModifier/../RulesOperand.h \
+ RulesModifier/../RulesOperand/RulesOperandConstant.h \
+ RulesModifier/../RulesOperand/RulesOperandRegister.h \
+ RulesModifier/../RulesOperand/RulesOperandMemory.h \
+ RulesModifier/../RulesOperand/RulesOperandComposite.h \
+ RulesModifier/../RulesOperand/RulesOperandOthers.h
 RulesModifierDataMovement.o: RulesModifier/RulesModifierDataMovement.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
  RulesModifier/../helper/helperMixed.h RulesModifier/../stdafx.h \
@@ -456,7 +469,21 @@ RulesModifierExecution.o: RulesModifier/RulesModifierExecution.cpp \
  RulesModifier/../helper/helperCubin.h RulesModifier/../helper/../Cubin.h \
  RulesModifier/../helper/helperException.h \
  RulesModifier/../SpecificParsers.h RulesModifier/stdafx.h \
- RulesModifier/RulesModifierExecution.h
+ RulesModifier/RulesModifierExecution.h RulesModifier/../RulesOperand.h \
+ RulesModifier/../RulesOperand/RulesOperandConstant.h \
+ RulesModifier/../RulesOperand/RulesOperandRegister.h \
+ RulesModifier/../RulesOperand/RulesOperandMemory.h \
+ RulesModifier/../RulesOperand/RulesOperandComposite.h \
+ RulesModifier/../RulesOperand/RulesOperandOthers.h \
+ RulesModifier/../RulesModifier.h \
+ RulesModifier/../RulesModifier/RulesModifierDataMovement.h \
+ RulesModifier/../RulesModifier/RulesModifierInteger.h \
+ RulesModifier/../RulesModifier/RulesModifierFloat.h \
+ RulesModifier/../RulesModifier/RulesModifierConversion.h \
+ RulesModifier/../RulesModifier/RulesModifierCommon.h \
+ RulesModifier/../RulesModifier/RulesModifierExecution.h \
+ RulesModifier/../RulesModifier/RulesModifierLogic.h \
+ RulesModifier/../RulesModifier/RulesModifierOthers.h
 RulesModifierFloat.o: RulesModifier/RulesModifierFloat.cpp \
  RulesModifier/../DataTypes.h RulesModifier/../SubString.h \
  RulesModifier/../helper/helperMixed.h RulesModifier/../stdafx.h \

@@ -48,8 +48,20 @@ char SubString::operator[] (int position)
 unsigned int SubString::ToImmediate20FromHexConstant(bool acceptNegative)
 {
 	unsigned int result = ToImmediate32FromHexConstant(acceptNegative);
-	if(result>0xFFFFF)
+	bool negative = (result&0x80000000);
+	if(negative)
+	{
+		result --;
+		result ^= 0xFFFFFFFF;
+	}
+	if(result>0x7FFFF)
 		throw 113;
+	if(negative)
+	{
+		result^=0xFFFFFFFF;
+		result++;
+		result&=0x000FFFFF;
+	}
 	return result;
 }
 
@@ -121,6 +133,8 @@ unsigned int SubString::ToImmediate32FromHexConstant(bool acceptNegative)
 				break;
 			digit -= 87;
 		}
+		else
+			break;
 		result <<=4;
 		result |= digit;
 		//result |= op_HexRef[digit];
@@ -317,7 +331,7 @@ void SubString::ToGlobalMemory(int &register1, unsigned int&memory)
 }
 
 //parse SubString as a constant memory expression in the form of c[0xa][Rxx+0xb]
-void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory)
+void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory, int maxBank)
 {
 	//shortest expression: c[0x0][0x0]
 	if(Length<11|| Start[0]!='c') 
@@ -336,8 +350,8 @@ void SubString::ToConstantMemory(unsigned int &bank, int &register1, unsigned in
 	int endPos = Find(']', startPos);
 	if(endPos == -1)
 		throw 110;
-	bank = SubStr(startPos, endPos - startPos).ToImmediate32FromHexConstant(false); //issue: the error line would be for global mem
-	if(bank > 15)
+	bank = SubStr(startPos, endPos - startPos).ToImmediate32FromHexConstant(false);
+	if(bank > maxBank)
 		throw 114; //bank number too large
 	startPos = endPos + 1;
 	for(; startPos<Length; startPos++)

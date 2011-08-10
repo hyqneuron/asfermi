@@ -30,11 +30,27 @@ struct SubString
 	unsigned int ToImmediate32FromIntConstant(); 
 	unsigned int ToImmediate32FromFloatConstant();
 	void ToGlobalMemory(int &register1, unsigned int&memory);
-	void ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory);
+	void ToConstantMemory(unsigned int &bank, int &register1, unsigned int &memory, int maxBank = 15);
 	int ToRegister();	
 	unsigned int ToImmediate20FromHexConstant(bool acceptNegative);
 	unsigned int ToImmediate20FromIntConstant();
 	unsigned int ToImmediate20FromFloatConstant();
+	inline bool IsRegister()
+	{
+		return Start[0]=='R'||Start[0]=='r';
+	}
+	inline bool IsConstantMemory()
+	{
+		return Start[0]=='c' || Start[0]=='C';
+	}
+	inline bool IsHex()
+	{
+		return Length>2&& Start[0]=='0' &&(Start[1]=='x'||Start[1]=='X');
+	}
+	inline bool IsFloat()
+	{
+		return Start[0]=='F';
+	}
 	
 	char* ToCharArrayStopOnCR();	
 };

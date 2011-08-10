@@ -8,6 +8,30 @@
 #include "../RulesOperand.h"
 #include "RulesOperandMemory.h"
 
+void memorySetMaxRegister(int reg)
+{
+	if(reg==63)
+		return;
+
+#ifdef DebugMode
+	if(reg>63||reg<0)
+		throw;
+#endif
+	if(csCurrentInstruction.OpcodeWord1&0x04000000)
+	{
+		reg++;
+		if(reg>=63)
+			throw 148; //reg too large for .E
+	}
+	if(reg>=csRegCount)
+		csRegCount = reg+1;
+}
+inline void memorySetMaxRegisterWithoutE(int reg)
+{
+	if(reg!=63&&reg>=csRegCount)
+		csRegCount = reg+1;
+}
+
 //Global Memory Operand
 struct OperandRuleGlobalMemoryWithImmediate32: OperandRule
 {
@@ -17,33 +41,40 @@ struct OperandRuleGlobalMemoryWithImmediate32: OperandRule
 		unsigned int memory; int register1;
 		component.ToGlobalMemory(register1, memory);
 		//Check max reg when register is not RZ(63)
-		if(register1!=63)
-			csMaxReg = (register1 > csMaxReg)? register1: csMaxReg;
-
+		memorySetMaxRegister(register1);
 		csCurrentInstruction.OpcodeWord0 |= register1<<20; //RE1
 		WriteToImmediate32(memory);
 	}
 }OPRGlobalMemoryWithImmediate32;
 
-//SharedMemory operand
-struct OperandRuleSharedMemoryWithImmediate20: OperandRule
+struct OperandRuleGlobalMemoryWithImmediate24: OperandRule
 {
-	OperandRuleSharedMemoryWithImmediate20(): OperandRule(SharedMemoryWithImmediate20){}
+	OperandRuleGlobalMemoryWithImmediate24(): OperandRule(GlobalMemoryWithImmediate32){}
 	virtual void Process(SubString &component)
 	{
 		unsigned int memory; int register1;
 		component.ToGlobalMemory(register1, memory);
-
-		if(memory>=1<<20) //issue: not sure if negative hex is gonna work
-			throw 130; //cannot be longer than 20 bits
-		//Check max reg when register is not RZ(63)
-		if(register1!=63)
-			csMaxReg = (register1 > csMaxReg)? register1: csMaxReg;
-
+		memorySetMaxRegisterWithoutE(register1);
+		bool negative = false;
+		if(memory&0x80000000)
+		{
+			negative = true;
+			memory --;
+			memory ^= 0xFFFFFFFF;
+		}
+		if(memory>0x7FFFFF)
+			throw 150; //24-bit.
+		if(negative)
+		{
+			memory^=0xFFFFFF;
+			memory++;
+			memory &= 0xFFFFFF;
+		}
 		csCurrentInstruction.OpcodeWord0 |= register1<<20; //RE1
 		WriteToImmediate32(memory);
 	}
-}OPRSharedMemoryWithImmediate20;
+}OPRGlobalMemoryWithImmediate24;
+
 
 
 
@@ -55,10 +86,8 @@ struct OperandRuleConstantMemory: OperandRule
 	{		
 		unsigned int bank, memory;
 		int register1;
-		component.ToConstantMemory(bank, register1, memory);
-		if(register1!=63)
-			csMaxReg = (register1 > csMaxReg)? register1: csMaxReg;
-
+		component.ToConstantMemory(bank, register1, memory, 0x1f);
+		memorySetMaxRegisterWithoutE(register1);
 		csCurrentInstruction.OpcodeWord0 |= register1<<20; //RE1
 		csCurrentInstruction.OpcodeWord1 |= bank<<10;
 		WriteToImmediate32(memory);
@@ -80,8 +109,7 @@ struct OperandRuleGlobalMemoryWithLastWithoutLast2Bits: OperandRule
 		if(memory%4!=0)
 			throw 138;//address must be multiple of 4
 
-		if(reg1!=63)
-			csMaxReg = (reg1 > csMaxReg)? reg1: csMaxReg;
+		memorySetMaxRegister(reg1);
 		csCurrentInstruction.OpcodeWord0 |= reg1<<20; //RE1
 		WriteToImmediate32(memory);
 
@@ -101,14 +129,15 @@ struct OperandRuleMemoryForATOM: OperandRule
 		{
 			memory--;
 			memory ^= 0xFFFFFFFF;
+			negative = true;
 		}
 		if(memory>0x7ffff)
 			throw 141; //20-bit signed integer
 		if(negative)
 		{
-			memory ^= 0xFFFFFFFF;
+			memory ^= 0x000FFFFF;
 			memory++;
-			memory &= 0x000fffff;
+			memory &= 0x000FFFFF;
 		}
 		csCurrentInstruction.OpcodeWord0 |= memory << 26;
 		csCurrentInstruction.OpcodeWord1 |= (memory&0x0001ffff)>>6;

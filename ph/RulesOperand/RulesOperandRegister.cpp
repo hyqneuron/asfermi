@@ -4,8 +4,9 @@
 #include "../stdafx.h"
 #include "stdafx.h" //SMark
 
-#include "../RulesOperand.h"
 #include "RulesOperandRegister.h"
+#include "../RulesOperand.h"
+
 
 
 struct OperandRuleRegister: OperandRule
@@ -25,8 +26,7 @@ struct OperandRuleRegister: OperandRule
 		int result = component.ToRegister();
 		//Check if this register is the highest register used so far
 		//issue: .128 and .64 will cause the highest register used be higher than the register indicated in the expression
-		if(result!=63)
-			csMaxReg = (result > csMaxReg)? result: csMaxReg;
+		CheckRegCount(result);
 		//apply result to OpcodeWord0
 		result = result<<Offset;
 		csCurrentInstruction.OpcodeWord0 |= result;
@@ -60,8 +60,7 @@ struct OperandRuleRegister3: OperandRule
 			csCurrentInstruction.OpcodeWord0|= 1<<8;
 		}
 		int result = component.ToRegister();
-		if(result!=63)
-			csMaxReg = (result > csMaxReg)? result: csMaxReg;
+		CheckRegCount(result);
 		//apply result
 		result = result<<Offset;
 		csCurrentInstruction.OpcodeWord1 &= ~(63<<Offset);
@@ -91,8 +90,7 @@ struct OperandRuleRegisterWithCC: OperandRule
 	{
 		//parse the register expression
 		int result = component.ToRegister();
-		if(result!=63) 
-			csMaxReg = (result > csMaxReg)? result: csMaxReg;
+		CheckRegCount(result);
 		//apply result
 		result = result<<Offset;
 		csCurrentInstruction.OpcodeWord0 |= result;
@@ -108,6 +106,51 @@ struct OperandRuleRegisterWithCC: OperandRule
 		}
 	}
 }OPRRegisterWithCC4IADD32I(14, 26), OPRRegisterWithCCAt16(14, 16);//for reg0
+
+
+
+
+inline void SetMaxRegisterFor64And128(int reg)
+{
+	if(reg==63)
+		return;
+
+#ifdef DebugMode
+	if(reg>63||reg<0)
+		throw;
+#endif
+
+	unsigned int lengthType = (csCurrentInstruction.OpcodeWord0&0x000000ff);
+	lengthType>>=5;
+	if(lengthType>4)
+	{
+		if(lengthType==5) //64
+		{
+			reg++;
+		}
+		else if(lengthType==6) //128
+		{
+			reg+=3;
+		}
+		else throw; //error in assembler
+		if(reg>=63)
+			throw 147; //reg too large
+	}
+	if(reg>=csRegCount)
+		csRegCount = reg+1;
+}
+struct OperandRuleRegister0ForMemory: OperandRule
+{
+	OperandRuleRegister0ForMemory(): OperandRule(Register){}
+	virtual void Process(SubString &component)
+	{
+		int reg = component.ToRegister();
+		SetMaxRegisterFor64And128(reg); //check .64 and .128
+		reg = reg<<14; //reg0
+		csCurrentInstruction.OpcodeWord0 |= reg;
+
+	}
+}OPRRegister0ForMemory;
 
 
 //Predicate register operand
@@ -276,3 +319,90 @@ struct OperandRuleRegister1WithSignFlag : OperandRule
 		}
 	}
 }OPRIMADReg1(9, false), OPRISCADDReg1(24, true);
+
+inline void RegCheckForDouble(int reg)
+{
+#ifdef DebugMode
+	if(reg>63||reg<0)
+		throw;
+#endif
+	if(reg!=63)
+	{
+		if(reg==62)
+			throw 151; //should be less than 62
+		reg++;
+		if(reg>=csRegCount)
+			csRegCount=reg+1;
+	}
+}
+
+struct OperandRuleRegister0ForDouble: OperandRule
+{
+	OperandRuleRegister0ForDouble(): OperandRule(Register){}
+	virtual void Process(SubString &component)
+	{
+		int result = component.ToRegister();
+		RegCheckForDouble(result);
+		csCurrentInstruction.OpcodeWord0 |= result<<14;
+	}
+}OPRRegister0ForDouble;
+
+struct OperandRuleRegister1ForDouble: OperandRule
+{
+	OperandRule* TargetRule;
+	OperandRuleRegister1ForDouble(OperandRule* targetRule): OperandRule(Register)
+	{
+		TargetRule = targetRule;
+	}
+	virtual void Process(SubString &component)
+	{
+		TargetRule->Process(component);
+		SubString localComp = component;
+		if(component[0]=='-'||component[0]=='|')
+		{
+			localComp = component.SubStr(1, component.Length -1);
+			localComp.RemoveBlankAtBeginning();
+			if(localComp.Length==0)
+				throw 125; //empty operand
+		}
+		int result = localComp.ToRegister();
+		RegCheckForDouble(result);
+	}
+}OPRRegister1ForDoubleWith2OP(&OPRFADD32IReg1), OPRRegister1ForDouble(&OPRRegister1);
+
+struct OperandRuleCompositeOperandForDouble: OperandRule
+{
+	OperandRule* TargetRule;
+	OperandRuleCompositeOperandForDouble(OperandRule* targetRule): OperandRule(Custom)
+	{
+		TargetRule = targetRule;
+	}
+	virtual void Process(SubString &component)
+	{
+		TargetRule->Process(component);
+		SubString localComp = component;
+		if(component[0]=='-'||component[0]=='|')
+		{
+			localComp = component.SubStr(1, component.Length -1);
+			localComp.RemoveBlankAtBeginning();
+			if(localComp.Length==0)
+				throw 125; //empty operand
+		}
+		if(localComp.IsRegister())
+		{
+			int result = localComp.ToRegister();
+			RegCheckForDouble(result);
+		}
+	}
+}OPRCompositeForDoubleWith2OP((OperandRule*)&OPRFADDCompositeWithOperator), OPRCompositeForDoubleWith1OP((OperandRule*)&OPRFFMAAllowNegative);
+
+struct OperandRuleRegister3ForDouble: OperandRule
+{
+	OperandRuleRegister3ForDouble(): OperandRule(Register){}
+	virtual void Process(SubString &component)
+	{
+		OPRRegister3ForMAD.Process(component);
+		int result = component.ToRegister();
+		RegCheckForDouble(result);
+	}
+}OPRRegister3ForDouble;

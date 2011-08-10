@@ -9,7 +9,7 @@
 
 //-----Extern declarations
 extern char* csSource; //The array with the entire source file stored in it
-extern int csMaxReg;   //highest register used
+extern int csRegCount;   //highest register used
 extern int hpParseComputeInstructionNameIndex(SubString &name);// compute instruction index from instruction name
 extern int hpParseComputeDirectiveNameIndex(SubString &name);
 //-----End of extern declaration

@@ -18,8 +18,8 @@ fstream csInput;
 fstream csOutput;
 char *csSource;
 int csSourceSize;
-int csMaxReg = 0;
-int csMaxBar = 0;
+int csRegCount = 0;
+int csBarCount = 0;
 bool csAbsoluteAddressing = true;
 
 OperationMode csOperationMode = Undefined;

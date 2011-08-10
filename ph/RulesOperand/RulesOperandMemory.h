@@ -6,15 +6,14 @@
 struct OperandRuleGlobalMemoryWithImmediate32;
 extern OperandRuleGlobalMemoryWithImmediate32 OPRGlobalMemoryWithImmediate32;
 
+struct OperandRuleGlobalMemoryWithImmediate24;
+extern OperandRuleGlobalMemoryWithImmediate24 OPRGlobalMemoryWithImmediate24;
+
 struct OperandRuleGlobalMemoryWithLastWithoutLast2Bits;
 extern OperandRuleGlobalMemoryWithLastWithoutLast2Bits OPRGlobalMemoryWithLastWithoutLast2Bits;
 
 struct OperandRuleMemoryForATOM;
 extern OperandRuleMemoryForATOM OPRMemoryForATOM;
-
-//SharedMemory operand
-struct OperandRuleSharedMemoryWithImmediate20;
-extern OperandRuleSharedMemoryWithImmediate20 OPRSharedMemoryWithImmediate20;
 
 //Constant Memory Operand
 struct OperandRuleConstantMemory;

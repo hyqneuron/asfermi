@@ -199,7 +199,7 @@ struct OperandRuleS2R: OperandRule
 		if(found.ExtraInfo==SortNotFound.ExtraInfo)
 		{
 			//try SRnum
-			if(component.Length>=3&&component[0]=='S'&&component[1]=='R'&&component[1]!='_')
+			if(component.Length>=3&&component[0]=='S'&&component[1]=='R'&&component[2]!='_')
 			{
 				int srnum=0;
 				try
