@@ -103,7 +103,6 @@ Instruction usage:
 {{{
 LDS(.type) reg0, [reg1(+0xabcd)];
 }}}
-Note that 0xabcd should not be greater than 0xFFFF. However, for the sake of experimentation, 0xabcd can have a maximal length of 20 bits.
 
 Template opcode
 {{{
@@ -111,6 +110,8 @@ Template opcode
         mod        reg0   reg1                   0xabcd
 }}}
 .type is the same as in LD.
+
+Note that 0xabcd is a 24-bit signed integer. Its magnitude by right should not exceed 0xFFFF.
 
 ----
 ==== LDC ====
@@ -174,7 +175,6 @@ Instruction usage:
 {{{
 STS(.type) [reg1(+0xabcd)], reg0;
 }}}
-Note: the same restriction that applies to LDS applies to STS as well.
 
 Template opcode
 {{{
@@ -182,6 +182,8 @@ Template opcode
         mod        reg0   reg1                   0xabcd
 }}}
 .type is the same as in LD.
+
+Note that 0xabcd is a 24-bit signed integer. Its magnitude by right should not exceed 0xFFFF.
 
 
 ----
