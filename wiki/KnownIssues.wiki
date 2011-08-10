@@ -1,6 +1,6 @@
 == Known Issues ==
   # .64 and .128 modifiers have not been properly supported as they do not cause the register count to increase by 2/4 respectively.
-  # cuobjdump suggests that the 20-bit address for constant memory in some composite operands should be rotated by 1 bit. Whether this is a bug of cuobjdump or something that the hardware mandates is not confirmed. This rotation is currently not implemented in any composite operand parsers.
+  # Constant memory banks 0x10 and above are not supported for now.
   # Error messages are reused too often and some errors will not trigger the correct error message.
   # No warning is given when the parsing of some floating point/integer expressions using atoi(), atol() or atof() produce errors.
 
