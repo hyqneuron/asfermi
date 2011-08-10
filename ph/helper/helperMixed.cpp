@@ -62,8 +62,7 @@ void hpUsage()
 	puts("     s mode.");
 	puts("  -o outputfile: Output cubin to the specified file.");
 	puts("  -r target_cubin kernel_name offset: Replace the opcodes in specified locati-");
-	puts("     on");
-	puts("     of a kernel in a specified cubin file with the assembled opcodes.");
+	puts("     on of a kernel in a specified cubin file with the assembled opcodes.");
 	puts("  -sm_20: output cubin for architecture sm_20. This is the default architectu-");
 	puts("     re assumed by asfermi.");
 	puts("  -sm_21: output cubin for architecture sm_21");
