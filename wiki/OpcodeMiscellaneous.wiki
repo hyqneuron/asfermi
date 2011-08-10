@@ -110,7 +110,8 @@ Instruction usage:
 {{{
 CCTLL.Op1 reg0, [reg1 + 0xabcd];
 }}}
-0xabcd should can be at most 24 bits long and should be a multiple of 4.
+0xabcd should can be at most 24 bits long and should be a multiple of 4. asfermi will allow numbers that are not multiples of 4 to be processed and written in the opcodes, but cuobjdump ignores the lowest 2 bits, and the hardware's behaviour is not confirmed.
+
 Template opcode
 {{{
 1010 000000 1110 000000 000000 000000000000000000000000 00000000 001011
