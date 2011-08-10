@@ -107,8 +107,8 @@ Note that 0xabcd should not be greater than 0xFFFF. However, for the sake of exp
 
 Template opcode
 {{{
-1010 000100 1110 000000 000000 0000000000000000 0000000000000010 000011
-        mod        reg0   reg1           0xabcd
+1010 000100 1110 000000 000000 000000000000000000000000 00000010 000011
+        mod        reg0   reg1                   0xabcd
 }}}
 .type is the same as in LD.
 
@@ -178,8 +178,8 @@ Note: the same restriction that applies to LDS applies to STS as well.
 
 Template opcode
 {{{
-1010 000100 1110 000000 000000 0000000000000000 0000000000000010 010011
-        mod        reg0   reg1           0xabcd
+1010 000100 1110 000000 000000 000000000000000000000000 00000010 010011
+        mod        reg0   reg1                   0xabcd
 }}}
 .type is the same as in LD.
 
