@@ -1,8 +1,11 @@
 #summary A development log
+#labels re
 
 ==== 10th August, 2011 ====
   # Added support of more Special Registers for S2R;
   # Added a new Directive "Label". Instructions that use instruction offset as argument can now use labels instead of real offset.
+  # Resolved some known issues regarding the register count.
+  # Fixed some parts in the documentation for the data movement instructions.
 
 ----
 ==== 9th August, 2011 ====
