@@ -78,6 +78,7 @@ Template opcode
 ||m 0  ||meaning||
 ||0    ||default||
 ||1    ||.E     ||
+
 ----
 ==== LDL ====
 Load local memory. Same as ld.local in ptx
