@@ -6,6 +6,7 @@
   # Added a new Directive "Label". Instructions that use instruction offset as argument can now use labels instead of real offset.
   # Resolved some known issues regarding the register count.
   # Fixed some parts in the documentation for the data movement instructions.
+  # Renamed the svn directories. The previous /trunk is now /asfermiOld. The current branch has been shifted from /ph to /trunk.
 
 ----
 ==== 9th August, 2011 ====
