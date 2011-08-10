@@ -50,19 +50,27 @@ void hpCleanUp() //parsers are created with the new keyword,        =====
 void hpUsage()
 {
 	puts("asfermi Version 0.3.0. Updated: 10 August 2011");
+	puts("");
 	puts("Usage:");
 	puts("asfermi sourcefile [Options [option arguments]]");
-	puts("Source file must be the first command-line option. However, it could be replaced by a -I option specified below.");
+	puts("Source file must be the first command-line option. However, it could be repla-");
+	puts("ced by a -I option specified below.");
 	puts("Options:");
 	puts("  -I \"instruction\": This can be used to replace the inputfile.");
-	puts("  A single line of instruction, surrounded by double quotation marks, will be processed as source input. Note that comment is not supported in this mode.");
+	puts("     A single line of instruction, surrounded by double quotation marks, will");
+	puts("     be prrocessed as source input. Note that comment is not supported in thi-");
+	puts("     s mode.");
 	puts("  -o outputfile: Output cubin to the specified file.");
-	puts("  -r target_cubin kernel_name offset: Replace the opcodes in specified location of a kernel in a specified cubin file with the assembled opcodes.");
-	puts("  -sm_20: output cubin for architecture sm_20. This is the default architecture assumed by asfermi.");
+	puts("  -r target_cubin kernel_name offset: Replace the opcodes in specified locati-");
+	puts("     on");
+	puts("     of a kernel in a specified cubin file with the assembled opcodes.");
+	puts("  -sm_20: output cubin for architecture sm_20. This is the default architectu-");
+	puts("     re assumed by asfermi.");
 	puts("  -sm_21: output cubin for architecture sm_21");
 	puts("  -32: output 32-bit cubin. This is the default behaviour.");
 	puts("  -64: output 64-bit cubin.");
-	puts("  -SelfDebug: throw unhandled exception when things go wrong. For debugging of asfermi only.");
+	puts("  -SelfDebug: throw unhandled exception when things go wrong. For debugging o-");
+	puts("     f asfermi only.");
 }
 
 
