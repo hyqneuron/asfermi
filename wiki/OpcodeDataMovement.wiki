@@ -199,6 +199,7 @@ Template opcode
 
 p_0 and p_1 combined is p;
 
+Note: While LDLK ought to operate on global memory, thus requiring the use of extended addressing mode in 64-bit environment, so far it seems LDLK does not support the .E modifier. As a result, LDLK may not work for 64-bit environments. (TBC)
 
 ----
 ==== LDSLK ====
@@ -225,6 +226,8 @@ Template opcode
         mod        reg0   reg1                           0xabcd
 }}}
 .type is the same as in LD.
+
+Note: While STUL ought to operate on global memory, thus requiring the use of extended addressing mode in 64-bit environment, so far it seems STUL does not support the .E modifier. As a result, STUL may not work for 64-bit environments. (TBC)
 
 ----
 ==== STSUL ====
