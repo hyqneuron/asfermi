@@ -1,4 +1,5 @@
 == Known Issues ==
+  # MUFU.Rxx64H currently does not cause the register count to increase by 2. Whether increasing register count by 2 instead of by 1 is necessary or not is to be confirmed.
   # Error messages are reused too often and some errors will not trigger the correct error message.
   # No warning is given when the parsing of some floating point/integer expressions using atoi(), atol() or atof() produce errors.
 
