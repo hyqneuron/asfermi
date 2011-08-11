@@ -6,6 +6,7 @@ Current results with S2R suggest:
   * The scheduler fetches 16 bytes (2 8-byte instructions. This is probably the row size of the instruction cache) at a time.
 
 Result of Test2 (showing the even-numbered warps only):
+
 https://lh5.googleusercontent.com/-F4l5rgQl3qg/TkPbT4CyFNI/AAAAAAAAAPA/MHskARdiu6s/s800/S2R%252520result.jpg
 
 === Test1 ===
