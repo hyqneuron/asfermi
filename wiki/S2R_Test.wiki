@@ -1,4 +1,3 @@
-
 === Interpretation ===
 Current results with S2R suggest:
   * S2R has a throughput: 64 /scheduler clock(SK)
@@ -39,9 +38,8 @@ ST.E [R4+0XC], R3;
 ST.E [R4+0X10], R10;
 ST.E [R4+0x14], R11;
 EXIT;
-}}
 !EndKernel
-
+}}}
 
 Results:
 
