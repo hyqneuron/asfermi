@@ -1,3 +1,5 @@
+<wiki:toc>
+
 === Interpretation ===
 Current results with S2R suggest:
   * S2R has a throughput: 64 /scheduler clock(SK)
