@@ -325,6 +325,8 @@ struct OperandRuleBAR: OperandRule
 			if(!AllowRegister)
 				throw 144; //no registers allowed
 			result = component.ToRegister();
+			if(result==63&&csBarCount==0)
+				csBarCount = 1;
 		}
 		//numerical expression
 		else
