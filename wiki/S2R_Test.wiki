@@ -6,7 +6,7 @@ Current results with S2R suggest:
   * The scheduler fetches 16 bytes (2 8-byte instructions. This is probably the row size of the instruction cache) at a time
 
 === Test1 ===
-code:
+====code====
 {{{
 !Machine 64
 !Kernel k
@@ -43,7 +43,7 @@ EXIT;
 !EndKernel
 }}}
 
-Results:
+====result====
 
 {{{
 length = 192 //number of unsigned integers written
@@ -247,7 +247,7 @@ i=191, output=2981802911
 }}}
 
 === Test2 ===
-code:
+====code====
 {{{
 !Machine 64
 
@@ -282,7 +282,7 @@ ST.E [R4+0x14], R11;
 EXIT;
 !EndKernel
 }}}
-result:
+====result====
 {{{
 length = 192
 tcount=1024
