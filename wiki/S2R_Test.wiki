@@ -2,8 +2,8 @@
 
 === Interpretation ===
 Current results with S2R suggest:
-  * S2R has a throughput: 64 per scheduler clock(SK) per Multiprocessor (MP)
-  * The scheduler fetches 16 bytes (2 8-byte instructions. This is probably the row size of the instruction cache) at a time
+  * S2R has a throughput of 64 instructions per scheduler clock(SK) per Multiprocessor (MP)
+  * The scheduler fetches 16 bytes (2 8-byte instructions. This is probably the row size of the instruction cache) at a time.
 
 === Test1 ===
 ====code====
