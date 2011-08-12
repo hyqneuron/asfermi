@@ -7,7 +7,7 @@ Current results with S2R suggest:
 
 Result of Test2 (with 16 warps, showing the even-numbered warps only):
 
-https://lh5.googleusercontent.com/-F4l5rgQl3qg/TkPbT4CyFNI/AAAAAAAAAPA/MHskARdiu6s/s800/S2R%252520result.jpg
+https://lh3.googleusercontent.com/-FW0EI9Nq5Qk/TkU4irz7cfI/AAAAAAAAAPU/nsKBdtu8rgM/s800/S2R%252520result.jpg
 
 === Test1 ===
 ====code====
@@ -485,5 +485,9 @@ i=188, output=2935324195
 i=189, output=2935324224
 i=190, output=2935324227
 i=191, output=2935324256
+}}}
 
+=== Test3 ===
+====code====
+{{{
 }}}
