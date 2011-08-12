@@ -30,5 +30,3 @@
     * [OpcodeMiscellaneous]
   * Microbenchmarks
     * Test Sets
-      * [S2R_Test]
-      * [LEPC_Test]
