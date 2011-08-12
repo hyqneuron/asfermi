@@ -5,6 +5,10 @@ Current results with S2R suggest:
   * S2R has a throughput of 64 instructions per scheduler clock(SK) per Multiprocessor (MP)
   * The scheduler fetches 16 bytes (2 8-byte instructions. This is probably the row size of the instruction cache) at a time.
 
+Result of Test1 (with 16 warps, showing only the even-numbered warps):
+
+https://lh5.googleusercontent.com/-LNlcS40ML2g/TkU7X9Hcc7I/AAAAAAAAAPo/FHf7s6WS7SQ/s800/S2R%252520result2.jpg
+
 Result of Test2 (with 16 warps, showing the even-numbered warps only):
 
 https://lh3.googleusercontent.com/-FW0EI9Nq5Qk/TkU4irz7cfI/AAAAAAAAAPU/nsKBdtu8rgM/s800/S2R%252520result.jpg
