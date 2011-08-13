@@ -27,6 +27,12 @@ This instruction appears at the beginning of all ptxas/nvcc-generated cubins. c`
 ==== `MOV R0, c[0x0][0x20]` ====
 A kernel's parameter window starts at `c[0x0][0x20]` and can be at most 256-byte wide. The instruction `MOV R0, c[0x0][0x20]` Loads the first 4 bytes of the parameters passed in to `R0`.
 
+====RZ====
+RZ means either 'no register' or 'value zero'.
+
+====pt====
+pt means either 'no predicate' or 'predicate true'
+
 ==== Working with 64-bit platform ====
 A full address is 64-bit and requires 2 MOV to complete the loading. ST.E will then be used to store any value to an address. Eg:
 {{{
