@@ -1,5 +1,4 @@
 #summary A development log
-#labels re
 
 ==== 10th August, 2011 ====
   # Added support of more Special Registers for S2R;
