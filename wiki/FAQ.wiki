@@ -39,4 +39,4 @@ ST.E [R0], R2;
 Note that ST.E [R1] will almost always generate kernel launch error. The reason for this is not yet known.
 
 ==== How to get clock count ====
-See #Special_Registers
+See [#Special_registers]
