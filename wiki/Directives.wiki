@@ -62,7 +62,7 @@ The example above declares the size of the constant2 section as 0x40, then defin
 
 ----
 == Assembler Commands ==
-==== [Features#State_Numbers 0]: RegCount ====
+==== [Features#State_Numbers 0]: `RegCount` ====
 Used within a kernel region to define the number of registers used by the kernel. However, if the actual number of registers required is larger than the defined number, the actual count will be used instead. Maximal count should not exceed 63.
 
 Format:
@@ -71,7 +71,7 @@ Format:
 !RegCount 0x10
 }}}
 
-==== [Features#State_Numbers 0]: BarCount ====
+==== [Features#State_Numbers 0]: `BarCount` ====
 Used within a kernel region to define the number of barriers used by the kernel. The defined count should not exceed 16. However, for the sake of experimentation a maximal count of 127 is actually allowed.
 
 Format
