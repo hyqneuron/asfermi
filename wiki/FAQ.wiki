@@ -1,3 +1,5 @@
+<wiki:toc>
+
 ==== Special registers ====
 {{{
 %tid.x: S2R Rx, SR_Tid_X;
