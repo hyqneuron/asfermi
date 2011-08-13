@@ -1,0 +1,38 @@
+==== Special registers ====
+{{{
+%tid.x: S2R Rx, SR_Tid_X;
+%tid.y: S2R Rx, SR_Tid_Y;
+%tid.z: S2R Rx, SR_Tid_Z;
+%landid:S2R Rx, SR_LandId;
+%ctaid.x: S2R Rx, SR_CTAid_X;
+%ctaid.y: S2R Rx, SR_CTAid_Y;
+%ctaid.z: S2R Rx, SR_CTAid_Z;
+%smid: S2R Rx, SR_VirtId;
+       BFE Rx, Rx, 0x914;
+%nsmid:S2R Rx, SR_VirtCfg;
+       BFE Rx, Rx, 0x914;
+%clock:S2R Rx, SR_ClockLo;
+}}}
+More: [OpcodeMiscellaneous#S2R]
+
+
+
+==== `MOV R1, c[0x1][0x100]` ====
+This instruction appears at the beginning of all ptxas/nvcc-generated cubins. c`[0x1`]`[0x100`] is a 4-byte constant value in bank 1 address 0x100. Currently the purpose of this constant value remains unknown. No problem has been discovered when this instruction is removed from cubin. However, attemping "ST.E `[R1]`, Rxx" will always result in kernel launch failure. Whether the same is true for "ST `[R1]`, Rxx" or not has not been tested.
+
+==== `MOV R0, c[0x0][0x20]` ====
+A kernel's parameter window starts at `c[0x0][0x20]` and can be at most 256-byte wide. The instruction `MOV R0, c[0x0][0x20]` Loads the first 4 bytes of the parameters passed in to `R0`.
+
+==== Working with 64-bit platform ====
+A full address is 64-bit and requires 2 MOV to complete the loading. ST.E will then be used to store any value to an address. Eg:
+{{{
+//store 0x1234 to address specified in the first 8-byte parameter
+MOV R0, c[0x0][0x20];
+MOV R1, c[0x0][0x24];
+MOV R2, 0x1234;
+ST.E [R0], R2;
+}}}
+Note that ST.E [R1] will almost always generate kernel launch error. The reason for this is not yet known.
+
+==== How to get clock count ====
+See #Special_Registers
