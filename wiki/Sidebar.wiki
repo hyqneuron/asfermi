@@ -12,6 +12,7 @@
     * [KnownIssues]
     * [Instructions]
     * [Directives]
+    * [FAQ]
   * Development Related
     * [Design]
     * [HowToStart]
