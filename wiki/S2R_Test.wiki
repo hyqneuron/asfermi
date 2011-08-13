@@ -13,6 +13,12 @@ Result of Test2 (with 16 warps, showing the even-numbered warps only):
 
 https://lh3.googleusercontent.com/-FW0EI9Nq5Qk/TkU4irz7cfI/AAAAAAAAAPU/nsKBdtu8rgM/s800/S2R%252520result.jpg
 
+Result of test 1, with 2,4 and 6 warps respectively. Only even-numbered warps are being shown.
+
+https://lh5.googleusercontent.com/-wLpcDZ6K9Oc/TkYLtM5uVhI/AAAAAAAAAQw/fzbQieI8Z-g/s800/S2R%2525202%252520warps.JPG
+https://lh6.googleusercontent.com/-yGhQVJ7qUZU/TkYLvn1RaDI/AAAAAAAAAQw/7gHOHOJF9cY/s800/S2R%2525204%252520warps.JPG
+https://lh6.googleusercontent.com/-EJVv7YzlFH8/TkYLwtvd2YI/AAAAAAAAAQw/Rac0T3gAyOU/s800/S2R%2525206%252520warps.JPG
+
 === Test1 ===
 ====code====
 {{{
