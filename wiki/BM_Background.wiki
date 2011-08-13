@@ -1,0 +1,11 @@
+#summary One-sentence summary of this page.
+
+  * All clock numbers shown in the tests are scheduler clock numbers. Core clock numbers cannot be directly measured.
+  * A Multiprocessor has 2 warp schedulers
+  * 32 CUDA cores are divided into 2 groups of 16
+  * *Processing Unit Group*(PUG): A group of processing units that work together to serve a warp.
+    * ALU: arithmetic and logic unit
+    * XLU: extended ALU
+    * FU:  floating-point unit
+    * AGU: address generation unit
+    * SU : special function unit
