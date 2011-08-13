@@ -46,3 +46,9 @@ Note that ST.E [R1] will almost always generate kernel launch error. The reason 
 
 ==== How to get clock count ====
 See [#Special_registers]
+
+==== Instruction not supported ====
+When trying to reassemble the output of cuobjdump, if asfermi says that some instruction is not supported, here's what you can do:
+  # Use other instructions to simulate it
+  # Copy the hex dump of the instruction and use the [Directives#:_RawInstruction RawInstruction] directive
+  # Email me and tell me that you want to see the support for that instruction.
