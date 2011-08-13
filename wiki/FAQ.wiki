@@ -13,7 +13,8 @@
           BFE Rx, Rx, 0x914;
 %nsmid:   S2R Rx, SR_VirtCfg;
           BFE Rx, Rx, 0x914;
-%clock:S2R Rx, SR_ClockLo;
+%clock:   S2R Rx, SR_ClockLo;
+          Note that clock number obtained is scheduler clock number.
 }}}
 More: [OpcodeMiscellaneous#S2R]
 
