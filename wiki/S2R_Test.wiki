@@ -6,8 +6,7 @@ Current results with S2R suggest:
   * The scheduler fetches 16 bytes (2 8-byte instructions. This is probably the row size of the instruction cache) at a time.
   * Even-numbered warps are often 1 step slower than odd-numbered warps. This reduces Processing Unit Group contention.
 
-Result of Test1 (with 16 warps, showing only the even-numbered warps):
-(Numbers in the following tables are the normalised clock numbers)
+Result of Test1 (with 16 warps, showing only the even-numbered warps, numbers in the following tables are the normalised clock numbers): 
 https://lh5.googleusercontent.com/-LNlcS40ML2g/TkU7X9Hcc7I/AAAAAAAAAPo/FHf7s6WS7SQ/s800/S2R%252520result2.jpg
 
 Result of Test2 (with 16 warps, showing the even-numbered warps only):
