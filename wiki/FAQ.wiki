@@ -2,17 +2,17 @@
 
 ==== Special registers ====
 {{{
-%tid.x: S2R Rx, SR_Tid_X;
-%tid.y: S2R Rx, SR_Tid_Y;
-%tid.z: S2R Rx, SR_Tid_Z;
-%landid:S2R Rx, SR_LandId;
+%tid.x:   S2R Rx, SR_Tid_X;
+%tid.y:   S2R Rx, SR_Tid_Y;
+%tid.z:   S2R Rx, SR_Tid_Z;
+%landid:  S2R Rx, SR_LandId;
 %ctaid.x: S2R Rx, SR_CTAid_X;
 %ctaid.y: S2R Rx, SR_CTAid_Y;
 %ctaid.z: S2R Rx, SR_CTAid_Z;
-%smid: S2R Rx, SR_VirtId;
-       BFE Rx, Rx, 0x914;
-%nsmid:S2R Rx, SR_VirtCfg;
-       BFE Rx, Rx, 0x914;
+%smid:    S2R Rx, SR_VirtId;
+          BFE Rx, Rx, 0x914;
+%nsmid:   S2R Rx, SR_VirtCfg;
+          BFE Rx, Rx, 0x914;
 %clock:S2R Rx, SR_ClockLo;
 }}}
 More: [OpcodeMiscellaneous#S2R]
