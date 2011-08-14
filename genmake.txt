@@ -52,11 +52,11 @@ all: copyfile $(main)  $(helper) $(instructions) $(operands) $(modifiers)
 	@echo Generation completed.
 
 copyfile:
-	del generated.txt
-	copy gentemp.txt generated.txt
+	rm generated.txt
+	cp gentemp.txt generated.txt
 
 clean:
-	del generated.txt
+	rm generated.txt
 
 helper%:
 	g++ -MM helper/$@.cpp>>generated.txt

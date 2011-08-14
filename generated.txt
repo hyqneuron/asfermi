@@ -54,8 +54,8 @@ all: $(allobjects)
 
 
 clean:
-	del *.o
-	del $(TARGET)
+	rm *.o
+	rm $(TARGET)
 
 asfermi.o: asfermi.cpp SubString.h DataTypes.h Cubin.h GlobalVariables.h \
  helper.h helper/helperMixed.h helper/helperParse.h helper/helperCubin.h \
