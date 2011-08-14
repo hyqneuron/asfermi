@@ -146,7 +146,7 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 138:	message = "The address must be a multiple of 4.";
 		break;
-	case 139:	message = "barrier identifier greater than 63 is not supported. Barrier identifier should normally be less than 16.";
+	case 139:	message = "barrier identifier greater than 127 is not supported. Barrier identifier should normally be less than 16.";
 		break;
 	case 140:	message = "Thread count should be no larger than 4095.";
 		break;
