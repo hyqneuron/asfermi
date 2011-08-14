@@ -54,6 +54,6 @@ all: $(allobjects)
 
 
 clean:
-	del *.o
-	del $(TARGET)
+	rm *.o
+	rm $(TARGET)
 
