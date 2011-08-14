@@ -1,4 +1,3 @@
-
 #include "../DataTypes.h"
 #include "../GlobalVariables.h"
 #include "../helper/helperMixed.h"
@@ -337,8 +336,10 @@ struct OperandRuleBAR: OperandRule
 			//int
 			else
 				result = component.ToImmediate32FromInt32();
-			if(result>63)
+			if(result>127)
 				throw 139;//too large barrier identifier
+         if(result>16)
+            hpWarning(13);
 			csCurrentInstruction.OpcodeWord1|= 1<<15;
 			if(result>=csBarCount)
 				csBarCount = result+1;
