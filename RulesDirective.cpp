@@ -55,7 +55,7 @@ void processLabels()
 	{
 		if(IndexList[i]==IndexList[i-1]&&SortedList[i].Name.Compare(SortedList[i-1].Name))
 		{
-			csLineNumber = ((Label*)SortedList[i].ExtraInfo)->LineNumber;
+			csCurrentDirective.Reset(csInstructions.begin()->InstructionString, csInstructions.begin()->LineNumber);
 			throw 1023; //repeating label name
 		}
 	}
@@ -65,7 +65,10 @@ void processLabels()
 		SortElement found = SortFind(SortedList, IndexList, count, request->RequestedLabelName);
 		if(found.ExtraInfo == SortNotFound.ExtraInfo)
 		{
-			csLineNumber = request->InstructionPointer->LineNumber;
+			if(!request->Zero)
+				csCurrentDirective.Reset(request->InstructionPointer->InstructionString, request->InstructionPointer->LineNumber);
+			else
+				csCurrentDirective.Reset(csInstructions.begin()->InstructionString, csInstructions.begin()->LineNumber);
 			throw 1024;//label not found
 		}
 		int offset = ((Label*)found.ExtraInfo)->Offset;
