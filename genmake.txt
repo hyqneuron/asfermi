@@ -42,6 +42,14 @@ modifiers = \
 	RulesModifierLogic\
 	RulesModifierOthers
 
+ifdef ProgramFiles
+	RM = del
+	CP = copy
+else
+	RM = rm
+	CP = cp
+endif
+
 
 .PHONY: all clean copyfile
 
@@ -52,11 +60,11 @@ all: copyfile $(main)  $(helper) $(instructions) $(operands) $(modifiers)
 	@echo Generation completed.
 
 copyfile:
-	rm generated.txt
-	cp gentemp.txt generated.txt
+	$(RM) generated.txt
+	$(CP) gentemp.txt generated.txt
 
 clean:
-	rm generated.txt
+	$(RM) generated.txt
 
 helper%:
 	g++ -MM helper/$@.cpp>>generated.txt
