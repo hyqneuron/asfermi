@@ -45,6 +45,14 @@ modifiers = \
 allnames = $(main) $(helper) $(instructions) $(operands) $(modifiers)
 allobjects = $(allnames:%=%.o)
 
+ifdef ProgramFiles
+	RM = del
+	CP = copy
+else
+	RM = rm
+	CP = cp
+endif
+
 CXX = g++
 CXXFLAGS = -w
 TARGET = asfermi.exe
@@ -54,6 +62,6 @@ all: $(allobjects)
 
 
 clean:
-	rm *.o
-	rm $(TARGET)
+	$(RM) *.o
+	$(RM) $(TARGET)
 
