@@ -253,7 +253,9 @@ struct OperandRuleInstructionAddress: OperandRule
 		if(component[0]=='!')
 		{
 			LabelRequest request;
+
 			SubString labelName = component.SubStr(1, component.Length - 1);
+			labelName.RemoveBlankAtEnd();
 			if(labelName.Length==0)
 				throw 145; //empty label name
 			request.RequestedLabelName = labelName;

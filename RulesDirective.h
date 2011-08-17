@@ -53,6 +53,9 @@ extern DirectiveRuleArch DRArch;
 struct DirectiveRuleMachine;
 extern DirectiveRuleMachine DRMachine;
 
+struct DirectiveRuleAlign;
+extern DirectiveRuleAlign DRAlign;
+
 struct DirectiveRuleSelfDebug;
 extern DirectiveRuleSelfDebug DRSelfDebug;
 
