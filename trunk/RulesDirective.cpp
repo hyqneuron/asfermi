@@ -66,7 +66,9 @@ void processLabels()
 		if(found.ExtraInfo == SortNotFound.ExtraInfo)
 		{
 			if(!request->Zero)
-				csCurrentDirective.Reset(request->InstructionPointer->InstructionString, request->InstructionPointer->LineNumber);
+			{
+				csCurrentDirective.Reset((++request->InstructionPointer)->InstructionString, request->InstructionPointer->LineNumber);
+			}
 			else
 				csCurrentDirective.Reset(csInstructions.begin()->InstructionString, csInstructions.begin()->LineNumber);
 			throw 1024;//label not found
@@ -149,7 +151,9 @@ struct DirectiveRuleLabel: DirectiveRule
 		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
 		currentArg++;//currentArg is on Name
 		Label label;
-		label.Name = *currentArg;
+		SubString lName = *currentArg;
+		lName.RemoveBlankAtEnd();
+		label.Name = lName;
 		label.Offset = csInstructionOffset;
 		label.LineNumber = csLineNumber;
 		csLabels.push_back(label);
@@ -484,6 +488,46 @@ struct DirectiveRuleMachine: DirectiveRule
 			throw 1021;// unsupported argument
 	}
 }DRMachine;
+
+
+
+struct DirectiveRuleAlign: DirectiveRule
+{
+	Instruction nop;
+	DirectiveRuleAlign()
+	{
+		nop.Is8 = true;
+		nop.OpcodeWord0=0x00001de4;
+		nop.OpcodeWord1=0x40000000;
+		Name = "Align";
+	}
+	virtual void Process()
+	{
+		if(!csCurrentKernelOpened)
+			throw 1006; //only definable inside kernels
+		if(csCurrentDirective.Parts.size()!=2)
+			throw 1002; //incorrect no. of arguments
+
+		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
+		currentArg++;//currentArg is on count
+		SubString state = *currentArg;
+		state.RemoveBlankAtEnd();
+		bool eight = false;
+		if(state.Compare("0"))
+			eight = false;
+		else if(state.Compare("8"))
+			eight = true;
+		else
+			throw 1025; //unsupported argument
+		bool aligned8 = (csInstructionOffset%16==8);
+		if(eight^aligned8)
+		{
+			csInstructions.push_back(nop);
+			csInstructionOffset+=8;
+		}
+
+	}
+}DRAlign;
 
 
 struct DirectiveRuleSelfDebug: DirectiveRule

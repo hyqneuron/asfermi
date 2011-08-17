@@ -237,6 +237,8 @@ void hpDirectiveErrorHandler(int e)
 		break;
 	case 1024:	message = "Label not found.";
 		break;
+	case 1025:	message = "Unsupported argument.";
+		break;
 	default:	message = "Unknown error.";
 		break;
 	};
