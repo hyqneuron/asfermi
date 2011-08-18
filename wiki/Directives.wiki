@@ -117,6 +117,14 @@ Format:
 !Label LabelName
 BRA !LabelName;
 }}}
+==== [Features#State_Numbers 0]:Align ====
+This directive aligns the following instruction to either 0x**0 or 0x**8 using NOPs.
+
+Format:
+{{{
+!Align 0 //align to 0x**0
+!Align 8 //align to 0x**8
+}}}
 ==== [Features#State_Numbers 2]: Unroll ====
 Description: the "Unroll" directive can be used to the same instruction for many times. Note that the "Unroll" directive only operates on the first instruction that follows. Even if multiple instructions appear on the same line, only the first instruction will be repeated. `"BeginUnroll"` and `"EndUnroll"` can be used to repeat the instructions defined within this pair many times.
 
