@@ -5,6 +5,7 @@ Note: round brackets, instead of square brackets, are used to represent an optio
 Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand] may be mentioned in the parts below. Please visit these two links for more information regarding their meaning.
 
 === Integer Instructions ===
+<wiki:toc>
 ==== IADD ====
 Instruction usage:
 {{{
