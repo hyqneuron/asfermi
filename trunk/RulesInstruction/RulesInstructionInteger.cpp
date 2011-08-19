@@ -1,4 +1,3 @@
-
 #include "../DataTypes.h"
 #include "../helper/helperMixed.h"
 
@@ -76,7 +75,7 @@ struct InstructionRuleIMAD: InstructionRule
 	{
 		hpBinaryStringToOpcode8("1100 010100111000000000000000000000000000000000000000000000 000100", OpcodeWord0, OpcodeWord1);
 		SetOperands(4,
-					&OPRRegister0,
+					&OPRRegisterWithCCAt16,
 					&OPRIMADReg1,
 					&OPRIMULStyle,
 					&OPRRegister3ForMAD);
