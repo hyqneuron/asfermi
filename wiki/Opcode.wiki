@@ -40,9 +40,11 @@ For most other instructions that use this field, imme is divided into two fields
 ||immea 0:1||immea 2:21               ||
 ||00        ||lowest 6 bits: register ||
 ||10        ||constant memory address ||
+||01        ||see note below          ||
 ||11        ||20-bit immediate        ||
 
-When immea 0:1 is 10, imme 2:5 is the constant memory bank number and imme 6:21 is the address within this bank.
+  * When immea 0:1 is 10, imme 2:5 is the constant memory bank number and imme 6:21 is the address within this bank. 
+  * When immea 0:1 is 01, the instruction should be one that resembles IMAD/FFMA/DFMA, i.e. supporting 4 operands of the same length. The third operand ought to be a register whose register number is stored in the reg3 field. The fourth operand should be a constant memory address stored in the lower 20 bits of immea.
 
 immeb is sometimes used to store modifier bits.
 
