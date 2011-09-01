@@ -136,6 +136,15 @@ Instruction Usage:
 {{{
 FFMA(.FTZ)(.roundOp)(.SAT) reg0, reg1, (-)composite operand, (-)reg3;
 }}}
+
+Or,
+
+{{{
+FFMA(.FTZ)(.roundOp)(.SAT) reg0, reg1, (-)reg3, (-)composite operand;
+}}}
+
+Note that both the third and the fourth operand can be a composite operand, but the other one must be a register. 
+
 Template Opcode
 {{{
 0000 000000 1110 000000 000000 0000000000000000000000 0 000000  000 001100
@@ -333,6 +342,16 @@ Instruction usage:
 {{{
 DFMA reg0, reg1, (-)composite operand, (-)reg3;
 }}}
+
+Or,
+
+{{{
+DFMA reg0, reg1, (-)reg3, (-)composite operand;
+}}}
+
+
+Note that both the third and the fourth operand can be a composite operand, but the other one must be a register.
+
 Template opcode
 {{{
 1000 000000 1110 000000 000000 0000000000000000000000 0 000000  000 000100
