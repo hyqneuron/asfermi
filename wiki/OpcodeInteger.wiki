@@ -105,7 +105,13 @@ Instruction usage:
 {{{
 IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0(.CC), (-)reg1, composite operand, (-)reg3;
 }}}
+Or,
+{{{
+IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0(.CC), (-)reg1, (-)reg3, composite operand;
+}}}
 Note that the when the negative operator is used on both reg1 and reg3, a .PO modifier would appear in the cubin instead. What .PO does has not been tested.
+
+Both the third and the fourth operand can be a composite operand, but the other one must be a register.
 
 Template opcode:
 {{{
