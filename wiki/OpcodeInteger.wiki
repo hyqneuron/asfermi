@@ -108,7 +108,7 @@ IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0(.CC), (-)reg1, composite operand, (-)r
 }}}
 Or,
 {{{
-IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0(.CC), (-)reg1, (-)reg3, composite operand;
+IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0(.CC), (-)reg1, (-)reg2, composite operand;
 }}}
 Note that the when the negative operator is used on both reg1 and reg3, a .PO modifier would appear in the cubin instead. What .PO does has not been tested.
 
