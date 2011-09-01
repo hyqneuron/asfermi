@@ -140,7 +140,7 @@ FFMA(.FTZ)(.roundOp)(.SAT) reg0, reg1, (-)composite operand, (-)reg3;
 Or,
 
 {{{
-FFMA(.FTZ)(.roundOp)(.SAT) reg0, reg1, (-)reg3, (-)composite operand;
+FFMA(.FTZ)(.roundOp)(.SAT) reg0, reg1, (-)reg2, (-)composite operand;
 }}}
 
 Note that both the third and the fourth operand can be a composite operand, but the other one must be a register. 
@@ -346,7 +346,7 @@ DFMA reg0, reg1, (-)composite operand, (-)reg3;
 Or,
 
 {{{
-DFMA reg0, reg1, (-)reg3, (-)composite operand;
+DFMA reg0, reg1, (-)reg2, (-)composite operand;
 }}}
 
 
