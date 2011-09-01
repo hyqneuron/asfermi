@@ -99,6 +99,7 @@ Template opcode:
 ||mod2 0||meaning||
 ||0     ||default||
 ||1     ||reg0.CC||
+
 ----
 ==== IMAD ====
 Instruction usage:
