@@ -11,6 +11,11 @@ The major parts of the assembler are already done.
 A few more things to do:
   # Write tests and debug
 
+Other possible future features:
+  # Support a subset of C to ease coding
+  # Macros (+ a bit of scripting to help with unrolling)
+  # Register renaming and instruction reordering
+
 ===Microbenchmarking===
 ====Instruction-related====
   * Instruction latencies
