@@ -143,7 +143,7 @@ Or,
 FFMA(.FTZ)(.roundOp)(.SAT) reg0, reg1, (-)reg2, (-)composite operand;
 }}}
 
-Note that both the third and the fourth operand can be a composite operand, but the other one must be a register. 
+Note that either the third and the fourth operand is a composite operand, but the other one must be a register. 
 
 Template Opcode
 {{{
@@ -350,7 +350,7 @@ DFMA reg0, reg1, (-)reg2, (-)composite operand;
 }}}
 
 
-Note that both the third and the fourth operand can be a composite operand, but the other one must be a register.
+Note that either the third and the fourth operand is a composite operand, but the other one must be a register.
 
 Template opcode
 {{{
