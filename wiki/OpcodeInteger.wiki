@@ -112,7 +112,7 @@ IMAD(.U32/S32)(.U32/.S32)(.HI)(.SAT) reg0(.CC), (-)reg1, (-)reg2, composite oper
 }}}
 Note that the when the negative operator is used on both reg1 and reg3, a .PO modifier would appear in the cubin instead. What .PO does has not been tested.
 
-Both the third and the fourth operand can be a composite operand, but the other one must be a register.
+Either the third or the fourth operand is a composite operand, but the other one must be a register.
 
 Template opcode:
 {{{
