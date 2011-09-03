@@ -81,9 +81,18 @@ int main( int argc, char** argv)
 		return;
 	}
 	int length = 8;
-	int cpu_output[8], cpu_output2[8];
+	if(argc>=4)
+	{
+		length = atoi(argv[3]);
+	}
+	int tcount = 1;
+	if(argc>=5)
+	{
+		tcount = atoi(argv[4]);
+	}
+	int cpu_output[8];
 	int size = sizeof(int)*length;
-	CUdeviceptr gpu_output, gpu_output2;
+	CUdeviceptr gpu_output;
 	CUdevice device;
 	CUcontext context;
 
@@ -91,7 +100,6 @@ int main( int argc, char** argv)
 	muRC(95, cuDeviceGet(&device, 0));
 	muRC(92, cuCtxCreate(&context, CU_CTX_SCHED_SPIN, device));
 	muRC(90, cuMemAlloc(&gpu_output, size));
-	muRC(90, cuMemAlloc(&gpu_output2, size));
 
 	CUmodule module;
 	CUfunction kernel;
@@ -99,32 +107,22 @@ int main( int argc, char** argv)
 	muRC(0 , result);
 	result = cuModuleGetFunction(&kernel, module, argv[2]);
 	muRC(1, result); 
-	//1 parameter as address of allocated memory of 128 bytes
-	//1 thread launched
-	//$(length) values expected
 	int param = 0x1010;
 	muRC(2, cuParamSetSize(kernel, 20));
 	muRC(3, cuParamSetv(kernel, 0, &gpu_output, 8));
-	muRC(3, cuParamSetv(kernel, 8, &gpu_output2, 8));
 	muRC(3, cuParamSetv(kernel, 16, &param, 4));
-	muRC(4, cuFuncSetBlockShape(kernel, 1,1,1));
+	muRC(4, cuFuncSetBlockShape(kernel, tcount,1,1));
 
 	muRC(5, cuLaunch(kernel));
 
 	muRC(6, cuMemcpyDtoH(cpu_output, gpu_output, size));
-	muRC(6, cuMemcpyDtoH(cpu_output2, gpu_output2, size));
 	muRC(7, cuCtxSynchronize());
 	for(int i=0; i<length; i++)
 	{
 		printf("i=%i, output=%i\n", i, cpu_output[i]);
 	}
-	for(int i=0; i<length; i++)
-	{
-		printf("i=%i, output2=%i\n", i, cpu_output2[i]);
-	}
 	muRC(8, cuModuleUnload(module));
 	muRC(9, cuMemFree(gpu_output));
-	muRC(9, cuMemFree(gpu_output2));
 	muRC(10, cuCtxDestroy(context));
 	return 0;
 }
