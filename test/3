@@ -1,0 +1,36 @@
+!Machine 64
+
+!Kernel k
+!Param 8 2
+!Param 4
+
+S2R R0, SR_ClockLo;
+S2R R1, SR_ClockLo;
+S2R R2, SR_ClockLo;
+S2R R10, SR_ClockLo;
+S2R R11, SR_ClockLo;
+S2R R12, SR_ClockLo;
+S2R R13, SR_ClockLo;
+IADD R18, R1, -R0;
+IADD R19, R2, -R0;
+IADD R20, R10, -R0;
+IADD R21, R11, -R0;
+IADD R22, R12, -R0;
+IADD R23, R13, -R0;
+
+S2R R5, SR_Tid_X;
+SHR R5, R5, 5;
+ISETP.NE P0, pt, R5, 0;
+@P0 EXIT;
+MOV R10, c[0x0][0x20];
+MOV R11, c[0x0][0x24];
+ST.E [R10], R18;
+ST.E [R10+0x4], R19;
+ST.E [R10+0x8], R20;
+ST.E [R10+0xc], R21;
+ST.E [R10+0x10], R22;
+ST.E [R10+0x14], R23;
+
+EXIT;
+
+!EndKernel

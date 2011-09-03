@@ -90,8 +90,23 @@ int main( int argc, char** argv)
 	{
 		tcount = atoi(argv[4]);
 	}
-	int cpu_output[8];
+	int* cpu_output=new int[length];
 	int size = sizeof(int)*length;
+	int interval = 1;
+	if(argc>=6)
+	{
+		interval = atoi(argv[5]);
+	}
+	bool odd = true;
+	bool even = true;
+	if(argc>=7)
+	{
+		int choice = atoi(argv[6]);
+		if(choice==1)
+			even = false;
+		else if(choice==2)
+			odd = false;
+	}
 	CUdeviceptr gpu_output;
 	CUdevice device;
 	CUcontext context;
@@ -117,12 +132,26 @@ int main( int argc, char** argv)
 
 	muRC(6, cuMemcpyDtoH(cpu_output, gpu_output, size));
 	muRC(7, cuCtxSynchronize());
-	for(int i=0; i<length; i++)
+	printf("length=%i\n", length);
+	printf("tcount=%i\n", tcount);
+	for(int i=0; i<length/interval; i++)
 	{
-		printf("i=%i, output=%i\n", i, cpu_output[i]);
+		if(i%2==0)
+		{
+			if(!even) continue;
+		}
+		else
+		{
+			if(!odd) continue;
+		}
+		for(int j=0; j<interval; j++)
+			printf("i=%i, j=%i, output=%i\n", i, j, cpu_output[i*interval+j]);
+		if(interval!=1)
+			puts("");
 	}
 	muRC(8, cuModuleUnload(module));
 	muRC(9, cuMemFree(gpu_output));
 	muRC(10, cuCtxDestroy(context));
+	delete[] cpu_output;
 	return 0;
 }

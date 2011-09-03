@@ -4,8 +4,11 @@
 !Param 8 2
 !Param 4
 
+
+NOP
 S2R R0, SR_ClockLo;
 FADD R2, R1, R1;
+NOP
 FADD RZ, RZ, R2;
 S2R R10, SR_ClockLo;
 S2R R11, SR_ClockLo;

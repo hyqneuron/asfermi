@@ -1,0 +1,26 @@
+!Machine 64
+
+!Kernel k
+!Param 8 2
+!Param 4
+
+S2R R0, SR_ClockLo;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+FADD R1, R1, R1;
+
+S2R R2, SR_ClockLo;
+IADD R5, R2, -R0;
+MOV R10, c[0x0][0x20];
+MOV R11, c[0x0][0x24];
+ST.E [R10], R5;
+EXIT;
+
+!EndKernel
