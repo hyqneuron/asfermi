@@ -1,0 +1,2 @@
+#!/bin/bash
+asfermi $1 -o $1.k
