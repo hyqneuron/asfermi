@@ -32,6 +32,7 @@ struct INstructionRuleIADD32I: InstructionRule
 		hpBinaryStringToOpcode8("0100000000111000000000000000000000000000000000000000000000010000", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegisterWithCC4IADD32I,
+          &OPRRegister1,
 					&OPR32I);
 		ModifierGroups[0].Initialize(true, 1, &MRIADD32ISAT);
 		ModifierGroups[1].Initialize(true, 1, &MRIADD32IX);
