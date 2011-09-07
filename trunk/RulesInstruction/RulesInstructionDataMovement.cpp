@@ -10,12 +10,13 @@
 
 struct InstructionRuleMOV: InstructionRule
 {
-	InstructionRuleMOV(): InstructionRule("MOV", 0, true, false)
+	InstructionRuleMOV(): InstructionRule("MOV", 1, true, false)
 	{
 		hpBinaryStringToOpcode8("0010 011110111000000000000000000000000000000000000000000000010100", OpcodeWord0, OpcodeWord1);
 		SetOperands(2, 
 					&OPRRegister0,
 					&OPRMOVStyle);
+		ModifierGroups[0].Initialize(true, 1, &MRS);
 	}
 }IRMOV;
 
