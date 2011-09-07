@@ -10,14 +10,19 @@ Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand]
 ==== MOV ====
 Instruction usage:
 {{{
-MOV reg0, composite operand;
+MOV(.S) reg0, composite operand;
 }}}
 If a hex number is used as the second operand, it cannot be longer than 20 bits.
 Template opcode:
 {{{
 0010 011110 1110 000000 000000 0000000000000000000000 0000000000 010100
-                   reg0   reg1                  immea
+        mod        reg0   reg1                  immea
 }}}
+
+||mod 5||meaning||
+||0    ||default||
+||1    ||.S     ||
+
 
 ----
 ==== MOV32I ====
