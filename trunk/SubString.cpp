@@ -1,4 +1,3 @@
-
 #include "SubString.h"
 extern char* csSource;
 extern void hpWarning(int e);
@@ -51,15 +50,8 @@ unsigned int SubString::ToImmediate20FromHexConstant(bool acceptNegative)
 	bool negative = (result&0x80000000);
 	if(negative)
 	{
-		result --;
-		result ^= 0xFFFFFFFF;
-	}
-	if(result>0x7FFFF)
-		throw 113;
-	if(negative)
-	{
-		result^=0xFFFFFFFF;
-		result++;
+    if(result<0xFFF80000)
+     throw 113;
 		result&=0x000FFFFF;
 	}
 	return result;
