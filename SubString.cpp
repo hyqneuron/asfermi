@@ -54,6 +54,8 @@ unsigned int SubString::ToImmediate20FromHexConstant(bool acceptNegative)
      throw 113;
 		result&=0x000FFFFF;
 	}
+  else if(result>0x7FFFF)
+   throw 113;
 	return result;
 }
 
