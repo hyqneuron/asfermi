@@ -45,6 +45,9 @@ S2R R28, SR_ClockLo
 S2R R29, SR_ClockLo
 S2R R30, SR_ClockLo
 S2R R31, SR_ClockLo
+S2R R32, SR_ClockLo
+S2R R33, SR_ClockLo
+S2R R34, SR_ClockLo
 MOV R50, c[0x0][0x20]
 MOV R51, c[0x0][0x24]
 ST.E [R50], R0
@@ -79,46 +82,54 @@ ST.E [R50+0x70], R28
 ST.E [R50+0x74], R29
 ST.E [R50+0x78], R30
 ST.E [R50+0x7c], R31
+ST.E [R50+0x80], R32
+ST.E [R50+0x84], R33
+ST.E [R50+0x88], R34
 EXIT
 !EndKernel
+
 
 }}}
 
 ====result====
 {{{
-length=32
+length=35
 tcount=1
-i=0, j=0, output=1604434
-i=1, j=0, output=1604437 //normal increment of 3
-i=2, j=0, output=1604440
-i=3, j=0, output=1604443
-i=4, j=0, output=1604446
-i=5, j=0, output=1604449
-i=6, j=0, output=1604452
-i=7, j=0, output=1604455
-i=8, j=0, output=1604462 //abnormal increment of 7
-i=9, j=0, output=1604465
-i=10, j=0, output=1604468
-i=11, j=0, output=1604471
-i=12, j=0, output=1604474
-i=13, j=0, output=1604477
-i=14, j=0, output=1604480
-i=15, j=0, output=1604483
-i=16, j=0, output=1604490//abnormal
-i=17, j=0, output=1604493
-i=18, j=0, output=1604496
-i=19, j=0, output=1604499
-i=20, j=0, output=1604502
-i=21, j=0, output=1604505
-i=22, j=0, output=1604508
-i=23, j=0, output=1604511
-i=24, j=0, output=1604518//abnormal
-i=25, j=0, output=1604521
-i=26, j=0, output=1604524
-i=27, j=0, output=1604527
-i=28, j=0, output=1604530
-i=29, j=0, output=1604533
-i=30, j=0, output=1604536
-i=31, j=0, output=1604539
+i=0, j=0, output=1469777
+i=1, j=0, output=1469780 //normal increment of 3
+i=2, j=0, output=1469783
+i=3, j=0, output=1469786
+i=4, j=0, output=1469789
+i=5, j=0, output=1469792
+i=6, j=0, output=1469795
+i=7, j=0, output=1469798
+i=8, j=0, output=1469805 //abnormal increment of 7
+i=9, j=0, output=1469808
+i=10, j=0, output=1469811
+i=11, j=0, output=1469814
+i=12, j=0, output=1469817
+i=13, j=0, output=1469820
+i=14, j=0, output=1469823
+i=15, j=0, output=1469826
+i=16, j=0, output=1469833//abnormal
+i=17, j=0, output=1469836
+i=18, j=0, output=1469839
+i=19, j=0, output=1469842
+i=20, j=0, output=1469845
+i=21, j=0, output=1469848
+i=22, j=0, output=1469851
+i=23, j=0, output=1469854
+i=24, j=0, output=1469861//abnormal
+i=25, j=0, output=1469864
+i=26, j=0, output=1469867
+i=27, j=0, output=1469870
+i=28, j=0, output=1469873
+i=29, j=0, output=1469876
+i=30, j=0, output=1469879
+i=31, j=0, output=1469882
+i=32, j=0, output=1469929//huge jump at 33rd instruction
+i=33, j=0, output=1469932
+i=34, j=0, output=1469935
+
 
 }}}
