@@ -2,7 +2,7 @@
 
 === Interpretation ===
   * LEPC loads the address of the current instruction into reg0.
-  * Fermi has limited memory access control
+  * Fermi has limited memory access control. Because of this, one should be able to create dummy kernel images, modify them on-the-fly, then launch them from the host.
 
 
 === Test ====
@@ -220,4 +220,3 @@ Success at 9
 Success at 10
 
 }}}
-
