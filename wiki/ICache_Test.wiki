@@ -1,5 +1,6 @@
-# Tests related to the instruction cache
 <wiki:toc>
+
+Note: the information below is not confirmative. I'm using this site to take note
 
 === Interpretation ===
   * instruction prefetch size is 64 bytes (8 instructions)
