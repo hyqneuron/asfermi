@@ -59,46 +59,6 @@ ELFHeader32::ELFHeader32()
 }
 ELFHeader32 ELFH32;
 
-/*
-//ELFHeader64
-ELFHeader64::ELFHeader64()
-{
-	Byte0 = 0x7f;
-	Byte1 = 'E';
-	Byte2 = 'L';
-	Byte3 = 'F';
-
-	FileClass = 2; //2 is 64-bit
-	Encoding = 1; //LSB
-	FileVersion = 1; //1 for current				
-
-	memset(&Padding, 0, 9);
-	Padding[0] = 0x33; //issue: same for all? any 
-	Padding[1] = 0x04;
-
-	FileType = 0x0002;
-	Machine = 0x00BE;								
-		
-
-	Version = 1;
-	EntryPoint = 0;
-	//PHTOffset not set
-	SHTOffset = 0x40;
-
-
-	Flags = 0x00140114;
-		
-		
-	HeaderSize = 0x40;
-	PHSize = 0x38;
-	//PHCount not set
-	SHSize = 0x40;
-	//SHCount not set;
-	SHStrIdx = 1;
-}
-ELFHeader64 ELFH64;
-
-*/
 
 //ELFSection
 ELFSection::ELFSection()
