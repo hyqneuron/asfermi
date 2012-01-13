@@ -1,7 +1,7 @@
 #summary A development log
 
 ==== 13th January, 2012 ====
-mmarc__ contributed a patch that enables asfermi to work as a library to write the assembled cubin or just the .text section (the raw instruction opcodes) into an iostream. This patch is currently under the [libasfermi branch http://code.google.com/p/asfermi/source/browse/#svn%2Fbranches%2Flibasfermi].
+mmarc__ contributed a patch that enables asfermi to work as a library to write the assembled cubin or just the .text section (the raw instruction opcodes) into an iostream. This patch is currently under the [http://code.google.com/p/asfermi/source/browse/#svn%2Fbranches%2Flibasfermi libasfermi branch].
 
 ----
 ==== 10th August, 2011 ====
