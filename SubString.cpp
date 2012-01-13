@@ -50,12 +50,12 @@ unsigned int SubString::ToImmediate20FromHexConstant(bool acceptNegative)
 	bool negative = (result&0x80000000);
 	if(negative)
 	{
-		if(result<0xFFF80000)
-			throw 113;
+    if(result<0xFFF80000)
+     throw 113;
 		result&=0x000FFFFF;
 	}
-	else if(result>0xFFFFF)
-		throw 113;
+  else if(result>0xFFFFF)
+   throw 113;
 	return result;
 }
 
