@@ -15,7 +15,6 @@ all functions are prefixed with 'hpCubin'
 #include "../stdafx.h"
 #include "stdafx.h" //SMark
 
-
 void hpCubinSet64(bool set64)
 {
 	if(set64)
@@ -591,7 +590,7 @@ void hpCubinStage6()
 
 unsigned int pad0 = 0;
 //Stage7: Write to cubin
-void hpCubinWriteSectionHeader(ELFSectionHeader &header)
+void hpCubinWriteSectionHeader(ELFSectionHeader &header, iostream& csOutput)
 {
 	if(!cubin64Bit)
 		csOutput.write((char*)&header, sizeof(ELFSectionHeader));
@@ -614,7 +613,7 @@ void hpCubinWriteSectionHeader(ELFSectionHeader &header)
 		csOutput.write((char*)&pad0,			0x4);
 	}
 }
-void hpCubinWriteSegmentHeader(ELFSegmentHeader &header)
+void hpCubinWriteSegmentHeader(ELFSegmentHeader &header, iostream& csOutput)
 {
 	if(!cubin64Bit)
 		csOutput.write((char*)&header, sizeof(ELFSegmentHeader));
@@ -636,7 +635,7 @@ void hpCubinWriteSegmentHeader(ELFSegmentHeader &header)
 		csOutput.write((char*)&pad0,			0x4);
 	}
 }
-void hpCubinStage7()
+void hpCubinStage7(iostream& csOutput)
 {
 	//---Header
 	if(!cubin64Bit)
@@ -657,25 +656,25 @@ void hpCubinStage7()
 
 	//---SHT
 	//head
-	hpCubinWriteSectionHeader(cubinSectionEmpty.SectionHeader);
-	hpCubinWriteSectionHeader(cubinSectionSHStrTab.SectionHeader);
-	hpCubinWriteSectionHeader(cubinSectionStrTab.SectionHeader);
-	hpCubinWriteSectionHeader(cubinSectionSymTab.SectionHeader);
+	hpCubinWriteSectionHeader(cubinSectionEmpty.SectionHeader, csOutput);
+	hpCubinWriteSectionHeader(cubinSectionSHStrTab.SectionHeader, csOutput);
+	hpCubinWriteSectionHeader(cubinSectionStrTab.SectionHeader, csOutput);
+	hpCubinWriteSectionHeader(cubinSectionSymTab.SectionHeader, csOutput);
 	//kern
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
 	{
-		hpCubinWriteSectionHeader(kernel->TextSection.SectionHeader);
-		hpCubinWriteSectionHeader(kernel->Constant0Section.SectionHeader);
-		hpCubinWriteSectionHeader(kernel->InfoSection.SectionHeader);
+		hpCubinWriteSectionHeader(kernel->TextSection.SectionHeader, csOutput);
+		hpCubinWriteSectionHeader(kernel->Constant0Section.SectionHeader, csOutput);
+		hpCubinWriteSectionHeader(kernel->InfoSection.SectionHeader, csOutput);
 		if(kernel->SharedSize != 0)
-			hpCubinWriteSectionHeader(kernel->SharedSection.SectionHeader);
+			hpCubinWriteSectionHeader(kernel->SharedSection.SectionHeader, csOutput);
 		if(kernel->LocalSize !=0)
-			hpCubinWriteSectionHeader(kernel->LocalSection.SectionHeader);
+			hpCubinWriteSectionHeader(kernel->LocalSection.SectionHeader, csOutput);
 	}
 	//tail
 	if(cubinConstant2Size)
-		hpCubinWriteSectionHeader(cubinSectionConstant2.SectionHeader);
-	hpCubinWriteSectionHeader(cubinSectionNVInfo.SectionHeader);
+		hpCubinWriteSectionHeader(cubinSectionConstant2.SectionHeader, csOutput);
+	hpCubinWriteSectionHeader(cubinSectionNVInfo.SectionHeader, csOutput);
 
 	//---Sections
 	//head
@@ -712,21 +711,17 @@ void hpCubinStage7()
 
 	//---PHT
 
-	hpCubinWriteSegmentHeader(cubinSegmentHeaderPHTSelf);
+	hpCubinWriteSegmentHeader(cubinSegmentHeaderPHTSelf, csOutput);
 	//kernel segments
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
 	{
-		hpCubinWriteSegmentHeader(kernel->KernelSegmentHeader);
+		hpCubinWriteSegmentHeader(kernel->KernelSegmentHeader, csOutput);
 		if(kernel->SharedSize || kernel->LocalSize)
-			hpCubinWriteSegmentHeader(kernel->MemorySegmentHeader);
+			hpCubinWriteSegmentHeader(kernel->MemorySegmentHeader, csOutput);
 	}
 	//ending segments
 	if(cubinConstant2Size)
-		hpCubinWriteSegmentHeader(cubinSegmentHeaderConstant2);
-
-	//end
-	csOutput.flush();
-	csOutput.close();
+		hpCubinWriteSegmentHeader(cubinSegmentHeaderConstant2, csOutput);
 }
 //-----End of cubin helper functions
 

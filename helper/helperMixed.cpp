@@ -18,22 +18,18 @@ void hpCleanUp() //parsers are created with the new keyword,        =====
 	for(list<Kernel>::iterator i = csKernelList.begin(); i != csKernelList.end(); i++)
 	{
 		if(i->TextSection.SectionContent)
-			delete i->TextSection.SectionContent;
+			delete[] i->TextSection.SectionContent;
 		if(i->Constant0Section.SectionContent)
-			delete i->Constant0Section.SectionContent;
+			delete[] i->Constant0Section.SectionContent;
 		if(i->InfoSection.SectionContent)
-			delete i->InfoSection.SectionContent;
+			delete[] i->InfoSection.SectionContent;
 		if(i->SharedSection.SectionContent)
-			delete i->SharedSection.SectionContent;
+			delete[] i->SharedSection.SectionContent;
 		if(i->LocalSection.SectionContent)
-			delete i->LocalSection.SectionContent;
+			delete[] i->LocalSection.SectionContent;
 	}
 
 	delete[] csSource;
-	if(csInput.is_open())
-		csInput.close();
-	if(csOutput.is_open())
-		csOutput.close();
 }
 //-----End of main helper functions
 
@@ -99,7 +95,6 @@ int hpHexCharToInt(char* str)
 	return result;
 }
 
-
 int hpFileSizeAndSetBegin(fstream &file)		//===
 {
 	file.seekg(0, fstream::end);
@@ -107,23 +102,47 @@ int hpFileSizeAndSetBegin(fstream &file)		//===
 	file.seekg(0, fstream::beg);
 	return fileSize;
 }
-int hpFindInSource(char target, int startPos, int &length)
+
+void hpReadSourceArray(char* src)
 {
-	int currentPos;
-	for(currentPos = startPos; currentPos < csSourceSize; currentPos++)
+	// Replace comments with newlines.
+	int length = strlen(src);
+	for (int i = 1; i < length; i++)
 	{
-		if(target == csSource[currentPos])
+		if ((src[i] == '*') && (src[i - 1] == '/'))
 		{
-			length = currentPos - startPos;
-			return currentPos;
+			int start = i - 1;
+			for ( ; i < length; i++)
+				if ((src[i] == '/') && (src[i - 1] == '*'))
+					break;
+			memset(src + start, '\n', i - start + 1);
 		}
 	}
-	length = currentPos - startPos;
-	return -1;
+	for (int i = 1; i < length; i++)
+	{
+		if ((src[i] == '/') && (src[i - 1] == '/'))
+		{
+			int start = i - 1;
+			for ( ; i < length; i++)
+				if (src[i] == '\n')
+					break;
+			memset(src + start, '\n', i - start + 1);
+		}
+	}
+
+	// Tokenize source into lines.
+	char* psrc = strtok(src, "\n");
+	for (int iline = 0; psrc; iline++)
+	{
+		csLines.push_back(Line(SubString(psrc), iline));
+		psrc = strtok(NULL, "\n");
+	}
 }
+
 void hpReadSource(char* path)				//===
 {
 	//Open file and check for validity of file
+	fstream csInput;
 	csInput.open(path, fstream::in | fstream::binary);
 	if(!csInput.is_open() | !csInput.good())
 		throw 1; //Unable to open input file
@@ -134,61 +153,13 @@ void hpReadSource(char* path)				//===
 	csInput.read(csSource, csSourceSize);		//read all into csSource
 	csInput.close();
 	
-	
-	int lineNumber = 0;
-	bool inBlockComment = false;
-
-	int startPos = 0;
-	int length = 0;
-	int lastLineFeedPos = 0;
-
-
-//Add lines
-	do
-	{
-		lastLineFeedPos = ::hpFindInSource(10, startPos, length);
-		//comment check
-		for(int i =startPos + 1; i< startPos + length; i++)
-		{
-			if(inBlockComment)
-			{
-				if(csSource[i]=='/' && csSource[i-1]=='*')
-				{
-					inBlockComment = false;
-					startPos = i + 1;
-					length = lastLineFeedPos - startPos;
-					i=startPos;
-					continue;
-				}
-			}
-			else
-			{
-				if(csSource[i]=='/' && csSource[i-1]=='/')
-				{
-					length = i - 1 - startPos;
-					break;
-				}
-				if(csSource[i]=='*' && csSource[i-1]=='/')
-				{
-					inBlockComment = true;
-					csLines.push_back(Line(SubString(startPos, i - 1 - startPos), lineNumber));
-					i++; //jump over a character
-					continue;
-				}
-			}
-		}
-		//comment check end
-		if(!inBlockComment)
-			csLines.push_back(Line(SubString(startPos, length), lineNumber));
-		startPos = lastLineFeedPos + 1;
-		lineNumber++;
-	}
-	while(lastLineFeedPos!=-1);
+	hpReadSourceArray(csSource);
 }
 
 void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint)		//===
 {
 	//open and check file
+	fstream csOutput;
 	csOutput.open(path, fstream::in | fstream::out | fstream::binary);
 	if( !csOutput.is_open() || !csOutput.good() )
 		throw 4; //can't open file
@@ -199,6 +170,8 @@ void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint)		
 	csOutput.read(buffer, fileSize);
 	if(csOutput.bad() || csOutput.fail())
 		throw 7; //failed to read cubin
+	
+	csOutput.close();
 
 	//Start checking the cubin and looking for sections
 	if ( fileSize < 100 || (int)buffer[0] != 0x7f || (int)buffer[1] != 0x45 || (int)buffer[2] != 0x4c || (int)buffer[3] != 0x46) //ELF file identifier
@@ -217,6 +190,7 @@ void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint)		
 	{
 		unsigned int SHNameIdx =	*((unsigned int*)  (buffer+fileoffset)); //first 4-byte word in a section header is the name index
 		sectionname = buffer + SHStrOffset + SHNameIdx;
+printf("strcmp(%s, %s)\n", sectionname, kernelname);
 		if(strcmp(sectionname, kernelname)==0)
 		{
 			found = true;

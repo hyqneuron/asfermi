@@ -50,7 +50,7 @@ void hpCubinStage5();
 void hpCubinStage6();
 
 //Stage7: Write to cubin
-void hpCubinStage7();
+void hpCubinStage7(std::iostream& csOutput);
 //-----End of cubin helper functions
 #else
 #endif
