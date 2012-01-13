@@ -22,8 +22,7 @@ extern Line		csCurrentLine;
 extern Instruction csCurrentInstruction;
 extern Directive   csCurrentDirective;
 
-extern std::fstream csInput;
-extern std::fstream csOutput;
+extern std::string ofilename;
 extern char *csSource;
 extern int csSourceSize;
 extern int csRegCount;

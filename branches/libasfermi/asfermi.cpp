@@ -1,7 +1,5 @@
 using namespace std;
 
-
-
 #include <stdarg.h>
 #include <iostream>
 #include <sstream>
@@ -24,26 +22,26 @@ using namespace std;
 #include "RulesInstruction.h"
 #include "RulesDirective.h"
 
-
-
-
+#include "asfermi.h"
 
 //-----Forward declarations
 void ProcessCommandsAndReadSource(int argc, char** args);
 void Initialize();
 void WriteToCubinReplace();
-void WriteToCubinDirectOutput();
+void WriteToCubinDirectOutput(iostream& csOutput);
 //extern void ExternInitialize();
 //-----End of forward declarations
 
-
+#ifndef NO_MAIN
 int main(int argc, char** args)
 {
 	try
 	{
+		ASFermi asfermi;
+
 		//---Preprocess
-		ProcessCommandsAndReadSource(argc, args);
 		Initialize();	//Initialize instruction and directive rules
+		ProcessCommandsAndReadSource(argc, args);
 		//ExternInitialize(); //initialize custom rules
 
 
@@ -58,7 +56,16 @@ int main(int argc, char** args)
 		if(csOperationMode == Replace)
 			WriteToCubinReplace();
 		else if(csOperationMode == DirectOutput)
-			WriteToCubinDirectOutput();
+		{
+			fstream csOutput;
+			csOutput.open(ofilename, fstream::out | fstream::binary |fstream::trunc);
+			if(!csOutput.is_open() || !csOutput.good())
+				throw 4; //failed to open output file
+
+			WriteToCubinDirectOutput(csOutput);
+
+			csOutput.close();
+		}
 		else
 			throw 97; //Mode not supported
 		puts("Done");
@@ -77,12 +84,18 @@ int main(int argc, char** args)
 #endif
 	return 0;
 }
+#endif // NO_MAIN
 
 void WriteToCubinReplace()
 {
 	if(csInstructionOffset + csOutputInstructionOffset> csOutputSectionSize )
 		throw 9; //output section not large enough
 	list<Instruction>::iterator inst = csInstructions.begin();
+	ofstream csOutput;
+	csOutput.open(ofilename, fstream::out | fstream::binary |fstream::trunc);
+	if(!csOutput.is_open() || !csOutput.good())
+		throw 4; //failed to open output file
+
 	csOutput.seekp(csOutput.beg + ::csOutputSectionOffset + ::csOutputInstructionOffset);
 
 	while(inst != csInstructions.end())
@@ -92,20 +105,17 @@ void WriteToCubinReplace()
 			csOutput.write((char*)&inst->OpcodeWord1, 4);
 		inst++;
 	}
-	csOutput.flush();
+	csOutput.close();
 }
 
 
 
-void WriteToCubinDirectOutput()
+void WriteToCubinDirectOutput(iostream& csOutput)
 {
 	if(csInstructions.size()!=0)
 		throw 100; //last kernel not ended
 	if(csKernelList.size()==0)
 		throw 101; //no valid kernel found
-	
-
-
 	
 	//head sections: (null), .shstrtab, .strtab, .symtab
 	//kern sections: .text.kername, .nv.constant0.kername, (not implemented).nv.constant16.kername,
@@ -142,11 +152,7 @@ void WriteToCubinDirectOutput()
 	//Stage6: Setup ELF header
 	hpCubinStage6();
 	//Stage7: Write to cubin
-	hpCubinStage7();
-
-
-
-
+	hpCubinStage7(csOutput);
 }
 
 void ProcessCommandsAndReadSource(int argc, char** args)
@@ -203,11 +209,8 @@ void ProcessCommandsAndReadSource(int argc, char** args)
 				throw 20; // invalid arguments
 			}
 			csOperationMode = DirectOutput;
-			csOutput.open(args[currentArg + 1], fstream::out | fstream::binary |fstream::trunc);
-			if(!csOutput.is_open() || !csOutput.good())
-				throw 4; //failed to open output file
+			ofilename = args[currentArg + 1];
 			currentArg += 2;
-			//note that csOutput is not closed
 		}
 		else if(strcmp(args[currentArg], "-sm_20")==0)
 		{
@@ -321,14 +324,33 @@ void OrganiseRules()
 }
 void Initialize() //set up the various lists
 {
+	csMasterParserList.clear();
+	csLineParserList.clear();
+	csInstructionParserList.clear();
+	csDirectiveParserList.clear();
+	csInstructionRulePrepList.clear();
+	csDirectiveRulePrepList.clear();
+
+	while (!csMasterParserStack.empty()) csMasterParserStack.pop();
+	while (!csLineParserStack.empty()) csLineParserStack.pop();
+	while (!csInstructionParserStack.empty()) csInstructionParserStack.pop();
+	while (!csDirectiveParserStack.empty()) csDirectiveParserStack.pop();
+
+	csLines.clear();
+	csInstructions.clear();
+	csDirectives.clear();
+	csLabels.clear();
+	csLabelRequests.clear();
+	csKernelList.clear();
+
 	//Set default parsers
-	csMasterParserList.push_back	((MasterParser*)	&MPDefault);
-	csLineParserList.push_back		((LineParser*)		&LPDefault);
+	csMasterParserList.push_back((MasterParser*)&MPDefault);
+	csLineParserList.push_back((LineParser*)&LPDefault);
 	csInstructionParserList.push_back((InstructionParser*)&IPDefault);
-	csDirectiveParserList.push_back	((DirectiveParser*)	&DPDefault);
+	csDirectiveParserList.push_back((DirectiveParser*)&DPDefault);
 
 	csMasterParser = (MasterParser*)&MPDefault;
-	csLineParser = (LineParser*)	&LPDefault;
+	csLineParser = (LineParser*)&LPDefault;
 	csInstructionParser = (InstructionParser*)&IPDefault;
 	csDirectiveParser = (DirectiveParser*)&DPDefault;
 	
@@ -433,3 +455,50 @@ void Initialize() //set up the various lists
 	
 	OrganiseRules();
 }
+
+ASFermi::ASFermi() :
+
+	csSelfDebug(false),
+	csLineNumber(0),
+	csRegCount(0),
+	csBarCount(0),
+	csAbsoluteAddressing(true),
+	csOperationMode(Undefined),
+	csExceptionPrintUsage(false),
+	csErrorPresent(false),
+	cubinCurrentSectionIndex(0),
+	cubinCurrentOffsetFromFirst(0), //from the end of the end of .symtab
+	cubinCurrentSHStrTabOffset(0),
+	cubinCurrentStrTabOffset(0),
+	cubinTotalSectionCount(0),
+	cubinPHTOffset(0),
+	cubinConstant2Size(0),
+	cubinCurrentConstant2Offset(0),
+	cubinConstant2Overflown(false),
+	cubinArchitecture(sm_20), //default architecture is sm_20
+	cubin64Bit(false),
+	csCurrentKernelOpened(false)
+
+{
+	::csSelfDebug = csSelfDebug;
+	::csLineNumber = csLineNumber;
+	::csRegCount = csRegCount;
+	::csBarCount = csBarCount;
+	::csAbsoluteAddressing = csAbsoluteAddressing;
+	::csOperationMode = csOperationMode;
+	::csExceptionPrintUsage = csExceptionPrintUsage;
+	::csErrorPresent = csErrorPresent;
+	::cubinCurrentSectionIndex = cubinCurrentSectionIndex;
+	::cubinCurrentOffsetFromFirst = cubinCurrentOffsetFromFirst;
+	::cubinCurrentSHStrTabOffset = cubinCurrentSHStrTabOffset;
+	::cubinCurrentStrTabOffset = cubinCurrentStrTabOffset;
+	::cubinTotalSectionCount = cubinTotalSectionCount;
+	::cubinPHTOffset = cubinPHTOffset;
+	::cubinConstant2Size = cubinConstant2Size;
+	::cubinCurrentConstant2Offset = cubinCurrentConstant2Offset;
+	::cubinConstant2Overflown = cubinConstant2Overflown;
+	::cubinArchitecture = cubinArchitecture;
+	::cubin64Bit = cubin64Bit;
+	::csCurrentKernelOpened = csCurrentKernelOpened;
+}
+

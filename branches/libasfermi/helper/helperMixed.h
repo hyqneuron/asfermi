@@ -28,6 +28,7 @@ int hpHexCharToInt(char* str);
 int hpFileSizeAndSetBegin(fstream &file);
 int hpFindInSource(char target, int startPos, int &length);
 void hpReadSource(char* path);
+void hpReadSourceArray(char* source);
 void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint);
 //-----End of command-line helper functions
 

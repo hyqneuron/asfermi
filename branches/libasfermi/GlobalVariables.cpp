@@ -14,8 +14,7 @@ Line		csCurrentLine;
 Instruction csCurrentInstruction;
 Directive   csCurrentDirective;
 
-fstream csInput;
-fstream csOutput;
+string ofilename;
 char *csSource;
 int csSourceSize;
 int csRegCount = 0;

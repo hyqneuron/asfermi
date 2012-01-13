@@ -3,6 +3,8 @@
 
 
 #include <list>
+#include <iostream>
+
 #include "SubString.h"
 #include "DataTypes.h"
 
