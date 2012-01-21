@@ -149,6 +149,15 @@ void WriteRawOpcodes(iostream& csOutput)
 	hpCubinStage6();
 	//Stage7: Write to cubin
 	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
+	{
 		csOutput.write((char*)kernel->TextSection.SectionContent, kernel->TextSection.SectionSize);
+
+		delete[] kernel->InfoSection.SectionContent;
+		kernel->InfoSection.SectionContent = NULL;
+		delete[] kernel->Constant0Section.SectionContent;
+		kernel->Constant0Section.SectionContent = NULL;
+		delete[] kernel->TextSection.SectionContent;
+		kernel->TextSection.SectionContent = NULL;
+	}
 }
 
