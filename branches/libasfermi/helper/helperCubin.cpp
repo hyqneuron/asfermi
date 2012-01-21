@@ -703,6 +703,13 @@ void hpCubinStage7(iostream& csOutput)
 		csOutput.write((char*)kernel->TextSection.SectionContent, kernel->TextSection.SectionSize);
 		csOutput.write((char*)kernel->Constant0Section.SectionContent, kernel->Constant0Section.SectionSize);
 		csOutput.write((char*)kernel->InfoSection.SectionContent, kernel->InfoSection.SectionSize);
+
+		delete[] kernel->InfoSection.SectionContent;
+		kernel->InfoSection.SectionContent = NULL;
+		delete[] kernel->Constant0Section.SectionContent;
+		kernel->Constant0Section.SectionContent = NULL;
+		delete[] kernel->TextSection.SectionContent;
+		kernel->TextSection.SectionContent = NULL;
 	}
 	//tail
 	if(cubinConstant2Size)

@@ -500,5 +500,57 @@ ASFermi::ASFermi() :
 	::cubinArchitecture = cubinArchitecture;
 	::cubin64Bit = cubin64Bit;
 	::csCurrentKernelOpened = csCurrentKernelOpened;
+	
+	::cubinSectionEmpty.SectionContent = NULL;
+	::cubinSectionSHStrTab.SectionContent = NULL;
+	::cubinSectionStrTab.SectionContent = NULL;
+	::cubinSectionSymTab.SectionContent = NULL;
+	::cubinSectionConstant2.SectionContent = NULL;
+	::cubinSectionNVInfo.SectionContent = NULL;
+	::cubinSectionNVInfo.SectionContent = NULL;
+}
+
+ASFermi::~ASFermi()
+{
+	if (::cubinSectionEmpty.SectionContent)
+	{
+		delete[] ::cubinSectionEmpty.SectionContent;
+		::cubinSectionEmpty.SectionContent = NULL;
+	}
+	if (::cubinSectionSHStrTab.SectionContent)
+	{
+		delete[] ::cubinSectionSHStrTab.SectionContent;
+		::cubinSectionSHStrTab.SectionContent = NULL;
+	}
+	if (::cubinSectionStrTab.SectionContent)
+	{
+		delete[] ::cubinSectionStrTab.SectionContent;
+		::cubinSectionStrTab.SectionContent = NULL;
+	}
+	if (::cubinSectionSymTab.SectionContent)
+	{
+		delete[] ::cubinSectionSymTab.SectionContent;
+		::cubinSectionSymTab.SectionContent = NULL;
+	}
+	if (::cubinSectionConstant2.SectionContent)
+	{
+		delete[] ::cubinSectionConstant2.SectionContent;
+		::cubinSectionConstant2.SectionContent = NULL;
+	}
+	if (::cubinSectionNVInfo.SectionContent)
+	{
+		delete[] ::cubinSectionNVInfo.SectionContent;
+		::cubinSectionNVInfo.SectionContent = NULL;
+	}
+	if (::cubinSectionNVInfo.SectionContent)
+	{
+		delete[] ::cubinSectionNVInfo.SectionContent;
+		::cubinSectionNVInfo.SectionContent = NULL;
+	}
+
+	delete[] ::csInstructionRules;	
+	delete[] ::csInstructionRuleIndices;
+	delete[] ::csDirectiveRules;
+	delete[] ::csDirectiveRuleIndices;
 }
 

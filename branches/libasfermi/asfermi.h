@@ -99,6 +99,8 @@ class ASFermi
 public :
 
 	ASFermi();
+
+	~ASFermi();
 };
 
 #endif // ASFERMI_H
