@@ -107,4 +107,5 @@ char *cubin_str_nvinfo =	".nv.info";
 bool csCurrentKernelOpened = false;
 Kernel	csCurrentKernel;
 list<Kernel> csKernelList;
+list<Constant2> csConstant2List;
 

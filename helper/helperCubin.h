@@ -24,7 +24,7 @@ void hpCubinStage1();
 //	2
 //-----Stage2 functions
 inline void hpCubinAddSectionName1(unsigned char* sectionContent, int &offset, char* sectionPrefix, SubString &kernelName);
-inline void hpCubinAddSectionName2(unsigned char* sectionContent, int &offset, char* sectionName);
+inline void hpCubinAddSectionName2(unsigned char* sectionContent, int &offset, const char* sectionName);
 inline void hpCubinAddSectionName3(unsigned char* sectionContent, int &offset, SubString &kernelName);
 inline void hpCubinStage2SetSHStrTabSectionContent();
 inline void hpCubinStage2SetStrTabSectionContent();

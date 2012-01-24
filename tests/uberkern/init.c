@@ -16,33 +16,27 @@ static const char* uberkern[] =
 	"!Param 8 2",
 
 	"LEPC R0",				// R0 = LEPC
+
+	"S2R R1, SR_Tid_Y",			// Perform dynamic kernel setup logic only by
+	"S2R R3, SR_Tid_X",			// tid = (0, 0, 0), ctaid = (0, 0, 0) thread.
+	"S2R R4, SR_Tid_Z",
+	"S2R R5, SR_CTAid_Y",
+	"LOP.OR R1, R1, R2",
+	"S2R R3, SR_CTAid_X",
+	"LOP.OR R4, R1, R4",
+	"LOP.OR R1, R4, R3",
+	"S2R R3, SR_CTAid_Z",
+	"LOP.OR R5, R1, R5",
+	"LOP.OR R1, R5, R3",
+	"ISETP.NE.AND P0, pt, R1, RZ, pt",
+	"@P0 BRA #BAR",				// For all other threads - go directly to #BAR
+
 	"MOV R2, c[0x0][0x28]",			// R2 = (int*)&addr
 	"MOV R3, c[0x0][0x2c]",			// R3 = (int*)&addr + 1
 
-						// Load the free space starting address from *(int*)(*addr + 1).
-	"LDU.E R1, [R2]",			// R1 = *(R2, R3)		<-- 4-byte value of uberkern_args_t.addr
-	"IADD R0, R0, R1",			// R0 += R1
-	"MOV R1, 0x1",				// R1 = 1			<-- low word compound = 1
-	"LD.E.64 R4, [R0]",			// (R4, R5) = *(R0, R1)		<-- code instruction value
-
-						// Load opcode for "NOP" and compare loaded instruction with it.
-	"MOV32I R6, -0x00001de4",		// R6 = -0x00001de4
-	"IADD R6, R6, R4",			// R6 -= NOP[0]
-	"ISETP.NE.AND P0, pt, R6, RZ, pt",	// if (R6 != 0)
-	"@P0 BRA #NOP",				// 	goto #NOP
-	"MOV32I R6, -0x40000000",		// R6 = -0x40000000
-	"IADD R6, R6, R5",			// R6 -= NOP[1]
-	"ISETP.NE.AND P0, pt, R6, RZ, pt",	// else if (R6 != 0)
-	"@P0 BRA #NOP",				//	goto #NOP
-
-						// OK, if instruction at address goto is pointing to is NOP,
-						// then the target kernel is not yet loaded.
-						
-						// 1) put "goto" opcode specified by addr value in place of #NOP
+						// Put "goto" opcode specified by addr value in place of #NOP
 						// below for further executing.
-						
-	"LDU.E R1, [R2]",			// R1 = *(R2, R3)		<-- 4-byte value of uberkern_args_t.addr
-	"IADD R0, R0, -R1",			// R0 -= R1
+
 	"IADD R0, R0, #NOP",			// R0 += #NOP
 	"MOV R1, 0x1",				// R1 = 1			<-- low word compound = 1
 	"IADD R2, R2, 8",			// R2 = R2 + 8			<-- address of uberkern_args_t.opcode
@@ -50,19 +44,36 @@ static const char* uberkern[] =
 	"ST.E.64 [R0], R4",			// *(R0, R1) = (R4, R5)
 	"IADD R0, R0, -#NOP",			// R0 -= #NOP
 	"IADD R2, R2, -8",			// R2 = R2 - 8			<-- address of uberkern_args_t.opcode
+
+						// Load the free space starting address from *(int*)(*addr + 1).
+
 	"LDU.E R1, [R2]",			// R1 = *(R2, R3)		<-- 4-byte value of uberkern_args_t.addr
-	"IADD R0, R0, R1",
+	"IADD R0, R0, R1",			// R0 += R1
 	"MOV R1, 0x1",				// R1 = 1			<-- low word compound = 1
+	"LD.E.64 R4, [R0]",			// (R4, R5) = *(R0, R1)		<-- code instruction value
 
+						// Load opcode for "NOP" and compare loaded instruction with it.
 
-						// 2) load kernel's size and then load each instruction in a loop.
-						
+	"MOV32I R6, -0x00001de4",		// R6 = -0x00001de4
+	"IADD R6, R6, R4",			// R6 -= NOP[0]
+	"ISETP.NE.AND P0, pt, R6, RZ, pt",	// if (R6 != 0)
+	"@P0 BRA #BAR",				// 	goto #BAR
+	"MOV32I R6, -0x40000000",		// R6 = -0x40000000
+	"IADD R6, R6, R5",			// R6 -= NOP[1]
+	"ISETP.NE.AND P0, pt, R6, RZ, pt",	// else if (R6 != 0)
+	"@P0 BRA #BAR",				//	goto #BAR
+
+						// OK, if instruction at address goto is pointing to is NOP,
+						// then the target kernel is not yet loaded.
+
+						// Load kernel's size and then load each instruction in a loop.
+
 	"IADD R2, R2, 16",			// R2 = R2 + 16			<-- address of uberkern_args_t.szbinary
 	"LDU.E R6, [R2]",			// R6 = *(R2, R3)
 	"IADD R2, R2, 8",			// R2 = R2 + 8			<-- address of uberkern_args_t.binary
 	"LDU.E.64 R4, [R2]",			// (R4, R5) = *(R2, R3)
 "#L1",	"ISETP.EQ.AND P0, pt, R6, RZ, pt",	// if (R6 == 0)
-	"@P0 BRA #NOP",				// 	goto #NOP
+	"@P0 BRA #BAR",				// 	goto #BAR
 						// else
 						// {
 						//	// Load instructions from args to kernel space
@@ -75,7 +86,6 @@ static const char* uberkern[] =
 	"IADD R6, R6, -8",			//	R6 -= 8
 	"BRA #L1",				//	goto #L1
 						// }
-	"MEMBAR.GL",
 	"NOP",
 	"NOP",
 	"NOP",
@@ -130,6 +140,9 @@ static const char* uberkern[] =
 	"NOP",
 	"NOP",
 	"NOP",
+	"NOP",
+"#BAR", "MEMBAR.GL",				// __threadfence();
+	"BAR.RED.POPC RZ, RZ",			// __syncthreads();
 "#NOP",	"NOP",					// goto *(R2, R3)
 "#FRE",	"$BUF",					// $BUF more NOPs here as free space for code insertions
 	"!EndKernel"

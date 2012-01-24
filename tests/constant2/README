@@ -1,0 +1,18 @@
+This test checks how named and unnamed constants are working.
+Handles of constants are retrieved from host through their names,
+and then one of constants is assigned with a different value.
+
+[marcusmae@noisy constant2]$ make
+cd ../.. && make
+make[1]: Entering directory `/home/marcusmae/Programming/libasfermi'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/home/marcusmae/Programming/libasfermi'
+../../asfermi constant2.s -64 -o constant2.cubin
+Done
+nvcc -g constant2.cu -o constant2 -lcuda
+[marcusmae@noisy constant2]$ ./constant2 
+unnamedConst2_0 size = 16
+named size = 48
+initial result = 1
+changed result = 10
+

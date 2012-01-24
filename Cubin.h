@@ -28,7 +28,7 @@ struct ELFHeader32
 extern ELFHeader32 ELFH32;
 
 
-enum SectionType{KernelText, KernelInfo, KernelShared, KernelLocal, KernelConstant0, KernelConstant16, Constant2, NVInfo, SHStrTab, StrTab, SymTab };
+enum SectionType{KernelText, KernelInfo, KernelShared, KernelLocal, KernelConstant0, KernelConstant16, /* Constant2, */ NVInfo, SHStrTab, StrTab, SymTab };
 struct ELFSectionHeader
 {
 	unsigned int NameIndex, Type, Flags, MemImgAddr, FileOffset, Size, Link, Info, Alignment, EntrySize;
@@ -82,5 +82,12 @@ struct Kernel
 	std::list<Instruction> KernelInstructions;
 
 	void Reset();
+};
+
+struct Constant2
+{
+	string Constant2Name;
+	unsigned int Offset;
+	unsigned int StrTabOffset;
 };
 #endif
