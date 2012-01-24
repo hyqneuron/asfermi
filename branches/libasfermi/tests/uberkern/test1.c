@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <cuda.h>
 #include <stdio.h>
 
@@ -119,6 +120,7 @@ int main(int argc, char* argv[])
 		goto finish;
 	}
 	printf("Done, result = %p\n", value);
+	assert(value == (void*)0x11);
 
 finish :
 	uberkern_dispose(kern);

@@ -297,7 +297,8 @@ struct DirectiveRuleConstant: DirectiveRule //!Constant type offset
 	}
 	virtual void Process()
 	{
-		if(csCurrentDirective.Parts.size()!=3)
+		int nparts = csCurrentDirective.Parts.size();
+		if((nparts!=3) && (nparts!=4))
 			throw 1002; //incorrect no. of arguments
 		if(cubinConstant2Size==0)
 			throw 1012; //constant2 size must be declared to non-zero before constant could be declared
@@ -334,6 +335,17 @@ struct DirectiveRuleConstant: DirectiveRule //!Constant type offset
 		cubinCurrentConstant2Offset = offset;
 		csLineParserStack.push(csLineParser);
 		csLineParser = (LineParser*)&LPConstant2;
+
+		// name: use default or user-specified, if given
+		currentArg++;
+		std::ostringstream constNameStream;
+		constNameStream << "unnamedConst2_" << csConstant2List.size();
+		string constName = constNameStream.str();
+		if (nparts == 4) constName = currentArg->ToCharArray();
+		Constant2 constant2;
+		constant2.Constant2Name = constName;
+		constant2.Offset = offset;
+		csConstant2List.push_back(constant2);
 	}
 }DRConstant;
 

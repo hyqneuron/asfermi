@@ -118,7 +118,7 @@ extern char *cubin_str_nvinfo;
 extern bool csCurrentKernelOpened;
 extern Kernel	csCurrentKernel;
 extern list<Kernel> csKernelList;
-
+extern list<Constant2> csConstant2List;
 
 #else
 #endif

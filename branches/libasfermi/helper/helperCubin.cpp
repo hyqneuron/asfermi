@@ -93,7 +93,8 @@ void hpCubinStage1()
 	//Setup StrTabOffset for all kernels
 	
 	cubinCurrentStrTabOffset = 1; //jump over first null character
-	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
+	for(list<Kernel>::iterator kernel = csKernelList.begin(),
+		kernele = csKernelList.end(); kernel != kernele; kernel++)
 	{
 		//Text
 		hpCubinStage1SetSection(kernel->TextSection, KernelText, kernel->KernelName.Length);
@@ -110,9 +111,19 @@ void hpCubinStage1()
 		//Local
 		if(kernel->LocalSize!=0)
 			hpCubinStage1SetSection(kernel->LocalSection, KernelLocal, kernel->KernelName.Length);
-		//StrTaboffset
+		//StrTabOffset
 		kernel->StrTabOffset = cubinCurrentStrTabOffset;
-		cubinCurrentStrTabOffset += kernel->KernelName.Length + 1;//increment by length of kernel name + length of endng zero
+
+		//increment by length of kernel name + length of endng zero
+		cubinCurrentStrTabOffset += kernel->KernelName.Length + 1;
+	}
+	for (list<Constant2>::iterator constant2 = csConstant2List.begin(),
+		constant2e = csConstant2List.end(); constant2 != constant2e; constant2++)
+	{
+		//StrTabOffset
+		constant2->StrTabOffset = cubinCurrentStrTabOffset;
+		//increment by length of constant name + length of endng zero
+		cubinCurrentStrTabOffset += constant2->Constant2Name.size() + 1;
 	}
 	//Setup SectionIndex, SHStrTabOffset for .nv.info, nv.constant2
 	
@@ -157,10 +168,10 @@ inline void hpCubinAddSectionName1(unsigned char* sectionContent, int &offset, c
 	*(char*)(sectionContent + offset) = (char)0;
 	offset += 1;
 }
-inline void hpCubinAddSectionName2(unsigned char* sectionContent, int &offset, char* sectionName)
+inline void hpCubinAddSectionName2(unsigned char* sectionContent, int &offset, const char* sectionName)
 {
-	memcpy(sectionContent + offset, sectionName, strlen(sectionName)+1);
-	offset += strlen(sectionName)+1;
+	memcpy(sectionContent + offset, sectionName, strlen(sectionName) + 1);
+	offset += strlen(sectionName) + 1;
 }
 inline void hpCubinAddSectionName3(unsigned char* sectionContent, int &offset, SubString &kernelName)
 {
@@ -203,11 +214,18 @@ inline void hpCubinStage2SetStrTabSectionContent()
 
 	cubinSectionStrTab.SectionContent[0] = 0;
 	int currentOffset = 1;
-	//1 entry for each kernel
-	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
-	{
-		hpCubinAddSectionName3(cubinSectionStrTab.SectionContent, currentOffset, kernel->KernelName);
-	}
+
+	// 1 entry for each kernel
+	for(list<Kernel>::iterator kernel = csKernelList.begin(),
+		kernele = csKernelList.end(); kernel != kernele; kernel++)
+		hpCubinAddSectionName3(cubinSectionStrTab.SectionContent,
+			currentOffset, kernel->KernelName);
+
+	// 1 entry for each constant
+	for (list<Constant2>::iterator constant2 = csConstant2List.begin(),
+		constant2e = csConstant2List.end(); constant2 != constant2e; constant2++)
+		hpCubinAddSectionName2(cubinSectionStrTab.SectionContent,
+			currentOffset, constant2->Constant2Name.c_str());
 }
 
 inline void hpCubinStage2AddSectionSymbol(ELFSection &section, ELFSymbolEntry &entry, int &index, unsigned int size)
@@ -220,8 +238,11 @@ inline void hpCubinStage2AddSectionSymbol(ELFSection &section, ELFSymbolEntry &e
 		section.SymbolIndex = index++;
 }
 inline void hpCubinStage2SetSymTabSectionContent()
-{		
-	int entryCount = cubinCurrentSectionIndex + csKernelList.size() + 2; //1 for each section, 1 for each kernel, 2 empty entries
+{
+	// 1 entry for each section, 1 entry for each kernel,
+	// 1 entry for each constant, 2 empty entries.		
+	int entryCount = cubinCurrentSectionIndex + csKernelList.size() +
+		+ csConstant2List.size() + 2;
 	cubinSectionSymTab.SectionSize = entryCount * ELFSymbolEntrySize;
 	ELFSymbolEntry* entries = new ELFSymbolEntry[cubinSectionSymTab.SectionSize];
 	cubinSectionSymTab.SectionContent = (unsigned char*)entries;
@@ -264,7 +285,8 @@ inline void hpCubinStage2SetSymTabSectionContent()
 	hpCubinStage2AddSectionSymbol(cubinSectionNVInfo, entry, index, 0);
 
 	//one entry per __global__ function
-	for(list<Kernel>::iterator kernel = csKernelList.begin(); kernel != csKernelList.end(); kernel++)
+	for(list<Kernel>::iterator kernel = csKernelList.begin(),
+		kernele = csKernelList.end(); kernel != kernele; kernel++)
 	{
 		entry.Name = kernel->StrTabOffset;
 		entry.Value = 0;
@@ -276,8 +298,34 @@ inline void hpCubinStage2SetSymTabSectionContent()
 		kernel->GlobalSymbolIndex = index++;
 	}
 
+	// TODO: calculate sizes of constants, based on offsets
+	// sort by offsets?
+
 	//one entry per constant symbol
-	//constant symbol not implemented yet
+        for (list<Constant2>::iterator constant2 = csConstant2List.begin(),
+                constant2e = csConstant2List.end(); constant2 != constant2e; constant2++)
+	{
+		entry.Name = constant2->StrTabOffset;
+
+		// Since constant data layout is defined by offsets (not sizes),
+		// here we need to determine the size of the constant symbol:
+		// the distance between the current symbol offset and the minimum
+		// offset that is greater than current (or section size)
+		entry.Size = cubinSectionConstant2.SectionSize - constant2->Offset;
+		for (list<Constant2>::iterator constant2other = csConstant2List.begin();
+			constant2other != constant2e; constant2other++)
+		{
+			if (constant2e == constant2other) continue;
+		
+			int size = constant2other->Offset - constant2->Offset;
+			if ((size > 0) && (size < entry.Size)) entry.Size = size;
+		}
+
+		entry.Info = 0x11;
+		entry.Other = 0x0;
+		entry.SHIndex = cubinSectionConstant2.SectionIndex;
+		entries[index++] = entry;
+	}
 }
 void hpCubinStage2()
 {

@@ -12,7 +12,7 @@
 
 void hpCleanUp() //parsers are created with the new keyword,        =====
 {
-	delete[] csInstructionRules;
+	/*delete[] csInstructionRules;
 	delete[] csInstructionRuleIndices;
 
 	for(list<Kernel>::iterator i = csKernelList.begin(); i != csKernelList.end(); i++)
@@ -29,7 +29,7 @@ void hpCleanUp() //parsers are created with the new keyword,        =====
 			delete[] i->LocalSection.SectionContent;
 	}
 
-	delete[] csSource;
+	delete[] csSource;*/
 }
 //-----End of main helper functions
 

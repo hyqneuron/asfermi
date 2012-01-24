@@ -342,6 +342,7 @@ void Initialize() //set up the various lists
 	csLabels.clear();
 	csLabelRequests.clear();
 	csKernelList.clear();
+	csConstant2List.clear();
 
 	//Set default parsers
 	csMasterParserList.push_back((MasterParser*)&MPDefault);
@@ -508,6 +509,12 @@ ASFermi::ASFermi() :
 	::cubinSectionConstant2.SectionContent = NULL;
 	::cubinSectionNVInfo.SectionContent = NULL;
 	::cubinSectionNVInfo.SectionContent = NULL;
+
+	::csInstructionRules = NULL;
+	::csInstructionRuleIndices = NULL;
+	::csDirectiveRules = NULL;
+	::csDirectiveRuleIndices = NULL;
+	::csSource = NULL;
 }
 
 ASFermi::~ASFermi()
@@ -552,5 +559,12 @@ ASFermi::~ASFermi()
 	delete[] ::csInstructionRuleIndices;
 	delete[] ::csDirectiveRules;
 	delete[] ::csDirectiveRuleIndices;
+	delete[] ::csSource;
+
+	::csInstructionRules = NULL;
+	::csInstructionRuleIndices = NULL;
+	::csDirectiveRules = NULL;
+	::csDirectiveRuleIndices = NULL;
+	::csSource = NULL;
 }
 

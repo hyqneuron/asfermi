@@ -56,10 +56,10 @@ struct uberkern_entry_t* uberkern_launch(
 			cuerr);
 		return NULL;
 	}
-	free(opcode);
 
 	printf("goto cmd = BRA.U 0x%04x\n", offset);
 	printf("opcode = %p\n", *(void**)opcode);
+	free(opcode);
 
 	// Load dynamic kernel binary.
 	char* binary_dev = NULL;
