@@ -28,8 +28,8 @@ test2: test2.cpp libuberkern.so
 	nvcc -g $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
 
 tests: test1 test2
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.:../.. ./test1 100
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.:../.. ./test2 1000 10
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test1 100
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test2 1000 10
 
 snap:
 	tar -cvzf ../uberkern_`date +%y%m%d%H%M%S`.tar.gz ../uberkern

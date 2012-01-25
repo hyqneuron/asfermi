@@ -11,6 +11,10 @@
 // uberkern (int* args, void** addr)
 static const char* uberkern[] =
 {
+	"!Constant2 0x8",			// Reserve 8 bytes of constant memory to store
+	"!Constant long 0x0 uberkern_config",	// the address of uberkern config structure
+	"!EndConstant",
+
 	"!Machine 64",
 	"!Kernel uberkern",
 	"!Param 8 2",
@@ -31,8 +35,8 @@ static const char* uberkern[] =
 	"ISETP.NE.AND P0, pt, R1, RZ, pt",
 	"@P0 BRA #BAR",				// For all other threads - go directly to #BAR
 
-	"MOV R2, c[0x0][0x28]",			// R2 = (int*)&addr
-	"MOV R3, c[0x0][0x2c]",			// R3 = (int*)&addr + 1
+	"MOV R2, c[0x2][0x0]",			// *(R2, R3) = addr
+	"MOV R3, c[0x2][0x4]",
 
 						// Put "goto" opcode specified by addr value in place of #NOP
 						// below for further executing.
@@ -399,6 +403,23 @@ struct uberkern_t* uberkern_init(unsigned int capacity)
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot load uberkernel function: %d\n", cuerr);
+		goto failure;
+	}
+
+        // Load the uberkernel config structure address constant.
+	CUdeviceptr args_address;
+	cuerr = cuModuleGetGlobal(&args_address, NULL, kern->module, "uberkern_config");
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot load uberkernel config data: %d\n", cuerr);
+		goto failure;
+	}
+
+	// Fill the structure address constant with the address value.
+	cuerr = cuMemcpyHtoD(args_address, &kern->args, sizeof(struct uberkern_args_t*));
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot fill uberkernel config data: %d\n", cuerr);
 		goto failure;
 	}
 

@@ -92,11 +92,7 @@ struct uberkern_entry_t* uberkern_launch(
 		return NULL;
 	}
 
-	void* kernel_args[] =
-	{
-		(void*)&args, // regular kernel arguments
-		(void*)&uberkern->args, // uberkernel configuration
-	};
+	void* kernel_args[] = { (void*)&args };
 	cuerr = cuLaunchKernel(uberkern->function,
 		gx, gy, gz, bx, by, bz, szshmem,
 		0, kernel_args, NULL);
