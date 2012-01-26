@@ -28,7 +28,7 @@ test2: test2.cpp libuberkern.so
 	nvcc -g $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
 
 test3: test3.c libuberkern.so
-	nvcc -g -Xcompiler -std=c99 -DBLOCK_SIZE=1 $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
+	nvcc -g -Xcompiler -std=c99 -DBLOCK_SIZE=256 $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
 
 tests: test1 test2 test3
 	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test1 100
