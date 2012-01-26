@@ -1,0 +1,209 @@
+#include <assert.h>
+#include <cuda_runtime.h>
+#include <stdio.h>
+
+#include "uberkern.h"
+
+// The Fermi binary for the sum_kernel:
+// __global__ void sum_kernel ( float * a, float * b, float * c )
+// {
+//     int idx = threadIdx.x + blockIdx.x * blockDim.x;
+//     c [idx] = a [idx] + b [idx];
+// }
+unsigned int kernel[] =
+{
+	/*0000*/	0x94001c04, 0x2c000000, 	/* S2R R0, SR_CTAid_X;			*/
+	/*0008*/	0x84005c04, 0x2c000000,		/* S2R R1, SR_Tid_X;			*/
+	/*0010*/	0x2000dca3, 0x20024000,		/* IMAD R3, R0, c [0x0] [0x8], R1;	*/
+	/*0018*/	0x1030dca3, 0x5000c000,		/* IMUL R3, R3, 0x4;			*/
+	/*0020*/	0x80311c03, 0x48004000,		/* IADD R4, R3, c [0x0] [0x20];		*/
+	/*0028*/	0x90015de4, 0x28004000,		/* MOV R5, c [0x0] [0x24];		*/
+	/*0030*/	0x00401c85, 0x84000000,		/* LD.E R0, [R4];			*/
+	/*0038*/	0xa0311c03, 0x48004000,		/* IADD R4, R3, c [0x0] [0x28];		*/
+	/*0040*/	0x90015de4, 0x28004000,		/* MOV R5, c [0x0] [0x24];		*/
+	/*0048*/	0x00405c85, 0x84000000,		/* LD.E R1, [R4];			*/
+	/*0050*/	0x04001c00, 0x50000000,		/* FADD R0, R0, R1;			*/
+	/*0058*/	0xc0311c03, 0x48004000,		/* IADD R4, R3, c [0x0] [0x30];		*/
+	/*0060*/	0x90015de4, 0x28004000,		/* MOV R5, c [0x0] [0x24];		*/
+	/*0068*/	0x00401c85, 0x94000000,		/* ST.E [R4], R0;			*/
+	/*0070*/	0x00001de7, 0x80000000,		/* EXIT;				*/
+};
+
+int capacity = 100;
+
+int sum_host(float* a, float* b, float* c, int n)
+{
+	int nb = n * sizeof ( float );
+	float* aDev = NULL;
+	float* bDev = NULL;
+	float* cDev = NULL;
+	
+	int result = 0;	
+
+	struct uberkern_t* kern = NULL;
+
+	// Allocate memory on the GPU.
+	cudaError_t cuerr = cudaMalloc((void**)&aDev, nb);
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot allocate GPU memory for aDev: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+	cuerr = cudaMalloc((void**)&bDev, nb);
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot allocate GPU memory for bDev: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+	cuerr = cudaMalloc((void**)&cDev, nb);
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot allocate GPU memory for cDev: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+
+	// Copy input data to device memory.
+	cuerr = cudaMemcpy(aDev, a, nb, cudaMemcpyHostToDevice);
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot copy data from a to aDev: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+	cuerr = cudaMemcpy(bDev, b, nb, cudaMemcpyHostToDevice);
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot copy data from b to bDev: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+
+	// Initialize uberkernel.
+	kern = uberkern_init(capacity);
+	if (!kern)
+	{
+		fprintf(stderr, "Cannot initialize uberkernel\n");
+		result = -1;
+		goto finish;
+	}
+	printf("Successfully initialized uberkernel ...\n");
+	
+	// Launch dynamic target kernel in uberkernel.
+	void* args[] = { (void*)&aDev, (void*)&bDev, (void*)&cDev };
+	struct uberkern_entry_t* entry = uberkern_launch(
+		kern, NULL, n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1,
+		0, args, (char*)kernel, sizeof(kernel));
+	if (!entry)
+	{
+		fprintf(stderr, "Cannot launch uberkernel\n");
+		result = 1;
+		goto finish;
+	}
+	printf("Launched kernel in uberkernel:\n");
+
+	// Check error status from the launched kernel.
+	cuerr = cudaGetLastError();
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot launch CUDA kernel: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+
+	// Wait for kernel completion.
+	cuerr = cudaDeviceSynchronize();
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot synchronize CUDA kernel: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+
+	// Copy the resulting array back to the host memory.
+	cuerr = cudaMemcpy(c, cDev, nb, cudaMemcpyDeviceToHost);
+	if (cuerr != cudaSuccess)
+	{
+		fprintf(stderr, "Cannot copy data from cdev to c: %s\n",
+			cudaGetErrorString(cuerr));
+		result = 1;
+		goto finish;
+	}
+
+finish :
+
+	// Release device memory.
+	if (aDev) cudaFree(aDev);
+	if (bDev) cudaFree(bDev);
+	if (cDev) cudaFree(cDev);
+
+	if (kern) uberkern_dispose(kern);
+	return result;
+}
+
+#include <malloc.h>
+#include <stdlib.h>
+
+int main ( int argc, char* argv[] )
+{
+    if (argc != 2)
+    {
+        printf("Usage: %s <n>\n", argv[0]);
+        printf("Where n must be a multiplier of %d\n", BLOCK_SIZE);
+        return 0;
+    }
+
+    int n = atoi(argv[1]), nb = n * sizeof(float);
+    printf("n = %d\n", n);
+    if (n <= 0)
+    {
+        fprintf(stderr, "Invalid n: %d, must be positive\n", n);
+        return 1;
+    }
+    if (n % BLOCK_SIZE)
+    {
+        fprintf(stderr, "Invalid n: %d, must be a multiplier of %d\n",
+            n, BLOCK_SIZE);
+        return 1;
+    }
+
+    float* a = (float*)malloc(nb);
+    float* b = (float*)malloc(nb);
+    float* c = (float*)malloc(nb);
+    double idrandmax = 1.0 / RAND_MAX;
+    for (int i = 0; i < n; i++)
+    {
+        a[i] = rand() * idrandmax;
+        b[i] = rand() * idrandmax;
+    }
+
+    int status = sum_host (a, b, c, n);
+    if (status) return status;
+
+    int imaxdiff = 0;
+    float maxdiff = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        float diff = c[i] / (a[i] + b[i]);
+        if (diff != diff) diff = 0; else diff = 1.0 - diff;
+        if (diff > maxdiff)
+        {
+            maxdiff = diff;
+            imaxdiff = i;
+        }
+    }
+    printf("Max diff = %f% @ i = %d: %f != %f\n",
+        maxdiff * 100, imaxdiff, c[imaxdiff],
+        a[imaxdiff] + b[imaxdiff]);
+    return 0;
+}
+
