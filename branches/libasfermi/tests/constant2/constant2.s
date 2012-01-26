@@ -10,7 +10,7 @@
 !EndConstant
 
 !Kernel kernel
-!Param 8 1
+!Param 256 1
 MOV R0, c[0x0][0x20];
 MOV R1, c[0x0][0x24];
 MOV R2, c[0x2][0x0];

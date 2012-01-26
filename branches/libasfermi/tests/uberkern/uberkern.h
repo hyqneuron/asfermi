@@ -88,7 +88,7 @@ struct uberkern_entry_t* uberkern_launch(
 	struct uberkern_t* uberkern, struct uberkern_entry_t* entry,
 	unsigned int gx, unsigned int gy, unsigned int gz,
 	unsigned int bx, unsigned int by, unsigned int bz,
-	size_t szshmem, char* args, char* binary, size_t szbinary);
+	size_t szshmem, void** args, char* binary, size_t szbinary);
 
 // Unload existing entry from the uberkernel identified
 // by handle.
