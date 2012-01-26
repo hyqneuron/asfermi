@@ -1,0 +1,17 @@
+This sample demonstrates asfermi is practically capable of compiling valid kernels
+for launching on non-trivial compute grids (more than a single thread). However,
+since the CC (condition code) register is not supported, it is not possible to
+implement a completely portable address arithmetics (see TODOs in sum_kernel.s)
+
+[marcusmae@noisy sum_kernel]$ make
+cd ../.. && make
+make[1]: Entering directory `/home/marcusmae/Programming/libasfermi'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/home/marcusmae/Programming/libasfermi'
+../../asfermi sum_kernel.s -64 -o sum_kernel.cubin
+Done
+nvcc -g -DBLOCK_SIZE=256 sum_kernel.cu -o sum_kernel -lcuda
+[marcusmae@noisy sum_kernel]$ ./sum_kernel 4096
+n = 4096
+Max diff = 0.000000% @ i = 0: 1.234571 != 1.234571
+

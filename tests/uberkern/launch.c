@@ -7,7 +7,7 @@ struct uberkern_entry_t* uberkern_launch(
 	struct uberkern_t* uberkern, struct uberkern_entry_t* entry,
 	unsigned int gx, unsigned int gy, unsigned int gz,
 	unsigned int bx, unsigned int by, unsigned int bz,
-	size_t szshmem, char* args, char* binary, size_t szbinary)
+	size_t szshmem, void** args, char* binary, size_t szbinary)
 {
 	// Check the dynamic pool has enough free space to
 	// incorporate the specified dynamic kernel body.
@@ -92,10 +92,9 @@ struct uberkern_entry_t* uberkern_launch(
 		return NULL;
 	}
 
-	void* kernel_args[] = { (void*)&args };
 	cuerr = cuLaunchKernel(uberkern->function,
 		gx, gy, gz, bx, by, bz, szshmem,
-		0, kernel_args, NULL);
+		0, args, NULL);
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot launch kernel: %d\n", cuerr);

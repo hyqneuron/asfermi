@@ -1,6 +1,6 @@
 .PHONY: ../../libasfermi.so
 
-all: libuberkern.so test1 test2
+all: libuberkern.so test1 test2 test3
 
 ../../libasfermi.so:
 	cd ../.. && $(MAKE)
@@ -27,9 +27,13 @@ test1: test1.c libuberkern.so
 test2: test2.cpp libuberkern.so
 	nvcc -g $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
 
-tests: test1 test2
+test3: test3.c libuberkern.so
+	nvcc -g -Xcompiler -std=c99 -DBLOCK_SIZE=1 $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
+
+tests: test1 test2 test3
 	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test1 100
 	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test2 1000 10
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test3 2048
 
 snap:
 	tar -cvzf ../uberkern_`date +%y%m%d%H%M%S`.tar.gz ../uberkern
