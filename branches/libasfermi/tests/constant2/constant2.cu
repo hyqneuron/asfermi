@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	cuerr = cuModuleGetGlobal(&unnamed, &szunnamed, module,
 		"unnamedConst2_0");
 	assert(cuerr == CUDA_SUCCESS);
-	printf("unnamedConst2_0 size = %zu\n", szunnamed);
+	printf("unnamedConst2_0 addr = %p size = %zu\n", unnamed, szunnamed);
 
 	// Load the named constant.
 	CUdeviceptr named;
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 	cuerr = cuModuleGetGlobal(&named, &sznamed, module,
 		"named");
 	assert(cuerr == CUDA_SUCCESS);
-	printf("named size = %zu\n", sznamed);
+	printf("named addr = %p, size = %zu\n", named, sznamed);
 
 	// Load kernel.
 	CUfunction kernel;
