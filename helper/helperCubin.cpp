@@ -298,9 +298,6 @@ inline void hpCubinStage2SetSymTabSectionContent()
 		kernel->GlobalSymbolIndex = index++;
 	}
 
-	// TODO: calculate sizes of constants, based on offsets
-	// sort by offsets?
-
 	//one entry per constant symbol
         for (list<Constant2>::iterator constant2 = csConstant2List.begin(),
                 constant2e = csConstant2List.end(); constant2 != constant2e; constant2++)
@@ -321,6 +318,7 @@ inline void hpCubinStage2SetSymTabSectionContent()
 			if ((size > 0) && (size < entry.Size)) entry.Size = size;
 		}
 
+		entry.Value = constant2->Offset;
 		entry.Info = 0x11;
 		entry.Other = 0x0;
 		entry.SHIndex = cubinSectionConstant2.SectionIndex;
