@@ -274,7 +274,7 @@ struct OperandRuleInstructionAddress: OperandRule
 		{
 			csCurrentInstruction.OpcodeWord0 |= 1 << 14;
 			SetConstMem(component, 0x1f, false);
-			MarkConstantMemoryForImmediate32();
+			//MarkConstantMemoryForImmediate32();
 		}
 		else
 		{

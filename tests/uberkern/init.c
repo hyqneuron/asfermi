@@ -11,33 +11,46 @@
 // uberkern (int* args, void** addr)
 static const char* uberkern[] =
 {
-	"!Constant2 0x8",			// Reserve 8 bytes of constant memory to store
+	"!Machine 64",
+
+	"!Constant2 0x10",			// Reserve 16 bytes of constant memory to store:
 	"!Constant long 0x0 uberkern_config",	// the address of uberkern config structure
 	"!EndConstant",
+	"!Constant int 0x8 uberkern_lepc",	// the load effective PC of uberkern
+	"!EndConstant",
+	"!Constant int 0xc uberkern_goto",	// the dynamic kernel relative offset in uberkern
+	"!EndConstant",
 
-	"!Machine 64",
 	"!Kernel uberkern",
-	"!Param 8 3",
+	"!Param 256 1",
 
 	"LEPC R0",				// R0 = LEPC
 
-	"MOV R2, c[0x2][0x0]",			// *(R2, R3) = addr
+	"S2R R1, SR_Tid_Y",			// Perform only by tid = (0, 0, 0), ctaid = (0, 0, 0).
+	"S2R R3, SR_Tid_X",
+	"S2R R4, SR_Tid_Z",
+	"S2R R5, SR_CTAid_Y",
+	"LOP.OR R1, R1, R2",
+	"S2R R3, SR_CTAid_X",
+	"LOP.OR R4, R1, R4",
+	"LOP.OR R1, R4, R3",
+	"S2R R3, SR_CTAid_Z",
+	"LOP.OR R5, R1, R5",
+	"LOP.OR R1, R5, R3",
+	"ISETP.NE.AND P0, pt, R1, RZ, pt",
+	"@P0 BRA #GO",				// For all other threads - go to #GO
+	"MOV R2, c[0x2][0x8]",			// Check if the uberkern_lepc contains 0.
+	"ISETP.NE.AND P0, pt, R2, RZ, pt",
+	"@P0 BRA #GO",				// If not - go to #GO
+	"MOV R2, c[0x2][0x0]",
 	"MOV R3, c[0x2][0x4]",
+	"ST.E [R2], R0",			// If yes, write LEPC to uberkern_config and exit.
+	"EXIT",
 
-						// Put "goto" opcode specified by addr value in place of #NOP
-						// below for further executing.
+						// Load the free space starting address.
 
-	"IADD R0, R0, #NOP",			// R0 += #NOP
-	"MOV R1, 0x1",				// R1 = 1			<-- low word compound = 1
-	"IADD R2, R2, 8",			// R2 = R2 + 8			<-- address of uberkern_args_t.opcode
-	"LD.E.64 R4, [R2]",			// (R4, R5) = *(R2, R3)		<-- 8-byte value of uberkern_args_t.opcode
-	"ST.E.64 [R0], R4",			// *(R0, R1) = (R4, R5)
-	"IADD R0, R0, -#NOP",			// R0 -= #NOP
-	"IADD R2, R2, -8",			// R2 = R2 - 8			<-- address of uberkern_args_t.opcode
-
-						// Load the free space starting address from *(int*)(*addr + 1).
-
-	"LDU.E R1, [R2]",			// R1 = *(R2, R3)		<-- 4-byte value of uberkern_args_t.addr
+"#GO",	"MOV R1, c[0x2][0xc]",			// R1 = c[0x2][0x12]		<-- 4-byte value of goto offset
+	"IADD R1, R1, #FRE",			// R1 += #FRE
 	"IADD R0, R0, R1",			// R0 += R1
 	"MOV R1, 0x1",				// R1 = 1			<-- low word compound = 1
 	"LD.E.64 R4, [R0]",			// (R4, R5) = *(R0, R1)		<-- code instruction value
@@ -58,7 +71,8 @@ static const char* uberkern[] =
 
 						// Load kernel's size and then load each instruction in a loop.
 
-	"IADD R2, R2, 16",			// R2 = R2 + 16			<-- address of uberkern_args_t.szbinary
+	"MOV R2, c[0x2][0x0]",
+	"MOV R3, c[0x2][0x4]",
 	"LDU.E R6, [R2]",			// R6 = *(R2, R3)
 	"IADD R2, R2, 8",			// R2 = R2 + 8			<-- address of uberkern_args_t.binary
 	"LDU.E.64 R4, [R2]",			// (R4, R5) = *(R2, R3)
@@ -69,8 +83,6 @@ static const char* uberkern[] =
 						//	// Load instructions from args to kernel space
 	"LD.E.64 R2, [R4]",			// 	*(R2, R3) = (R4, R5)
 	"ST.E.64 [R0], R2",			//	*(R0, R1) = (R2, R3)
-	"LD.E.64 R2, [R0]",
-	"ST.E.64 [R4], R2",
 	"IADD R0, R0, 8",			//	R0 += 8
 	"IADD R4, R4, 8",			//	R4 += 8
 	"IADD R6, R6, -8",			//	R6 -= 8
@@ -78,7 +90,7 @@ static const char* uberkern[] =
 						// }
 "#BAR", "MEMBAR.GL",				// __threadfence();
 	"BAR.RED.POPC RZ, RZ",			// __syncthreads();
-	"BRA #NOP",				// goto #NOP
+	"BRA #BRA",				// goto #BRA
 	"NOP",
 	"NOP",
 	"NOP",
@@ -134,65 +146,7 @@ static const char* uberkern[] =
 	"NOP",
 	"NOP",
 	"NOP",
-
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-
-
-"#NOP",	"NOP",					// goto *(R2, R3)
+"#BRA",	"BRA c[0x2][0xc]",			// goto dynamic kernel offset
 "#FRE",	"$BUF",					// $BUF more NOPs here as free space for code insertions
 	"!EndKernel"
 };
@@ -273,7 +227,7 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 			continue;
 		}
 
-		// Put the specified number of NOPs in place of $BUF.
+		// Account the specified number of NOPs in place of $BUF.
 		if (!strncmp(line, "$BUF", 5))
 		{
 			for (unsigned int j = 0; j < capacity; j++)
@@ -327,6 +281,12 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 		}
 	}
 
+	// Account additional entry points with all possible
+	// reg counts.
+	for (unsigned int regcount = 0; regcount < 64; regcount++)
+		size += snprintf(NULL, 0, "!Kernel uberkern%d\n!RegCount %d\n"
+			"!Param 256 1\nJMP c[0x2][0x8]\n!EndKernel\n", regcount, regcount);
+
 	char* source = (char*)malloc(size + 1);
 	char* psource = source;
 	
@@ -346,7 +306,7 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 			continue;
 		}
 
-		// Put the specified number of NOPs in place of $BUF.
+		// Output the specified number of NOPs in place of $BUF.
 		if (!strncmp(line, "$BUF", 5))
 		{
 			int sznop = sprintf(psource, "/*%04x*/ NOP;\n", ilines * 8, line);
@@ -398,6 +358,12 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 		}
 	}
 
+	// Output additional entry points with all possible
+	// reg counts.
+	for (unsigned int regcount = 0; regcount < 64; regcount++)
+		size += snprintf(NULL, 0, "!Kernel uberkern%d\n!RegCount %d\n"
+			"!Param 256 1\nJMP c[0x2][0x8]\n!EndKernel\n", regcount, regcount);
+
 	result = source;
 
 finish :
@@ -408,7 +374,6 @@ finish :
 	struct uberkern_t* kern = (struct uberkern_t*)malloc(
 		sizeof(struct uberkern_t));
 	kern->binary = cubin;
-	kern->pool = pool;
 	kern->offset = 0;
 	kern->capacity = capacity * 8;
 	return kern;
@@ -452,19 +417,82 @@ struct uberkern_t* uberkern_init(unsigned int capacity)
 	}
 
         // Load the uberkernel config structure address constant.
-	CUdeviceptr args_address;
-	cuerr = cuModuleGetGlobal(&args_address, NULL, kern->module, "uberkern_config");
+	CUdeviceptr uberkern_config;
+	cuerr = cuModuleGetGlobal(&uberkern_config, NULL, kern->module, "uberkern_config");
 	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot load uberkernel config data: %d\n", cuerr);
+		fprintf(stderr, "Cannot load uberkern_config: %d\n", cuerr);
 		goto failure;
 	}
 
 	// Fill the structure address constant with the address value.
-	cuerr = cuMemcpyHtoD(args_address, &kern->args, sizeof(struct uberkern_args_t*));
+	cuerr = cuMemcpyHtoD(uberkern_config, &kern->args, sizeof(struct uberkern_args_t*));
 	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot fill uberkernel config data: %d\n", cuerr);
+		fprintf(stderr, "Cannot fill uberkern_config: %d\n", cuerr);
+		goto failure;
+	}
+
+        // Load the uberkernel load effective PC constant.
+	CUdeviceptr uberkern_lepc;
+	cuerr = cuModuleGetGlobal(&uberkern_lepc, NULL, kern->module, "uberkern_lepc");
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot load uberkern_lepc data: %d\n", cuerr);
+		goto failure;
+	}
+
+	// Initialize the LEPC value with zero, so on the first
+	// launch uberkern will simply report LEPC and exit.
+	cuerr = cuMemsetD8(uberkern_lepc, 0, sizeof(int));
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot fill uberkern_lepc: %d\n", cuerr);
+		goto failure;
+	}
+
+	// Launch uberkernel to fill the LEPC.
+	// Note we are always sending 256 Bytes, regardless
+	// the actual size of arguments.
+	char args[256];
+	size_t szargs = 256;
+	void* config[] =
+	{
+		CU_LAUNCH_PARAM_BUFFER_POINTER, args,
+		CU_LAUNCH_PARAM_BUFFER_SIZE, &szargs,
+		CU_LAUNCH_PARAM_END
+	};
+	cuerr = cuLaunchKernel(kern->function,
+		1, 1, 1, 1, 1, 1, 0, 0, NULL, config);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot launch kernel: %d\n", cuerr);
+		goto failure;
+	}
+
+	// Synchronize kernel.
+	cuerr = cuCtxSynchronize();
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot synchronize target kernel: %d\n", cuerr);
+		goto failure;
+	}
+
+	// Read the LEPC.
+	unsigned int lepc;
+	cuerr = cuMemcpyDtoH(&lepc, (CUdeviceptr)kern->args, sizeof(int));
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot read back the lepc: %d\n", cuerr);
+		goto failure;
+	}
+	printf("uberkern lepc = %p\n", lepc);
+
+	// Again, initialize the LEPC, this time with the actual value.
+	cuerr = cuMemcpyHtoD(uberkern_lepc, &lepc, sizeof(int));
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot fill uberkern_lepc: %d\n", cuerr);
 		goto failure;
 	}
 

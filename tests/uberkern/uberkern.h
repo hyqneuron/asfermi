@@ -14,14 +14,6 @@ extern "C"
 // uberkernel(int*, struct uberkernel_args_t*)
 struct uberkern_args_t
 {
-	// Kernel entry starting address.
-	unsigned int addr;
-
-	// Opcode "BRA addr;" to jump to starting address.
-	// (It will be inserted in the end of uberkernel
-	// code to jump to desired location).
-	unsigned long long opcode;
-
 	// Dynamic kernel binary size.
 	unsigned int szbinary;
 
@@ -49,10 +41,6 @@ struct uberkern_t
 
 	// Uberkernel binary (ELF cubin).
 	char* binary;
-	
-	// The starting address of uberkernel space for
-	// dynamically loaded kernels.
-	unsigned int pool;
 	
 	// The offset of the top most free space for
 	// dynamically loaded kernels from the beginning of
@@ -88,7 +76,7 @@ struct uberkern_entry_t* uberkern_launch(
 	struct uberkern_t* uberkern, struct uberkern_entry_t* entry,
 	unsigned int gx, unsigned int gy, unsigned int gz,
 	unsigned int bx, unsigned int by, unsigned int bz,
-	size_t szshmem, void** args, char* binary, size_t szbinary);
+	size_t szshmem, void* args, char* binary, size_t szbinary);
 
 // Unload existing entry from the uberkernel identified
 // by handle.
