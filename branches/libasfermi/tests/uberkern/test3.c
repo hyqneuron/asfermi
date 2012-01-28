@@ -29,6 +29,29 @@ unsigned int kernel[] =
 	/*0070*/	0x00001de7, 0x80000000,		/* EXIT;				*/
 };
 
+// And the following kernel will fail, since it has register footprint
+// larger than the predefined amount (uberkernel loader code).
+// unsigned int kernel[] =
+// {
+//	/*0000*/	0x00005de4, 0x28004404,		/* MOV R1, c [0x1] [0x100];			*/
+//	/*0008*/	0x94001c04, 0x2c000000,		/* S2R R0, SR_CTAid_X;				*/
+//	/*0010*/	0x84009c04, 0x2c000000,		/* S2R R2, SR_Tid_X;				*/
+//	/*0018*/	0x10015de2, 0x18000000,		/* MOV32I R5, 0x4;				*/
+//	/*0020*/	0x2000dca3, 0x20044000,		/* IMAD R3, R0, c [0x0] [0x8], R2;		*/
+//	/*0028*/	0x10311ce3, 0x5000c000,		/* IMUL.HI R4, R3, 0x4;				*/
+//	/*0030*/	0x80321ca3, 0x200b8000,		/* IMAD R8.CC, R3, R5, c [0x0] [0x20];		*/
+//	/*0038*/	0x90425c43, 0x48004000,		/* IADD.X R9, R4, c [0x0] [0x24];		*/
+//	/*0040*/	0xa0329ca3, 0x200b8000,		/* IMAD R10.CC, R3, R5, c [0x0] [0x28];		*/
+//	/*0048*/	0x00809c85, 0x84000000,		/* LD.E R2, [R8];				*/
+//	/*0050*/	0xb042dc43, 0x48004000,		/* IADD.X R11, R4, c [0x0] [0x2c];		*/
+//	/*0058*/	0xc0319ca3, 0x200b8000,		/* IMAD R6.CC, R3, R5, c [0x0] [0x30];		*/
+//	/*0060*/	0x00a01c85, 0x84000000,		/* LD.E R0, [R10];				*/
+//	/*0068*/	0xd041dc43, 0x48004000,		/* IADD.X R7, R4, c [0x0] [0x34];		*/
+//	/*0070*/	0x00201c00, 0x50000000,		/* FADD R0, R2, R0;				*/
+//	/*0078*/	0x00601c85, 0x94000000,		/* ST.E [R6], R0;				*/
+//	/*0080*/	0x00001de7, 0x80000000,		/* EXIT;					*/
+// };
+
 int capacity = 100;
 
 int sum_host(float* a, float* b, float* c, int n)
@@ -97,10 +120,11 @@ int sum_host(float* a, float* b, float* c, int n)
 	printf("Successfully initialized uberkernel ...\n");
 	
 	// Launch dynamic target kernel in uberkernel.
-	void* args[] = { (void*)&aDev, (void*)&bDev, (void*)&cDev };
+	struct { void *aDev, *bDev, *cDev; } args =
+		{ .aDev = aDev, .bDev = bDev, .cDev = cDev };
 	struct uberkern_entry_t* entry = uberkern_launch(
 		kern, NULL, n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1,
-		0, args, (char*)kernel, sizeof(kernel));
+		0, (void*)&args, (char*)kernel, sizeof(kernel));
 	if (!entry)
 	{
 		fprintf(stderr, "Cannot launch uberkernel\n");

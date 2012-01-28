@@ -1,13 +1,12 @@
 #include <stdio.h>
 
-#include "libasfermi.h"
 #include "uberkern.h"
 
 struct uberkern_entry_t* uberkern_launch(
 	struct uberkern_t* uberkern, struct uberkern_entry_t* entry,
 	unsigned int gx, unsigned int gy, unsigned int gz,
 	unsigned int bx, unsigned int by, unsigned int bz,
-	size_t szshmem, void** args, char* binary, size_t szbinary)
+	size_t szshmem, void* args, char* binary, size_t szbinary)
 {
 	// Check the dynamic pool has enough free space to
 	// incorporate the specified dynamic kernel body.
@@ -18,48 +17,23 @@ struct uberkern_entry_t* uberkern_launch(
 			uberkern->capacity - uberkern->offset, szbinary);
 		return NULL;
 	}
-
-	// Generate jump command, create and load opcode.
-	unsigned int addr = uberkern->pool + uberkern->offset;
-	CUresult cuerr = cuMemcpyHtoD((CUdeviceptr)&uberkern->args->addr,
-		&addr, sizeof(unsigned int));
-	if (cuerr != CUDA_SUCCESS)
-	{
-		fprintf(stderr, "Cannot load kernel jump address: %d\n",
-			cuerr);
-		return NULL;
-	}
 	
-	// The goto is exactly before the beginning of the pool, so +8.
-	unsigned int offset = uberkern->offset + 8; // uberkern->pool + uberkern->offset;
-	const char* fmtcommand = "!Kernel bra\nBRA.U 0x%04x\n!EndKernel\n";
-	int szcommand = snprintf(NULL, 0, fmtcommand, offset);
-	if (szcommand < 0)
-	{
-		fprintf(stderr, "Error measuring opcode command length: %d\n",
-			szcommand);
-		return NULL;
-	}
-	char command[szcommand];
-	sprintf(command, fmtcommand, offset);
-	char* opcode = asfermi_encode_opcodes(command, 20);
-	if (!opcode)
-	{
-		fprintf(stderr, "Error generating opcode for command %s\n",
-			command);
-		return NULL;
-	}
-	cuerr = cuMemcpyHtoD((CUdeviceptr)&uberkern->args->opcode, opcode, 8);
+	// Load the dynamic kernel code BRA target address.
+	CUdeviceptr uberkern_goto;
+	CUresult cuerr = cuModuleGetGlobal(&uberkern_goto, NULL, uberkern->module, "uberkern_goto");
 	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot load kernel jump opcode: %d\n",
-			cuerr);
+		fprintf(stderr, "Cannot load uberkern_goto: %d\n", cuerr);
 		return NULL;
 	}
 
-	printf("goto cmd = BRA.U 0x%04x\n", offset);
-	printf("opcode = %p\n", *(void**)opcode);
-	free(opcode);
+	// Fill the dynamic kernel code BRA target address.
+	cuerr = cuMemcpyHtoD(uberkern_goto, &uberkern->offset, sizeof(int));
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot fill uberkern_goto: %d\n", cuerr);
+		return NULL;
+	}
 
 	// Load dynamic kernel binary.
 	char* binary_dev = NULL;
@@ -92,9 +66,18 @@ struct uberkern_entry_t* uberkern_launch(
 		return NULL;
 	}
 
+	// Note we are always sending 256 Bytes, regardless
+	// the actual size of arguments.
+	size_t szargs = 256;
+	void* config[] =
+	{
+		CU_LAUNCH_PARAM_BUFFER_POINTER, args,
+		CU_LAUNCH_PARAM_BUFFER_SIZE, &szargs,
+		CU_LAUNCH_PARAM_END
+	};
 	cuerr = cuLaunchKernel(uberkern->function,
 		gx, gy, gz, bx, by, bz, szshmem,
-		0, args, NULL);
+		0, NULL, config);
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot launch kernel: %d\n", cuerr);
