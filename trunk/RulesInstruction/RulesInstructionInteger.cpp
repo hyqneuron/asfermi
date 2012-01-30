@@ -79,7 +79,7 @@ struct InstructionRuleIMAD: InstructionRule
 					&OPRRegisterWithCCAt16,
 					&OPRIMADReg1,
 					&OPRIMULStyle,
-					&OPRRegister3ForMAD);
+					&OPRMAD3);
 		ModifierGroups[0].Initialize(true, 2, &MRIMUL0U32, &MRIMUL0S32);
 		ModifierGroups[1].Initialize(true, 2, &MRIMUL1U32, &MRIMUL1S32);
 		ModifierGroups[2].Initialize(true, 1, &MRIMULHI);

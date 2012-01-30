@@ -187,6 +187,27 @@ OPRISCADDAllowNegative: ISCADD
 OPRI2F: I2F, I2I
 */
 
+struct OperandRuleMAD3: OperandRule
+{
+	OperandRuleMAD3(): OperandRule(Custom){}
+	virtual void Process(SubString &component)
+	{
+		if(component.IsConstantMemory() )
+		{
+			csCurrentInstruction.OpcodeWord0 &= 0x03FFFFFF; //remove action of third opr
+			OPRIMULStyle.Process(component); //issue: temporary fix only. Not the right one to use
+			MarkConstantMemoryForIMAD();
+			//issue: need to check third operand is register!!
+			//reprocess third as fourth opr
+			list<SubString>::iterator opr = csCurrentInstruction.Components.end();
+			opr--; //third operand
+			opr--; //third operand
+			((OperandRule*)&OPRRegister3ForMAD)->Process(*opr);
+		}
+		else
+			((OperandRule*)&OPRRegister3ForMAD)->Process(component);
+	}
+} OPRMAD3;
 
 struct OperandRuleIAllowNegative: OperandRule
 {

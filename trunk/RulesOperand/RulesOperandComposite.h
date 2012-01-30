@@ -14,6 +14,9 @@ extern OperandRuleFAllowNegative OPRFMULAllowNegative, OPRFFMAAllowNegative;
 struct OperandRuleIADDStyle;
 extern OperandRuleIADDStyle OPRIADDStyle, OPRIMULStyle;
 
+struct OperandRuleMAD3;
+extern OperandRuleMAD3 OPRMAD3;
+
 struct OperandRuleIAllowNegative;
 extern OperandRuleIAllowNegative OPRISCADDAllowNegative;
 
