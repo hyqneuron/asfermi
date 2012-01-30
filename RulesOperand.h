@@ -14,6 +14,11 @@ inline void MarkConstantMemoryForImmediate32()
 {
 	csCurrentInstruction.OpcodeWord1 |= 1<<14; //constant memory flag
 }
+inline void MarkConstantMemoryForIMAD()
+{
+	csCurrentInstruction.OpcodeWord1 &= (0xFFFF3FFF);
+	csCurrentInstruction.OpcodeWord1 |= 2<<14; //special constant mem flag for IMAD, FFMA, DFMA
+}
 inline void MarkImmediate20ForImmediate32()
 {
 	csCurrentInstruction.OpcodeWord1 |= 3<<14; //20-bit immediate flag

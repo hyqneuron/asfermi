@@ -80,7 +80,7 @@ struct InstructionRuleFFMA: InstructionRule
 					&OPRRegister0,
 					&OPRRegister1,
 					&OPRFFMAAllowNegative, 
-					&OPRRegister3ForMAD);
+					&OPRMAD3);
 		ModifierGroups[0].Initialize(true, 1, &MRFMUL32IFTZ);
 		ModifierGroups[1].Initialize(true, 3, &MRFMULRP, &MRFMULRM, &MRFMULRZ);
 		ModifierGroups[2].Initialize(true, 1, &MRFMULSAT);
