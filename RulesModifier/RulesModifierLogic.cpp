@@ -40,6 +40,7 @@ struct ModifierRuleSHR: ModifierRule
 		{
 			Name = "W";
 			hpBinaryStringToOpcode4("1111 111110 1111111111111111111111", Mask0);
+			hpBinaryStringToOpcode4("0000 000001 0000000000000000000000", Bits0);
 		}
 	}
 }MRSHRU32(true), MRSHRW(false);
