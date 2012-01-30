@@ -67,8 +67,8 @@ Template opcode
         mod        reg0   reg1                  immea       mod2
 }}}
 ||mod 0||meaning||
-||0    ||.W     ||
-||1    ||default||
+||0    ||default||
+||1    ||.W     ||
 
 ||mod 4||meaning||
 ||0    ||.U32   ||
