@@ -59,12 +59,12 @@ struct InstructionRuleSHR: InstructionRule
 	{
 		if(shr)
 		{
-			hpBinaryStringToOpcode8("1100 010001 1110 000000 000000 0000000000000000000000 0000000000 011010", OpcodeWord0, OpcodeWord1);
+			hpBinaryStringToOpcode8("1100 010000 1110 000000 000000 0000000000000000000000 0000000000 011010", OpcodeWord0, OpcodeWord1);
 			Name = "SHR";
 		}
 		else
 		{
-			hpBinaryStringToOpcode8("1100 010001 1110 000000 000000 0000000000000000000000 0000000000 000110", OpcodeWord0, OpcodeWord1);
+			hpBinaryStringToOpcode8("1100 010000 1110 000000 000000 0000000000000000000000 0000000000 000110", OpcodeWord0, OpcodeWord1);
 			Name = "SHL";
 		}
 		SetOperands(3,
