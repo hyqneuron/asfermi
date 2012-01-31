@@ -158,11 +158,11 @@ Template opcode:
         int1        reg0   reg1                  immea       mod2
 }}}
 
-||mod2 1:2||meaning   ||
-||00      ||0: default||
-||01      ||1: -reg1  ||
-||10      ||0: -int0  ||
-||11      ||1: .PO    ||
+||mod2 1:2||meaning               ||
+||00      ||0: default            ||
+||01      ||1: -reg1              ||
+||10      ||0: -composite operand ||
+||11      ||1: .PO                ||
 
 ||mod2 9||meaning||
 ||0     ||default||
