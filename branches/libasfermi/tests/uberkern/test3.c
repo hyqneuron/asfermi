@@ -211,7 +211,7 @@ int main ( int argc, char* argv[] )
     }
 
     int status = sum_host (a, b, c, n);
-    if (status) return status;
+    if (status) goto finish;
 
     int imaxdiff = 0;
     float maxdiff = 0.0;
@@ -228,6 +228,11 @@ int main ( int argc, char* argv[] )
     printf("Max diff = %f% @ i = %d: %f != %f\n",
         maxdiff * 100, imaxdiff, c[imaxdiff],
         a[imaxdiff] + b[imaxdiff]);
-    return 0;
+
+finish:
+    free(a);
+    free(b);
+    free(c);
+    return status;
 }
 

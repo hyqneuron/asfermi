@@ -559,7 +559,6 @@ ASFermi::~ASFermi()
 	delete[] ::csInstructionRuleIndices;
 	delete[] ::csDirectiveRules;
 	delete[] ::csDirectiveRuleIndices;
-	delete[] ::csSource;
 
 	::csInstructionRules = NULL;
 	::csInstructionRuleIndices = NULL;
