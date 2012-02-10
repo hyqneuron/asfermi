@@ -66,6 +66,25 @@ struct uberkern_entry_t* uberkern_launch(
 		return NULL;
 	}
 
+        // Load the uberkernel command constant.
+	CUdeviceptr uberkern_cmd;
+	cuerr = cuModuleGetGlobal(&uberkern_cmd, NULL, uberkern->module, "uberkern_cmd");
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot load uberkern_cmd data: %d\n", cuerr);
+		return NULL;
+	}
+
+	// Initialize command value with ONE, so on the next
+	// launch uberkern will load dynamic kernel code and exit.
+	cuerr = cuMemsetD32(uberkern_cmd, 1, 1);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot fill uberkern_cmd: %d\n", cuerr);
+		return NULL;
+	}
+
+	// Launch uberkernel to load the dynamic kernel code.
 	// Note we are always sending 256 Bytes, regardless
 	// the actual size of arguments.
 	size_t szargs = 256;
@@ -76,13 +95,35 @@ struct uberkern_entry_t* uberkern_launch(
 		CU_LAUNCH_PARAM_END
 	};
 	cuerr = cuLaunchKernel(uberkern->function,
-		gx, gy, gz, bx, by, bz, szshmem,
-		0, NULL, config);
+		1, 1, 1, 1, 1, 1, 0, 0, NULL, config);
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot launch kernel: %d\n", cuerr);
 		return NULL;
 	}
+
+	// Synchronize kernel.
+	cuerr = cuCtxSynchronize();
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot synchronize target kernel: %d\n", cuerr);
+		return NULL;
+	}
+
+	// Initialize command value with TWO, so on the next
+	// launch uberkern will load dynamic kernel code and exit.
+	cuerr = cuMemsetD32(uberkern_cmd, 2, 1);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot fill uberkern_cmd: %d\n", cuerr);
+		return NULL;
+	}
+
+	// Note we are always sending 256 Bytes, regardless
+	// the actual size of arguments.
+	cuerr = cuLaunchKernel(uberkern->function,
+		gx, gy, gz, bx, by, bz, szshmem,
+		0, NULL, config);
 
 	// Increment pool offset by the size of kernel binary.
 	uberkern->offset += szbinary;

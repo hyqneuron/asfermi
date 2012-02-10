@@ -31,9 +31,7 @@ test3: test3.c libuberkern.so
 	nvcc -g -Xcompiler -std=c99 -DBLOCK_SIZE=256 $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
 
 tests: test1 test2 test3
-	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test1 100
-	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test2 1000 10
-	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.:../.. ./test3 2048
+	perl tests.pl
 
 snap:
 	tar -cvzf ../uberkern_`date +%y%m%d%H%M%S`.tar.gz ../uberkern
