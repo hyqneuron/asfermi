@@ -106,7 +106,7 @@ struct uberkern_entry_t* uberkern_launch(
 	cuerr = cuCtxSynchronize();
 	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot synchronize target kernel: %d\n", cuerr);
+		fprintf(stderr, "Cannot synchronize initial load kernel: %d\n", cuerr);
 		return NULL;
 	}
 
