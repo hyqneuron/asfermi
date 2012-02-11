@@ -20,11 +20,11 @@ unsigned int kernel[] =
 	/*0028*/	0x90015de4, 0x28004000,		/* MOV R5, c [0x0] [0x24];		*/
 	/*0030*/	0x00401c85, 0x84000000,		/* LD.E R0, [R4];			*/
 	/*0038*/	0xa0311c03, 0x48004000,		/* IADD R4, R3, c [0x0] [0x28];		*/
-	/*0040*/	0x90015de4, 0x28004000,		/* MOV R5, c [0x0] [0x24];		*/
+	/*0040*/	0xb0015de4, 0x28004000, 	/* MOV R5, c [0x0] [0x2c];		*/
 	/*0048*/	0x00405c85, 0x84000000,		/* LD.E R1, [R4];			*/
 	/*0050*/	0x04001c00, 0x50000000,		/* FADD R0, R0, R1;			*/
 	/*0058*/	0xc0311c03, 0x48004000,		/* IADD R4, R3, c [0x0] [0x30];		*/
-	/*0060*/	0x90015de4, 0x28004000,		/* MOV R5, c [0x0] [0x24];		*/
+	/*0060*/	0xd0015de4, 0x28004000, 	/* MOV R5, c [0x0] [0x34];		*/
 	/*0068*/	0x00401c85, 0x94000000,		/* ST.E [R4], R0;			*/
 	/*0070*/	0x00001de7, 0x80000000,		/* EXIT;				*/
 };
@@ -179,60 +179,60 @@ finish :
 
 int main ( int argc, char* argv[] )
 {
-    if (argc != 2)
-    {
-        printf("Usage: %s <n>\n", argv[0]);
-        printf("Where n must be a multiplier of %d\n", BLOCK_SIZE);
-        return 0;
-    }
+	if (argc != 2)
+	{
+		printf("Usage: %s <n>\n", argv[0]);
+		printf("Where n must be a multiplier of %d\n", BLOCK_SIZE);
+		return 0;
+	}
 
-    int n = atoi(argv[1]), nb = n * sizeof(float);
-    printf("n = %d\n", n);
-    if (n <= 0)
-    {
-        fprintf(stderr, "Invalid n: %d, must be positive\n", n);
-        return 1;
-    }
-    if (n % BLOCK_SIZE)
-    {
-        fprintf(stderr, "Invalid n: %d, must be a multiplier of %d\n",
-            n, BLOCK_SIZE);
-        return 1;
-    }
+	int n = atoi(argv[1]), nb = n * sizeof(float);
+	printf("n = %d\n", n);
+	if (n <= 0)
+	{
+		fprintf(stderr, "Invalid n: %d, must be positive\n", n);
+		return 1;
+	}
+	if (n % BLOCK_SIZE)
+	{
+		fprintf(stderr, "Invalid n: %d, must be a multiplier of %d\n",
+			n, BLOCK_SIZE);
+		return 1;
+	}
 
-    float* a = (float*)malloc(nb);
-    float* b = (float*)malloc(nb);
-    float* c = (float*)malloc(nb);
-    double idrandmax = 1.0 / RAND_MAX;
-    for (int i = 0; i < n; i++)
-    {
-        a[i] = rand() * idrandmax;
-        b[i] = rand() * idrandmax;
-    }
+	float* a = (float*)malloc(nb);
+	float* b = (float*)malloc(nb);
+	float* c = (float*)malloc(nb);
+	double idrandmax = 1.0 / RAND_MAX;
+	for (int i = 0; i < n; i++)
+	{
+		a[i] = rand() * idrandmax;
+		b[i] = rand() * idrandmax;
+	}
 
-    int status = sum_host (a, b, c, n);
-    if (status) goto finish;
+	int status = sum_host (a, b, c, n);
+	if (status) goto finish;
 
-    int imaxdiff = 0;
-    float maxdiff = 0.0;
-    for (int i = 0; i < n; i++)
-    {
-        float diff = c[i] / (a[i] + b[i]);
-        if (diff != diff) diff = 0; else diff = 1.0 - diff;
-        if (diff > maxdiff)
-        {
-            maxdiff = diff;
-            imaxdiff = i;
-        }
-    }
-    printf("Max diff = %f% @ i = %d: %f != %f\n",
-        maxdiff * 100, imaxdiff, c[imaxdiff],
-        a[imaxdiff] + b[imaxdiff]);
+	int imaxdiff = 0;
+	float maxdiff = 0.0;
+	for (int i = 0; i < n; i++)
+	{
+		float diff = c[i] / (a[i] + b[i]);
+		if (diff != diff) diff = 0; else diff = 1.0 - diff;
+		if (diff > maxdiff)
+		{
+			maxdiff = diff;
+			imaxdiff = i;
+		}
+	}
+	printf("Max diff = %f% @ i = %d: %f != %f\n",
+		maxdiff * 100, imaxdiff, c[imaxdiff],
+		a[imaxdiff] + b[imaxdiff]);
 
 finish:
-    free(a);
-    free(b);
-    free(c);
-    return status;
+	free(a);
+	free(b);
+	free(c);
+	return status;
 }
 
