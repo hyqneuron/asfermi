@@ -41,6 +41,12 @@ struct uberkern_t
 
 	// Uberkernel binary (ELF cubin).
 	char* binary;
+
+	// Uberkernel register footprint.
+	int regcount;
+	
+	// Uberkern opcodes count.
+	int nopcodes;
 	
 	// The offset of the top most free space for
 	// dynamically loaded kernels from the beginning of

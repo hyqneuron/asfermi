@@ -29,7 +29,7 @@ void Initialize();
 void WriteToCubinDirectOutput(iostream& csOutput);
 void WriteRawOpcodes(iostream& csOutput);
 
-static char* asfermi_encode(char* source, int cc, bool embed, int elf64bit)
+static char* asfermi_encode(char* source, int cc, bool embed, int elf64bit, size_t* size)
 {
 	try
 	{
@@ -68,6 +68,7 @@ static char* asfermi_encode(char* source, int cc, bool embed, int elf64bit)
 			char* result = (char*)malloc(length + 1);
 			result[length] = '\0';
 			memcpy(result, str.c_str(), length);
+			if (size) *size = length;
 			return result;
 		}
 		
@@ -79,6 +80,7 @@ static char* asfermi_encode(char* source, int cc, bool embed, int elf64bit)
 		char* result = (char*)malloc(length + 1);
 		result[length] = '\0';
 		memcpy(result, str.c_str(), length);
+		if (size) *size = length;
 		return result;		
 	}
 	catch (int e)
@@ -96,14 +98,14 @@ static char* asfermi_encode(char* source, int cc, bool embed, int elf64bit)
 	ifstream& ifstr2 = (ifstream&)sstr;
 }
 
-char* asfermi_encode_cubin(char* source, int cc, int elf64bit)
+char* asfermi_encode_cubin(char* source, int cc, int elf64bit, size_t* szcubin)
 {
-	return asfermi_encode(source, cc, true, elf64bit);
+	return asfermi_encode(source, cc, true, elf64bit, szcubin);
 }
 
-char* asfermi_encode_opcodes(char* source, int cc)
+char* asfermi_encode_opcodes(char* source, int cc, size_t* szopcodes)
 {
-	return asfermi_encode(source, cc, false, 0);
+	return asfermi_encode(source, cc, false, 0, szopcodes);
 }
 
 void WriteRawOpcodes(iostream& csOutput)

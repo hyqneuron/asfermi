@@ -1,6 +1,6 @@
 .PHONY: ../../libasfermi.so
 
-all: libuberkern.so test1 test2 test3
+all: libuberkern.so test1 test2 test3 test4
 
 ../../libasfermi.so:
 	cd ../.. && $(MAKE)
@@ -30,7 +30,10 @@ test2: test2.cpp libuberkern.so
 test3: test3.c libuberkern.so
 	nvcc -g -Xcompiler -std=c99 -DBLOCK_SIZE=256 $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda
 
-tests: test1 test2 test3
+test4: test4.c libuberkern.so
+	nvcc -I../.. -g -Xcompiler -std=c99 -DBLOCK_SIZE=256 $< -o $@ -L. -luberkern -L../.. -lasfermi -lcuda -lelf
+
+tests: test1 test2 test3 test4
 	perl tests.pl
 
 snap:

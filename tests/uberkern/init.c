@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <cuda_runtime.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -303,7 +304,7 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 finish :
 	free(labels);
 	if (!result) return NULL;
-	char* cubin = asfermi_encode_cubin(source, 20, 0);
+	char* cubin = asfermi_encode_cubin(source, 20, 0, NULL);
 	free(source);
 	struct uberkern_t* kern = (struct uberkern_t*)malloc(
 		sizeof(struct uberkern_t));
@@ -324,16 +325,16 @@ struct uberkern_t* uberkern_init(unsigned int capacity)
 	}
 
 	// Allocate space for uberkernel arguments.
-	CUresult cuerr = cuMemAlloc((CUdeviceptr*)&kern->args, sizeof(struct uberkern_args_t));
-	if (cuerr != CUDA_SUCCESS)
+	cudaError_t cudaerr = cudaMalloc((void**)&kern->args, sizeof(struct uberkern_args_t));
+	if (cudaerr != cudaSuccess)
 	{
 		fprintf(stderr, "Cannot allocate space for uberkernel arguments: %d\n",
-			cuerr);
+			cudaerr);
 		goto failure;
 	}
 
 	// Load binary containing uberkernel to deivce memory.
-	cuerr = cuModuleLoadData(&kern->module, kern->binary);
+	CUresult cuerr = cuModuleLoadData(&kern->module, kern->binary);
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot load uberkernel module: %d\n", cuerr);
