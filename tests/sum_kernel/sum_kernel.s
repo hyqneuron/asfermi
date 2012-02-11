@@ -15,11 +15,11 @@ IADD R4, R3, c [0x0] [0x20]; // TODO: R4.CC
 MOV R5, c [0x0] [0x24]; // TODO: IADD.X R5, RZ
 LD.E R0, [R4];
 IADD R4, R3, c [0x0] [0x28]; // TODO: R4.CC
-MOV R5, c [0x0] [0x24]; // TODO: IADD.X R5, RZ
+MOV R5, c [0x0] [0x2c]; // TODO: IADD.X R5, RZ
 LD.E R1, [R4];
 FADD R0, R0, R1;
 IADD R4, R3, c [0x0] [0x30]; // TODO: R4.CC
-MOV R5, c [0x0] [0x24]; // TODO: IADD.X R5, RZ
+MOV R5, c [0x0] [0x34]; // TODO: IADD.X R5, RZ
 ST.E [R4], R0;
 EXIT;
 !EndKernel
