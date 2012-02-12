@@ -134,7 +134,14 @@ struct CUDYfunction_t
 				
 				// For asynchronous data transfers to work, need to
 				// pin memory for binary content.
-				CUTHROW( cuMemHostRegister(binary, szbinary, 0) );
+				CUresult cuerr = cuMemHostRegister(binary, szbinary, 0);
+				if (cuerr != CUDA_SUCCESS)
+				{
+					if (cuerr != CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED)
+						throw cuerr;
+					
+					// We are fine, if memory is already registered.
+				}
 
 				break;
 			}
@@ -161,13 +168,27 @@ struct CUDYfunction_t
 	{
 		// For asynchronous data transfers to work, need to
 		// pin memory for binary content.
-		CUTHROW( cuMemHostRegister(binary, szbinary, 0) );
+		CUresult cuerr = cuMemHostRegister(binary, szbinary, 0);
+		if (cuerr != CUDA_SUCCESS)
+		{
+			if (cuerr != CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED)
+				throw cuerr;
+
+			// We are fine, if memory is already registered.
+		}
 	}
 	
 	~CUDYfunction_t()
 	{
 		// Unpin pinned memory for binary.
-		CUTHROW( cuMemHostUnregister(binary) );
+		CUresult cuerr = cuMemHostUnregister(binary);
+		if (cuerr != CUDA_SUCCESS)
+		{
+			if (cuerr != CUDA_ERROR_HOST_MEMORY_NOT_REGISTERED)
+				throw cuerr;
+			
+			// We are fine, if memory is already unregistered.
+		}
 	}
 };
 
