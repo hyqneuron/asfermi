@@ -6,7 +6,8 @@ struct uberkern_entry_t* uberkern_launch(
 	struct uberkern_t* uberkern, struct uberkern_entry_t* entry,
 	unsigned int gx, unsigned int gy, unsigned int gz,
 	unsigned int bx, unsigned int by, unsigned int bz,
-	size_t szshmem, void* args, char* binary, size_t szbinary)
+	size_t szshmem, void* args, char* binary, size_t szbinary,
+	size_t regcount)
 {
 	// Check the dynamic pool has enough free space to
 	// incorporate the specified dynamic kernel body.
@@ -94,7 +95,7 @@ struct uberkern_entry_t* uberkern_launch(
 		CU_LAUNCH_PARAM_BUFFER_SIZE, &szargs,
 		CU_LAUNCH_PARAM_END
 	};
-	cuerr = cuLaunchKernel(uberkern->function,
+	cuerr = cuLaunchKernel(uberkern->loader,
 		1, 1, 1, 1, 1, 1, 0, 0, NULL, config);
 	if (cuerr != CUDA_SUCCESS)
 	{
@@ -110,9 +111,11 @@ struct uberkern_entry_t* uberkern_launch(
 		return NULL;
 	}
 
-	// Initialize command value with TWO, so on the next
+	// Initialize command value with LEPC, so on the next
 	// launch uberkern will load dynamic kernel code and exit.
-	cuerr = cuMemsetD32(uberkern_cmd, 2, 1);
+	// XXX: 0x138 is #BRA of uberkernel loader code - the value
+	// may change if loader code gets changed. 
+	cuerr = cuMemsetD32(uberkern_cmd, uberkern->lepc + 0x138, 1);
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot fill uberkern_cmd: %d\n", cuerr);
@@ -121,7 +124,8 @@ struct uberkern_entry_t* uberkern_launch(
 
 	// Note we are always sending 256 Bytes, regardless
 	// the actual size of arguments.
-	cuerr = cuLaunchKernel(uberkern->function,
+	cuerr = cuLaunchKernel(
+		uberkern->entry[regcount],
 		gx, gy, gz, bx, by, bz, szshmem,
 		0, NULL, config);
 

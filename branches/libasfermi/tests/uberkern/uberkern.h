@@ -8,6 +8,12 @@ extern "C"
 {
 #endif
 
+// The register footprint of uberkern loader code itself.
+// Engine still should be able to run dynamic kernels with
+// smaller footprints, but when loader code is running, this
+// number is a must.
+#define UBERKERN_LOADER_REGCOUNT 7
+
 // All kernels we need to pack into uberkernel have unified
 // prototype: kernel(int*). So, for now let's just make the
 // following prototype for uberkernel containing them:
@@ -36,11 +42,18 @@ struct uberkern_t
 	// Uberkernel module.
 	CUmodule module;
 
-	// Uberkernel entry point (if loaded).
-	CUfunction function;
+	// Uberkernel entry points for all possible
+	// regcounts.
+	CUfunction entry[64];
+	
+	// Uberkernel loader entry point.
+	CUfunction loader;
 
 	// Uberkernel binary (ELF cubin).
 	char* binary;
+
+	// Uberkernel loader load effective PC (LEPC).
+	int lepc;
 
 	// Uberkernel register footprint.
 	int regcount;
@@ -82,7 +95,8 @@ struct uberkern_entry_t* uberkern_launch(
 	struct uberkern_t* uberkern, struct uberkern_entry_t* entry,
 	unsigned int gx, unsigned int gy, unsigned int gz,
 	unsigned int bx, unsigned int by, unsigned int bz,
-	size_t szshmem, void* args, char* binary, size_t szbinary);
+	size_t szshmem, void* args, char* binary, size_t szbinary,
+	size_t regcount);
 
 // Unload existing entry from the uberkernel identified
 // by handle.
