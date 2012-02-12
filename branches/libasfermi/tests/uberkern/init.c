@@ -7,145 +7,14 @@
 
 #include "libasfermi.h"
 #include "uberkern.h"
-
-// Loader source code template.
-// uberkern (int* args, void** addr)
-// XXX loader code regcount must be set in UBERKERN_LOADER_REGCOUNT.
-static const char* uberkern[] =
-{
-	"!Machine 64",
-
-	"!Constant2 0x10",			// Reserve 16 bytes of constant memory to store:
-	"!Constant long 0x0 uberkern_config",	// the address of uberkern config structure
-	"!EndConstant",
-	"!Constant int 0x8 uberkern_cmd",	// select command:
-						// 0 - load effective PC of uberkern
-						// 1 - load dynamic kernel source code
-						// other value - execute dynamic kernel
-						// (to be used as JMP address in entry points)
-	"!EndConstant",
-	"!Constant int 0xc uberkern_goto",	// the dynamic kernel relative offset in uberkern
-	"!EndConstant",
-
-	"!Kernel uberkern",
-	"!Param 256 1",
-
-	"LEPC R0",				// R0 = LEPC
-
-	"MOV R2, c[0x2][0x8]",			// Check if the uberkern_cmd contains 0.
-	"ISETP.NE.AND P0, pt, R2, RZ, pt",
-	"@P0 BRA #LD",				// If not - go to #LD
-	"MOV R2, c[0x2][0x0]",
-	"MOV R3, c[0x2][0x4]",
-	"ST.E [R2], R0",			// If yes, write LEPC to uberkern_config and exit.
-	"EXIT",
-
-"#LD",	"MOV R1, 0x1",				// Check if the uberkern_cmd contains 1.
-	"ISETP.NE.AND P0, pt, R2, R1, pt",
-	"@P0 BRA #BRA",				// If not - go to #BRA
-
-						// If yes, write dynamic kernel code and exit.
-
-						// Load the dynamic kernel starting address.
-
-"#GO",	"MOV R1, c[0x2][0xc]",			// R1 = c[0x2][0x12]		<-- 4-byte value of goto offset
-	"IADD R1, R1, #FRE",			// R1 += #FRE
-	"IADD R0, R0, R1",			// R0 += R1
-	"MOV R1, 0x1",				// R1 = 1			<-- low word compound = 1
-
-						// Load kernel's size and then load each instruction in a loop.
-
-	"MOV R2, c[0x2][0x0]",
-	"MOV R3, c[0x2][0x4]",
-	"LD.E R6, [R2]",			// R6 = *(R2, R3)
-	"IADD R2, R2, 8",			// R2 = R2 + 8			<-- address of uberkern_args_t.binary
-	"LD.E.64 R4, [R2]",			// (R4, R5) = *(R2, R3)
-"#L1",	"ISETP.EQ.AND P0, pt, R6, RZ, pt",	// if (R6 == 0)
-	"@P0 EXIT",				// 	exit;
-						// else
-						// {
-						//	// Load instructions from args to kernel space
-	"LD.E.64 R2, [R4]",			// 	*(R2, R3) = (R4, R5)
-	"ST.E.64 [R0], R2",			//	*(R0, R1) = (R2, R3)
-	"IADD R0, R0, 8",			//	R0 += 8
-	"IADD R4, R4, 8",			//	R4 += 8
-	"IADD R6, R6, -8",			//	R6 -= 8
-	"BRA #L1",				//	goto #L1
-						// }
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-	"NOP",
-"#BRA",	"BRA c[0x2][0xc]",			// goto dynamic kernel offset
-"#FRE",	"$BUF",					// $BUF more NOPs here as free space for code insertions
-	"!EndKernel"
-};
+#include "loader.h"
 
 // Generate cubin containing uberkernel with loader
 // code and the specified number of free space (in
 // instructions).
 static struct uberkern_t* uberkern_generate(unsigned int capacity)
 {
-	char* result = NULL;
-	unsigned int pool;
-
 	int ntokens = sizeof(uberkern) / sizeof(const char*);
-	
-	// Record the number of labels.
-	int nlabels = 0;
-	for (int i = 0; i < ntokens; i++)
-	{
-		const char* line = uberkern[i];
-		if (line[0] == '#') nlabels++;
-	}
-
-	// Record labels themselves and their positions.
-	struct label_t
-	{
-		// The name of label.
-		const char* name;
-	
-		// The address of instruction label is pointing to.
-		int addr;
-	};
-	struct label_t* labels = (struct label_t*)malloc(
-		nlabels * sizeof(struct label_t));		
-	for (int i = 0, ilabel = 0, nskip = 0; i < ntokens; i++)
-	{
-		const char* line = uberkern[i];
-		
-		if (line[0] == '!')
-		{
-			nskip++;
-			continue;
-		}
-
-		if (line[0] == '#')
-		{
-			if (strlen(line) < 2)
-			{
-				fprintf(stderr, "Invalid label: \"%s\"\n", line);
-				goto finish;
-			}
-			labels[ilabel].name = line;
-			labels[ilabel].addr = (i - nskip - ilabel) * 8;
-
-			// Record where #FRE label points to: it would
-			// be the starting address for dynamically loaded
-			// kernels.
-			if (!strcmp(line, "#FRE"))
-				pool = labels[ilabel].addr;
-
-			ilabel++;
-		}
-	}
 	
 	// Determine the output size.
 	size_t size = 0;
@@ -154,10 +23,7 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 		const char* line = uberkern[i];
 		int szline = strlen(line);
 			
-		// Skip lines-labels.
-		if (line[0] == '#') continue;
-
-		// If line starts with '!', then just print it, do not count.
+		// If line starts with '!', then do not count it.
 		if (line[0] == '!')
 		{
 			size += snprintf(NULL, 0, "%s\n", line);
@@ -165,7 +31,7 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 		}
 
 		// Account the specified number of NOPs in place of $BUF.
-		if (!strncmp(line, "$BUF", 5))
+		if (!strcmp(line, "$BUF"))
 		{
 			for (unsigned int j = 0; j < capacity; j++)
 			{
@@ -175,47 +41,8 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 			continue;		
 		}
 		
-		// Search for single label in each line.
-		struct label_t* maxlabel = NULL;
-		for (int j = 0; j < szline; j++)
-		{
-			if (line[j] != '#') continue;
-			
-			// Find the longest matching label.
-			for (int ilabel = 0; ilabel < nlabels; ilabel++)
-			{
-				struct label_t* label = labels + ilabel;
-				if (strcmp(line + j, label->name)) continue;
-				
-				if (!maxlabel || (strlen(label->name) > strlen(maxlabel->name)))
-					maxlabel = label;
-			}
-			
-			if (!maxlabel)
-			{
-				fprintf(stderr, "Used label not found: %s\n", line);
-				goto finish;
-			}
-			
-			// Build new line.
-			int szlabel = strlen(maxlabel->name);
-			int sznewline = szline - szlabel + 6;
-			char* newline = (char*)malloc(sznewline + 1);
-			memcpy(newline, line, j);
-			sprintf(newline + j, "0x%04x", maxlabel->addr);
-			memcpy(newline + j + 6, line + j + szlabel,
-				szline - j - szlabel);
-			size += snprintf(NULL, 0, "/*%04x*/ %s;\n", ilines * 8, newline);
-			ilines++;
-			free(newline);
-			break;
-		}
-
-		if (!maxlabel)
-		{
-			size += snprintf(NULL, 0, "/*%04x*/ %s;\n", ilines * 8, line);
-			ilines++;
-		}
+		size += snprintf(NULL, 0, "/*%04x*/ %s;\n", ilines * 8, line);
+		ilines++;
 	}
 
 	// Account additional entry points with all possible
@@ -233,10 +60,6 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 		const char* line = uberkern[i];
 		int szline = strlen(line);
 			
-		// Skip lines-labels.
-		if (line[0] == '#') continue;
-
-		// If line starts with '!', then just print it, do not count.
 		if (line[0] == '!')
 		{
 			psource += sprintf(psource, "%s\n", line);
@@ -244,13 +67,9 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 		}
 
 		// Output the specified number of NOPs in place of $BUF.
-		if (!strncmp(line, "$BUF", 5))
+		if (!strcmp(line, "$BUF"))
 		{
-			int sznop = sprintf(psource, "/*%04x*/ NOP;\n", ilines * 8, line);
-			psource -= (ptrdiff_t)source;
-			source = (char*)realloc(source, size + sznop * capacity);
-			psource += (ptrdiff_t)source;
-			for (int j = 1; j < capacity; j++)
+			for (unsigned int j = 0; j < capacity; j++)
 			{
 				psource += sprintf(psource, "/*%04x*/ NOP;\n", ilines * 8, line);
 				ilines++;
@@ -258,41 +77,8 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 			continue;		
 		}
 		
-		// Search for single label in each line.
-		struct label_t* maxlabel = NULL;
-		for (int j = 0; j < szline; j++)
-		{
-			if (line[j] != '#') continue;
-			
-			// Find the longest matching label.
-			for (int ilabel = 0; ilabel < nlabels; ilabel++)
-			{
-				struct label_t* label = labels + ilabel;
-				if (strcmp(line + j, label->name)) continue;
-				
-				if (!maxlabel || (strlen(label->name) > strlen(maxlabel->name)))
-					maxlabel = label;
-			}
-						
-			// Build new line.
-			int szlabel = strlen(maxlabel->name);
-			int sznewline = szline - szlabel + 6;
-			char* newline = (char*)malloc(sznewline + 1);
-			memcpy(newline, line, j);
-			sprintf(newline + j, "0x%04x", maxlabel->addr);
-			memcpy(newline + j + 6, line + j + szlabel,
-				szline - j - szlabel);
-			psource += sprintf(psource, "/*%04x*/ %s;\n", ilines * 8, newline);
-			ilines++;
-			free(newline);
-			break;
-		}
-
-		if (!maxlabel)
-		{
-			psource += sprintf(psource, "/*%04x*/ %s;\n", ilines * 8, line);
-			ilines++;
-		}
+		psource += sprintf(psource, "/*%04x*/ %s;\n", ilines * 8, line);
+		ilines++;
 	}
 
 	// Output additional entry points with all possible
@@ -303,18 +89,16 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 
 	//printf("%s\n", source);
 
-	result = source;
-
-finish :
-	free(labels);
-	if (!result) return NULL;
 	char* cubin = asfermi_encode_cubin(source, 20, 0, NULL);
 	free(source);
+	if (!cubin) return NULL;
+
 	struct uberkern_t* kern = (struct uberkern_t*)malloc(
 		sizeof(struct uberkern_t));
 	kern->binary = cubin;
 	kern->offset = 0;
 	kern->capacity = capacity * 8;
+
 	return kern;
 }
 
