@@ -1,13 +1,10 @@
 #include <assert.h>
 #include <cuda_runtime.h>
-#include <elf.h>
-#include <gelf.h>
-#include <libelf.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "libasfermi.h"
-#include "uberkern.h"
+#include "cuda_dyloader.h"
 
 // The Fermi binary for the sum_kernel:
 // __global__ void sum_kernel ( float * a1, ..., float * aN, float * b )
@@ -43,7 +40,7 @@ const char* epilog[] =
 
 int capacity = 100;
 
-int sum_host(struct uberkern_t* kern, float* a, float* b, int n, int narrays)
+int sum_host(CUDYloader loader, float* a, float* b, int n, int narrays)
 {
 	int nb = n * sizeof ( float );
 	float* aDev = NULL;
@@ -174,101 +171,42 @@ int sum_host(struct uberkern_t* kern, float* a, float* b, int n, int narrays)
 	size_t szkernel = 0;
 	char* kernel = asfermi_encode_cubin(source, 20, 64, &szkernel);
 	
-	// Extract kernel details: regcount, opcodes and their size.
-	// Method: walk thorough the cubin using ELF tools and dump
-	// details of the first kernel found (section starting with
-	// ".text.").
-	int regcount = -1;
-	char* opcodes = NULL;
-	size_t szopcodes = 0;
-	Elf* e = elf_memory(kernel, szkernel);
-	size_t shstrndx;
-	if (elf_getshdrstrndx(e, &shstrndx))
-	{
-		fprintf(stderr, "elf_getshdrstrndx() failed: %s\n",
-			elf_errmsg(-1));
-		result = 1;
-		goto finish;
-	}
-	Elf_Scn* scn = NULL;
-	while ((scn = elf_nextscn(e, scn)) != NULL)
-	{
-		scn = elf_nextscn(e, scn);
-
-		// Get section name.
-		GElf_Shdr shdr;
-		if (gelf_getshdr(scn, &shdr) != &shdr)
-		{
-			fprintf(stderr, "getshdr() failed: %s\n",
-				elf_errmsg(-1));
-			result = 1;
-			goto finish;
-		}
-		char* name = NULL;
-		if ((name = elf_strptr(e, shstrndx, shdr.sh_name)) == NULL)
-		{
-			fprintf(stderr, "elf_strptr() failed: %s\n",
-				elf_errmsg(-1));
-			result = 1;
-			goto finish;
-		}
-
-		// Check if section name starts with ".text.".
-		if (strncmp(name, ".text.", strlen(".text.")))
-			continue;
-		
-		// If yes, then extract regcount out of 24 bits of
-		// section info.
-		regcount = shdr.sh_info >> 24;
-
-		// Also extract opcodes and size.
-		opcodes = kernel + shdr.sh_offset;
-		szopcodes = shdr.sh_size;
-
-		break;
-	}
-	
-	if (regcount == -1)
-	{
-		fprintf(stderr, "Cannot find section containing kernel code\n");
-		result = 1;
-		goto finish;
-	}
-	
-	printf("regcount = %d\n", regcount);
-	/*printf("szopcodes = %zu\n", szopcodes);
-	for (int i = 0; i < szopcodes / sizeof(unsigned int); i += 2)
-	{
-		printf("0x%03x\t0x%08x 0x%08x\n", i * 8,
-			((unsigned int*)opcodes)[i],
-			((unsigned int*)opcodes)[i + 1]);
-	}*/
-	
 	// Allocate memory on the GPU.
-	cudaError_t cuerr = cudaMalloc((void**)&aDev, nb * narrays);
-	if (cuerr != cudaSuccess)
+	cudaError_t cudaerr = cudaMalloc((void**)&aDev, nb * narrays);
+	if (cudaerr != cudaSuccess)
 	{
 		fprintf(stderr, "Cannot allocate GPU memory for aDev: %s\n",
-			cudaGetErrorString(cuerr));
+			cudaGetErrorString(cudaerr));
 		result = 1;
 		goto finish;
 	}
-	cuerr = cudaMalloc((void**)&bDev, nb);
-	if (cuerr != cudaSuccess)
+	cudaerr = cudaMalloc((void**)&bDev, nb);
+	if (cudaerr != cudaSuccess)
 	{
 		fprintf(stderr, "Cannot allocate GPU memory for bDev: %s\n",
-			cudaGetErrorString(cuerr));
+			cudaGetErrorString(cudaerr));
 		result = 1;
 		goto finish;
 	}
 
 	// Copy input data to device memory.
-	cuerr = cudaMemcpy(aDev, a, nb * narrays, cudaMemcpyHostToDevice);
-	if (cuerr != cudaSuccess)
+	cudaerr = cudaMemcpy(aDev, a, nb * narrays, cudaMemcpyHostToDevice);
+	if (cudaerr != cudaSuccess)
 	{
 		fprintf(stderr, "Cannot copy data from a to aDev: %s\n",
-			cudaGetErrorString(cuerr));
+			cudaGetErrorString(cudaerr));
 		result = 1;
+		goto finish;
+	}
+
+	// Load kernel function from the binary opcodes.
+	CUDYfunction function;
+	CUresult cuerr = cudyLoadCubin(&function, loader, (char*)kernel, "sum_kernel", 0);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot load kernel function: %d\n",
+			cuerr);
+		result = -1;
 		goto finish;
 	}
 
@@ -278,44 +216,44 @@ int sum_host(struct uberkern_t* kern, float* a, float* b, int n, int narrays)
 		args[i] = aDev + i * n;
 	args[narrays] = bDev;
 	
-	// Launch dynamic target kernel in uberkernel.
-	struct uberkern_entry_t* entry = uberkern_launch(
-		kern, NULL, n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1,
-		0, (void*)args, opcodes, szopcodes, regcount);
-	if (!entry)
+	// Launch kernel function within dynamic loader.
+	cuerr = cudyLaunch(function,
+		n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1, 0, args, 0);
+	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot launch uberkernel\n");
-		result = 1;
+		fprintf(stderr, "Cannot launch kernel function: %d\n",
+			cuerr);
+		result = -1;
 		goto finish;
 	}
 	printf("Launched kernel in uberkernel:\n");
 
 	// Check error status from the launched kernel.
-	cuerr = cudaGetLastError();
-	if (cuerr != cudaSuccess)
+	cudaerr = cudaGetLastError();
+	if (cudaerr != cudaSuccess)
 	{
 		fprintf(stderr, "Cannot launch CUDA kernel: %s\n",
-			cudaGetErrorString(cuerr));
+			cudaGetErrorString(cudaerr));
 		result = 1;
 		goto finish;
 	}
 
 	// Wait for kernel completion.
-	cuerr = cudaDeviceSynchronize();
-	if (cuerr != cudaSuccess)
+	cudaerr = cudaDeviceSynchronize();
+	if (cudaerr != cudaSuccess)
 	{
 		fprintf(stderr, "Cannot synchronize CUDA kernel: %s\n",
-			cudaGetErrorString(cuerr));
+			cudaGetErrorString(cudaerr));
 		result = 1;
 		goto finish;
 	}
 
 	// Copy the resulting array back to the host memory.
-	cuerr = cudaMemcpy(b, bDev, nb, cudaMemcpyDeviceToHost);
-	if (cuerr != cudaSuccess)
+	cudaerr = cudaMemcpy(b, bDev, nb, cudaMemcpyDeviceToHost);
+	if (cudaerr != cudaSuccess)
 	{
 		fprintf(stderr, "Cannot copy data from bDev to b: %s\n",
-			cudaGetErrorString(cuerr));
+			cudaGetErrorString(cudaerr));
 		result = 1;
 		goto finish;
 	}
@@ -372,15 +310,38 @@ int main ( int argc, char* argv[] )
 			max_narrays);
 		return 1;
 	}
-
-	// Initialize uberkernel.
-	struct uberkern_t* kern = uberkern_init(capacity);
-	if (!kern)
+	
+	// Initialize driver, select device and create context.
+	CUresult cuerr = cuInit(0);
+	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot initialize uberkernel\n");
+		fprintf(stderr, "Cannot initialize CUDA driver: %d\n", cuerr);
+		return -1;
+	}
+	CUdevice device;
+	cuerr = cuDeviceGet(&device, 0);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot get CUDA device #0: %d\n", cuerr);
+		return -1;
+	}
+	CUcontext context;
+	cuerr = cuCtxCreate(&context, CU_CTX_SCHED_SPIN, device);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot create CUDA context: %d\n", cuerr);
+		return -1;
+	}
+
+	// Initialize dynamic loader.
+	CUDYloader loader;
+	cuerr = cudyInit(&loader, capacity);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot initialize dynamic loader: %d\n",
+			cuerr);
 		return 1;
 	}
-	printf("Successfully initialized uberkernel ...\n");
 	
 	for (int narrays = min_narrays; narrays <= max_narrays; narrays++)
 	{
@@ -393,7 +354,7 @@ int main ( int argc, char* argv[] )
 		for (int i = 0; i < n; i++)
 			b[i] = rand() * idrandmax;
 
-		int status = sum_host (kern, a, b, n, narrays);
+		int status = sum_host (loader, a, b, n, narrays);
 		if (status) goto finish;
 
 		int imaxdiff = 0;
@@ -422,12 +383,12 @@ int main ( int argc, char* argv[] )
 		free(b);
 		if (status)
 		{
-			uberkern_dispose(kern);
+			cudyDispose(loader);
 			return status;
 		}
 	}
 
-	uberkern_dispose(kern);	
+	cudyDispose(loader);	
 	return 0;
 }
 
