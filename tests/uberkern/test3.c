@@ -124,7 +124,7 @@ int sum_host(float* a, float* b, float* c, int n)
 		{ .aDev = aDev, .bDev = bDev, .cDev = cDev };
 	struct uberkern_entry_t* entry = uberkern_launch(
 		kern, NULL, n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1,
-		0, (void*)&args, (char*)kernel, sizeof(kernel));
+		0, (void*)&args, (char*)kernel, sizeof(kernel), 6);
 	if (!entry)
 	{
 		fprintf(stderr, "Cannot launch uberkernel\n");

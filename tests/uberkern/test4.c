@@ -167,7 +167,7 @@ int sum_host(struct uberkern_t* kern, float* a, float* b, int n, int narrays)
 		psource++;
 	}
 
-	printf("%s", source);
+	//printf("%s", source);
 	
 	// Compile kernel source to binary opcodes.
 	// TODO: size
@@ -236,13 +236,13 @@ int sum_host(struct uberkern_t* kern, float* a, float* b, int n, int narrays)
 	}
 	
 	printf("regcount = %d\n", regcount);
-	printf("szopcodes = %zu\n", szopcodes);
+	/*printf("szopcodes = %zu\n", szopcodes);
 	for (int i = 0; i < szopcodes / sizeof(unsigned int); i += 2)
 	{
-		printf("/* 0x%03x */\t0x%08x 0x%08x\n", i * 8,
+		printf("0x%03x\t0x%08x 0x%08x\n", i * 8,
 			((unsigned int*)opcodes)[i],
 			((unsigned int*)opcodes)[i + 1]);
-	}
+	}*/
 	
 	// Allocate memory on the GPU.
 	cudaError_t cuerr = cudaMalloc((void**)&aDev, nb * narrays);
@@ -281,7 +281,7 @@ int sum_host(struct uberkern_t* kern, float* a, float* b, int n, int narrays)
 	// Launch dynamic target kernel in uberkernel.
 	struct uberkern_entry_t* entry = uberkern_launch(
 		kern, NULL, n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1,
-		0, (void*)args, opcodes, szopcodes);
+		0, (void*)args, opcodes, szopcodes, regcount);
 	if (!entry)
 	{
 		fprintf(stderr, "Cannot launch uberkernel\n");

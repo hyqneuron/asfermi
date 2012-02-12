@@ -10,6 +10,7 @@
 
 // Loader source code template.
 // uberkern (int* args, void** addr)
+// XXX loader code regcount must be set in UBERKERN_LOADER_REGCOUNT.
 static const char* uberkern[] =
 {
 	"!Machine 64",
@@ -21,6 +22,7 @@ static const char* uberkern[] =
 						// 0 - load effective PC of uberkern
 						// 1 - load dynamic kernel source code
 						// other value - execute dynamic kernel
+						// (to be used as JMP address in entry points)
 	"!EndConstant",
 	"!Constant int 0xc uberkern_goto",	// the dynamic kernel relative offset in uberkern
 	"!EndConstant",
@@ -220,7 +222,7 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 	// reg counts.
 	for (unsigned int regcount = 0; regcount < 64; regcount++)
 		size += snprintf(NULL, 0, "!Kernel uberkern%d\n!RegCount %d\n"
-			"!Param 256 1\nJMP c[0x2][0x8]\n!EndKernel\n", regcount, regcount);
+			"!Param 256 1\nJMP c[0x2][0x8];\n!EndKernel\n", regcount, regcount);
 
 	char* source = (char*)malloc(size + 1);
 	char* psource = source;
@@ -296,8 +298,10 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 	// Output additional entry points with all possible
 	// reg counts.
 	for (unsigned int regcount = 0; regcount < 64; regcount++)
-		size += snprintf(NULL, 0, "!Kernel uberkern%d\n!RegCount %d\n"
-			"!Param 256 1\nJMP c[0x2][0x8]\n!EndKernel\n", regcount, regcount);
+		psource += sprintf(psource, "!Kernel uberkern%d\n!RegCount %d\n"
+			"!Param 256 1\nJMP c[0x2][0x8];\n!EndKernel\n", regcount, regcount);
+
+	//printf("%s\n", source);
 
 	result = source;
 
@@ -343,12 +347,29 @@ struct uberkern_t* uberkern_init(unsigned int capacity)
 	free(kern->binary);
 	kern->binary = NULL;
 	
-	// Load uberkernel entry point from module.
-	cuerr = cuModuleGetFunction(&kern->function, kern->module, "uberkern");
+	// Load uberkern loader entry point from module.
+	cuerr = cuModuleGetFunction(&kern->loader, kern->module, "uberkern");
 	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot load uberkernel function: %d\n", cuerr);
+		fprintf(stderr, "Cannot load uberkernel loader entry: %d\n", cuerr);
 		goto failure;
+	}
+	
+	// Load uberkernel entry points from module.
+	for (int i = 0; i < 64; i++)
+	{
+		const char* fmt = "uberkern%d";
+		int size = snprintf(NULL, 0, fmt, i);
+		char* name = (char*)malloc(size + 1);
+		sprintf(name, fmt, i);
+		cuerr = cuModuleGetFunction(&kern->entry[i], kern->module, name);
+		if (cuerr != CUDA_SUCCESS)
+		{
+			fprintf(stderr, "Cannot load uberkernel entry %s: %d\n", name, cuerr);
+			free(name);
+			goto failure;
+		}
+		free(name);
 	}
 
         // Load the uberkernel config structure address constant.
@@ -397,7 +418,7 @@ struct uberkern_t* uberkern_init(unsigned int capacity)
 		CU_LAUNCH_PARAM_BUFFER_SIZE, &szargs,
 		CU_LAUNCH_PARAM_END
 	};
-	cuerr = cuLaunchKernel(kern->function,
+	cuerr = cuLaunchKernel(kern->loader,
 		1, 1, 1, 1, 1, 1, 0, 0, NULL, config);
 	if (cuerr != CUDA_SUCCESS)
 	{
@@ -409,27 +430,18 @@ struct uberkern_t* uberkern_init(unsigned int capacity)
 	cuerr = cuCtxSynchronize();
 	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot synchronize target kernel: %d\n", cuerr);
+		fprintf(stderr, "Cannot synchronize init kernel: %d\n", cuerr);
 		goto failure;
 	}
 
 	// Read the LEPC.
-	unsigned int lepc;
-	cuerr = cuMemcpyDtoH(&lepc, (CUdeviceptr)kern->args, sizeof(int));
+	cuerr = cuMemcpyDtoH(&kern->lepc, (CUdeviceptr)kern->args, sizeof(int));
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot read back the lepc: %d\n", cuerr);
 		goto failure;
 	}
-	printf("uberkern lepc = %p\n", lepc);
-
-	// Again, initialize the LEPC, this time with the actual value.
-	cuerr = cuMemcpyHtoD(uberkern_cmd, &lepc, sizeof(int));
-	if (cuerr != CUDA_SUCCESS)
-	{
-		fprintf(stderr, "Cannot fill uberkern_cmd: %d\n", cuerr);
-		goto failure;
-	}
+	printf("uberkern lepc = %p\n", kern->lepc);
 
 	return kern;
 

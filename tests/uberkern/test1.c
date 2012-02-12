@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 	// Launch dynamic target kernel in uberkernel.
 	struct uberkern_entry_t* entry = uberkern_launch(
 		kern, NULL, 1, 1, 1, 1, 1, 1, 0,
-		(void*)&args, (char*)kernel, sizeof(kernel));
+		(void*)&args, (char*)kernel, sizeof(kernel), 4);
 	if (!entry)
 	{
 		fprintf(stderr, "Cannot launch uberkernel\n");
