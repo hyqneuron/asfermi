@@ -21,7 +21,6 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 	for (int i = 0, ilines = 0; i < ntokens; i++)
 	{
 		const char* line = uberkern[i];
-		int szline = strlen(line);
 			
 		// If line starts with '!', then do not count it.
 		if (line[0] == '!')
@@ -58,7 +57,6 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 	for (int i = 0, ilines = 0; i < ntokens; i++)
 	{
 		const char* line = uberkern[i];
-		int szline = strlen(line);
 			
 		if (line[0] == '!')
 		{
@@ -71,7 +69,7 @@ static struct uberkern_t* uberkern_generate(unsigned int capacity)
 		{
 			for (unsigned int j = 0; j < capacity; j++)
 			{
-				psource += sprintf(psource, "/*%04x*/ NOP;\n", ilines * 8, line);
+				psource += sprintf(psource, "/*%04x*/ NOP;\n", ilines * 8);
 				ilines++;
 			}
 			continue;		

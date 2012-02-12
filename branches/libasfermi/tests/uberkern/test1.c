@@ -2,7 +2,7 @@
 #include <cuda.h>
 #include <stdio.h>
 
-#include "uberkern.h"
+#include "cuda_dyloader.h"
 
 // The Fermi binary for the dummy kernel.
 unsigned int kernel[] =
@@ -60,7 +60,31 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	// Create args.
+	// Initialize dynamic loader.
+	CUDYloader loader;
+	cuerr = cudyInit(&loader, capacity);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot initialize dynamic loader: %d\n",
+			cuerr);
+		result = -1;
+		goto finish;
+	}
+	printf("Successfully initialized dynamic loader ...\n");
+
+	// Load kernel function from the binary opcodes.
+	CUDYfunction function;
+	cuerr = cudyLoadOpcodes(&function,
+		loader, (char*)kernel, sizeof(kernel) / 8, 4, 0);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot load kernel function: %d\n",
+			cuerr);
+		result = -1;
+		goto finish;
+	}
+
+	// Create result buffer.
 	char* args = NULL;
 	cuerr = cuMemAlloc((CUdeviceptr*)&args, sizeof(void*));
 	if (cuerr != CUDA_SUCCESS)
@@ -74,32 +98,21 @@ int main(int argc, char* argv[])
 	{
 		fprintf(stderr, "Cannot initialize device memory for kernel args: %d\n",
 			cuerr);
-		return -1;
-	}	
-
-	// Initialize uberkernel.
-	struct uberkern_t* kern = uberkern_init(capacity);
-	if (!kern)
-	{
-		fprintf(stderr, "Cannot initialize uberkernel\n");
 		result = -1;
 		goto finish;
-	}
-	printf("Successfully initialized uberkernel ...\n");
-	
-	// Launch dynamic target kernel in uberkernel.
-	struct uberkern_entry_t* entry = uberkern_launch(
-		kern, NULL, 1, 1, 1, 1, 1, 1, 0,
-		(void*)&args, (char*)kernel, sizeof(kernel), 4);
-	if (!entry)
+	}	
+
+	// Launch kernel function within dynamic loader.
+	cuerr = cudyLaunch(function,
+		1, 1, 1, 1, 1, 1, 0, &args, 0);
+	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot launch uberkernel\n");
+		fprintf(stderr, "Cannot launch kernel function: %d\n",
+			cuerr);
 		result = -1;
 		goto finish;
 	}
 	printf("Launched kernel in uberkernel:\n");
-	//for (int i = 0; i < sizeof(kernel) / sizeof(int64_t); i++)
-	//	printf("0x%016lx\n", kernel[i]);
 	
 	// Synchronize kernel.
 	cuerr = cuCtxSynchronize();
@@ -123,7 +136,7 @@ int main(int argc, char* argv[])
 	assert(value == (void*)0x11);
 
 finish :
-	uberkern_dispose(kern);
+	cudyDispose(loader);
 
 	cuerr = cuMemFree((CUdeviceptr)args);
 	if (cuerr != CUDA_SUCCESS)

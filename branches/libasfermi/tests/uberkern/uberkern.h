@@ -14,10 +14,7 @@ extern "C"
 // number is a must.
 #define UBERKERN_LOADER_REGCOUNT 7
 
-// All kernels we need to pack into uberkernel have unified
-// prototype: kernel(int*). So, for now let's just make the
-// following prototype for uberkernel containing them:
-// uberkernel(int*, struct uberkernel_args_t*)
+// Device memory buffer for binary size and content.
 struct uberkern_args_t
 {
 	// Dynamic kernel binary size.
@@ -80,8 +77,6 @@ struct uberkern_t
 
 // Initialize a new instance of uberkernel with the
 // specified capacity (in 8-byte instructions) in GPU memory.
-// NOTE: this call assumes CUDA initialization and
-// device selection is already performed on user side.
 struct uberkern_t* uberkern_init(unsigned int capacity);
 
 // Dispose the uberkernel handle, assuming it owns

@@ -2,7 +2,7 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 
-#include "uberkern.h"
+#include "cuda_dyloader.h"
 
 // The Fermi binary for the sum_kernel:
 // __global__ void sum_kernel ( float * a, float * b, float * c )
@@ -109,26 +109,40 @@ int sum_host(float* a, float* b, float* c, int n)
 		goto finish;
 	}
 
-	// Initialize uberkernel.
-	kern = uberkern_init(capacity);
-	if (!kern)
+	// Initialize dynamic loader.
+	CUDYloader loader;
+	cuerr = cudyInit(&loader, capacity);
+	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot initialize uberkernel\n");
+		fprintf(stderr, "Cannot initialize dynamic loader: %d\n",
+			cuerr);
 		result = -1;
 		goto finish;
 	}
-	printf("Successfully initialized uberkernel ...\n");
-	
-	// Launch dynamic target kernel in uberkernel.
+	printf("Successfully initialized dynamic loader ...\n");
+
+	// Load kernel function from the binary opcodes.
+	CUDYfunction function;
+	cuerr = cudyLoadOpcodes(&function,
+		loader, (char*)kernel, sizeof(kernel) / 8, 6, 0);
+	if (cuerr != CUDA_SUCCESS)
+	{
+		fprintf(stderr, "Cannot load kernel function: %d\n",
+			cuerr);
+		result = -1;
+		goto finish;
+	}
+
+	// Launch kernel function within dynamic loader.
 	struct { void *aDev, *bDev, *cDev; } args =
 		{ .aDev = aDev, .bDev = bDev, .cDev = cDev };
-	struct uberkern_entry_t* entry = uberkern_launch(
-		kern, NULL, n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1,
-		0, (void*)&args, (char*)kernel, sizeof(kernel), 6);
-	if (!entry)
+	cuerr = cudyLaunch(function,
+		n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1, 0, &args, 0);
+	if (cuerr != CUDA_SUCCESS)
 	{
-		fprintf(stderr, "Cannot launch uberkernel\n");
-		result = 1;
+		fprintf(stderr, "Cannot launch kernel function: %d\n",
+			cuerr);
+		result = -1;
 		goto finish;
 	}
 	printf("Launched kernel in uberkernel:\n");
@@ -170,7 +184,7 @@ finish :
 	if (bDev) cudaFree(bDev);
 	if (cDev) cudaFree(cDev);
 
-	if (kern) uberkern_dispose(kern);
+	cudyDispose(loader);
 	return result;
 }
 
