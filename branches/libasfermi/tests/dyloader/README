@@ -1,4 +1,4 @@
-The uberkern library and group of tests is an experimental effort in order to explore the dynamic code editing capabilities of NVIDIA Fermi GPUs. Initially so-called "uberkernel" is created - a CUDA kernel incorporating code loader and free space (NOPs) for later loaded sub-kernels' instructions. Later uberkernel can be queried with device array containing sub-kernel opcodes. Loader code will load these opcodes into kernel body and execute them.
+The dynamic loader library and group of tests is an experimental effort in order to explore the dynamic code editing capabilities of NVIDIA Fermi GPUs. Initially so-called "uberkernel" is created - a CUDA kernel incorporating code loader and free space (NOPs) for later loaded sub-kernels' instructions. Later uberkernel can be queried with device array containing sub-kernel opcodes. Loader code will load these opcodes into kernel body and execute them.
 
-Uberkernel is developed and maintained by Dmitry Mikushin, with great help from Hou Yunqing (hyq.neuron).
+dyloader is developed and maintained by Dmitry Mikushin, with great help from Hou Yunqing (hyq.neuron).
 
