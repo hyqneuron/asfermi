@@ -222,3 +222,98 @@ Template opcode
 ||4             ||.GT||
 ||5             ||.NE||
 ||6             ||.GE||
+
+----
+==== VADD ====
+Instruction Usage:
+{{{
+VADD(.UD).Op1Type.Op2Type(.SAT)(.op)(.S) reg0(.CC), (-)reg1(.r1sel), (-)composite operand(.r2sel), reg3;
+}}}
+Note that the composite operand of VADD should be either a register or a 16-bit integer. 
+
+While in PTX dtype must be specified as u32 or s32, for VADD the dtype of s32 is assumed. if u32 is the desired type, use the .UD modifier.
+
+Also, while in PTX atype and btype can only be u32/s32, for VADD Op1Type and Op2Type can be Uxx/Sxx, where xx=8,16 or 32. When xx!=32, sub-word selection of the corresponding operand takes place in accordance with the r1sel and r2sel modifiers.
+
+Template opcode:
+{{{
+0010 000000 1110 000000 000000 0000000000000000 1000000 000000  111 000011
+        mod        reg0   reg1        composite    mod3   reg3 mod4
+}}}
+
+||mod 0||meaning||
+||0    ||default||
+||1    ||.SAT   ||
+
+||mod 1||meaning||
+||0    ||default||
+||1    ||-reg1  ||
+
+||mod 2||meaning||
+||0    ||default||
+||1    ||-composite operand||
+
+Note that when both reg1 and composite operand are set to negative, .PO appears instead in the disassembly of cuobjdump.
+
+||mod 3||.Op1Type||
+||0    ||.Uxx, ||
+||1    ||.Sxx  ||
+
+||mod 4||.Op2Type||
+||0    ||.Uxx, ||
+||1    ||.Sxx  ||
+
+||mod 5||meaning||
+||0    ||default||
+||1    ||.S     ||
+
+||mod3 6||meaning||
+||0     ||.UD    ||
+||1     ||default||
+
+||mod3 2:4 value ||.Op1Type, .r1sel ||
+||0              ||.x8, default    ||
+||1              ||.x8, .B1        ||
+||2              ||.x8, .B2        ||
+||3              ||.x8, .B3        ||
+||4              ||.x16, default   ||
+||5              ||.x16, .H1       ||
+||6              ||.x32, default   ||
+||7              ||invalid         ||
+
+x=S/U
+
+||mod3 1||meaning||
+||0     ||use composite as 0xabcd||
+||1     ||use composite as reg2, specified below||
+
+mod2 = composite 7:9
+
+reg2 = composite 10:15
+
+||mod2 value ||.Op2Type, .r2sel||
+||0          ||.x8, default    ||
+||1          ||.x8, .B1        ||
+||2          ||.x8, .B2        ||
+||3          ||.x8, .B3        ||
+||4          ||.x16, default   ||
+||5          ||.x16, .H1       ||
+||6          ||.x32, default   ||
+||7          ||invalid         ||
+
+
+||mod3 0||meaning||
+||0     ||default||
+||1     ||reg0.CC||
+
+||mod4 0:2 value ||.op     ||
+||0              ||.MRG_16H||
+||1              ||.MRG_16L||
+||2              ||.MRG_8B0||
+||3              ||.MRG_8B2||
+||4              ||.ACC    ||
+||5              ||.MIN    ||
+||6              ||.MAX    ||
+||7              ||default ||
+
+VADD does not have MRG_8B1 or MRG_8B3. If PTX specifies dsel=b1/b3, an extra PRMT instruction is used.
