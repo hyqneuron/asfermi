@@ -440,6 +440,7 @@ struct OperandRuleCompositeForVADD: OperandRule
 				throw 154; //cannot be longer than 16 bits
 			//write result, lowest 6 bits to OpcodeWord0
 			csCurrentInstruction.OpcodeWord0 |= result << 26;
+			csCurrentInstruction.OpcodeWord1 &= ~(7); //clear the x32 modifier bits
 			csCurrentInstruction.OpcodeWord1 |= result >> 6;
 			//default is immediate operand, so no need to mark
 		}
