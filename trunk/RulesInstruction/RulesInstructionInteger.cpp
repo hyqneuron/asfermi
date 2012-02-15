@@ -148,3 +148,40 @@ struct InstructionRuleICMP: InstructionRule
 	}
 }IRICMP;
 
+struct InstructionRuleVADD: InstructionRule
+{
+	InstructionRuleVADD(): InstructionRule("VADD", 6, true, false)
+	{
+		hpBinaryStringToOpcode8("0010 000000 1110 000000 000000 0000000000000000 1000000 000000 111 000011", OpcodeWord0, OpcodeWord1);
+		SetOperands(4,
+					&OPRRegisterWithCCAt16,
+					&OPRRegister1ForVADD,
+					&OPRCompositeForVADD,
+					&OPRRegister3ForCMP);
+		ModifierGroups[0].Initialize(true, 1, &MRVADD_UD);
+		ModifierGroups[1].Initialize(false, 6,  
+					&MRVADD_Op1_U8,
+					&MRVADD_Op1_U16,
+					&MRVADD_Op1_U32,
+					&MRVADD_Op1_S8,
+					&MRVADD_Op1_S16,
+					&MRVADD_Op1_S32);
+		ModifierGroups[2].Initialize(false, 6, 
+					&MRVADD_Op2_U8,
+					&MRVADD_Op2_U16,
+					&MRVADD_Op2_U32,
+					&MRVADD_Op2_S8,
+					&MRVADD_Op2_S16,
+					&MRVADD_Op2_S32);
+		ModifierGroups[3].Initialize(true, 1, &MRVADD_SAT);
+		ModifierGroups[4].Initialize(true, 7,
+					&MRVADD_SecOp_MRG_16H,
+					&MRVADD_SecOp_MRG_16L,
+					&MRVADD_SecOp_MRG_8B0,
+					&MRVADD_SecOp_MRG_8B2,
+					&MRVADD_SecOp_ACC,
+					&MRVADD_SecOp_MAX,
+					&MRVADD_SecOp_MIN);
+		ModifierGroups[5].Initialize(true, 1, &MRS);
+	}
+}IRVADD;

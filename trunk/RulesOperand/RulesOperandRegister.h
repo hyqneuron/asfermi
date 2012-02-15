@@ -57,6 +57,8 @@ extern OperandRuleCompositeOperandForDouble OPRCompositeForDoubleWith2OP, OPRCom
 struct OperandRuleRegister3ForDouble;
 extern OperandRuleRegister3ForDouble OPRRegister3ForDouble;
 
-
+//VADD
+struct OperandRuleRegisterForVADD;
+extern OperandRuleRegisterForVADD OPRRegister1ForVADD, OPRRegister2ForVADD;
 
 #endif

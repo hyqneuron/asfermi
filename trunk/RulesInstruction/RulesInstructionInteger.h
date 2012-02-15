@@ -27,5 +27,7 @@ extern InstructionRuleISETP IRISETP;
 struct InstructionRuleICMP;
 extern InstructionRuleICMP IRICMP;
 
+struct InstructionRuleVADD;
+extern InstructionRuleVADD IRVADD;
 #else
 #endif
