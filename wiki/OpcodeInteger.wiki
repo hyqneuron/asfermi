@@ -227,7 +227,7 @@ Template opcode
 ==== VADD ====
 Instruction Usage:
 {{{
-VADD(.UD).Op1Type.Op2Type(.SAT)(.op)(.S) reg0(.CC), (-)reg1(.r1sel), (-)composite operand(.r2sel), reg3;
+VADD(.UD)(.Op1Type)(.Op2Type)(.SAT)(.op)(.S) reg0(.CC), (-)reg1(.r1sel), (-)composite operand(.r2sel), reg3;
 }}}
 Note that the composite operand of VADD should be either a register or a 16-bit integer. When a 16-bit integer is used, .r2sel should not be present.
 
@@ -239,7 +239,7 @@ Also, even though the immediate bit field is 16-bit in length, cuobjdump always 
 
 Template opcode:
 {{{
-0010 000000 1110 000000 000000 0000000000000000 1000000 000000  111 000011
+0010 011000 1110 000000 000000 0000000000000000 1000000 000000  111 000011
         mod        reg0   reg1        composite    mod3   reg3 mod4
 }}}
 
@@ -264,6 +264,8 @@ Note that when both reg1 and composite operand are set to negative, .PO appears 
 ||mod 4||.Op2Type||
 ||0    ||.Uxx, ||
 ||1    ||.Sxx  ||
+
+With asfermi, default OpTypes are S32. When only 1 OpType modifier is given it will be treated as Op1Type and Op2Type will be assumed to be S32, unless Op2 is actually an immediate operand, in that case Op2Type will become S8 if not otherwise specified.
 
 ||mod 5||meaning||
 ||0    ||default||
