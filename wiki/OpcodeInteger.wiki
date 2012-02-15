@@ -229,11 +229,13 @@ Instruction Usage:
 {{{
 VADD(.UD).Op1Type.Op2Type(.SAT)(.op)(.S) reg0(.CC), (-)reg1(.r1sel), (-)composite operand(.r2sel), reg3;
 }}}
-Note that the composite operand of VADD should be either a register or a 16-bit integer. 
+Note that the composite operand of VADD should be either a register or a 16-bit integer. When a 16-bit integer is used, .r2sel should not be present.
 
-While in PTX dtype must be specified as u32 or s32, for VADD the dtype of s32 is assumed. if u32 is the desired type, use the .UD modifier.
+While in PTX dtype (please refer to ptx manual) must be specified as u32 or s32, for VADD the dtype of s32 is assumed. if u32 is the desired type, use the .UD modifier.
 
 Also, while in PTX atype and btype can only be u32/s32, for VADD Op1Type and Op2Type can be Uxx/Sxx, where xx=8,16 or 32. When xx!=32, sub-word selection of the corresponding operand takes place in accordance with the r1sel and r2sel modifiers.
+
+Also, even though the immediate bit field is 16-bit in length, cuobjdump always outputs Op2Type as U8/S8 when the immediate operand is used, even when the immediate operand has more than 8 effective bits.
 
 Template opcode:
 {{{
