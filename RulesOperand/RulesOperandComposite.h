@@ -34,4 +34,7 @@ extern OperandRuleBAR OPRBAR, OPRBARNoRegister;
 struct OperandRuleTCount;
 extern OperandRuleTCount OPRTCount;
 
+struct OperandRuleCompositeForVADD;
+extern OperandRuleCompositeForVADD OPRCompositeForVADD;
+
 #endif

@@ -406,3 +406,75 @@ struct OperandRuleRegister3ForDouble: OperandRule
 		RegCheckForDouble(result);
 	}
 }OPRRegister3ForDouble;
+
+struct OperandRuleRegisterForVADD: OperandRule
+{
+	//this operand supports both the negative sign and the .rxsel subword selection modifier
+	int RegOffset; //both reside in OpcodeWord0
+	int SelOffset; //both reside in OpcodeWord1
+	int NegOffset; //both reside in OpcodeWord0
+	OperandRuleRegisterForVADD(int regOffset, int selOffset, int negOffset): OperandRule(Register)
+	{
+		RegOffset = regOffset;
+		SelOffset = selOffset;
+		NegOffset = negOffset;
+	}
+	virtual void Process(SubString &component)
+	{
+		//check negative sign first
+		bool negative = false;
+		if(component[0]=='-')
+		{
+			negative = true;
+			component.Start++;
+			component.Length--;
+			csCurrentInstruction.OpcodeWord0 |= 1<<NegOffset;
+		}
+		//write to register field
+		int result = component.ToRegister();
+		CheckRegCount(result);
+		csCurrentInstruction.OpcodeWord0 |= result << RegOffset;
+		//check sub-word selection modifier
+		int selector = 0;
+		int dotPos = component.Find('.', 0);
+		if(dotPos!=-1)
+		{
+			//get the substring from the dot to the last non-blank character
+			SubString mod = component.SubStr(dotPos, component.Length - dotPos);
+			mod.RemoveBlankAtEnd();
+			if(mod.CompareWithCharArray(".B1", 3))
+				selector = 1;
+			else if(mod.CompareWithCharArray(".B2", 3))
+				selector = 2;
+			else if(mod.CompareWithCharArray(".B3", 3))
+				selector = 3;
+			else if(mod.CompareWithCharArray(".H1", 3))
+				selector = 5;
+			else
+				throw 152; //unrecognised sub-word selector modifier
+		}
+		//selector has been found out. 0 means no selector is used.
+		//if selector is zero, then no need to confirm with the OpType
+		if(selector!=0)
+		{
+			int opType = csCurrentInstruction.OpcodeWord1 & (7 << SelOffset);
+			opType >>= SelOffset;
+			//H1
+			if(selector == 5 && opType != 4) //has to be S/U16, which uses an opType of 4
+				throw 153; //operand's sub-word selector incompatible with type modifier
+			//B1 to B3 use U8/S8, which should have an opType of 0
+			else if(selector <=3 && opType != 0)
+				throw 153;
+			//U32/S32 uses an opType of 6, but it generates no selector so ignore
+			//write back selector
+			csCurrentInstruction.OpcodeWord1 |= selector << SelOffset;
+		}
+		if(negative)
+		{
+			component.Start--;
+			component.Length++;
+		}
+		
+	}
+};
+OperandRuleRegisterForVADD OPRRegister1ForVADD(20, 12, 8), OPRRegister2ForVADD(26, 0, 7);

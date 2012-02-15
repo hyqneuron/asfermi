@@ -400,3 +400,55 @@ struct OperandRuleTCount: OperandRule
 		csCurrentInstruction.OpcodeWord0 |= result >> 6;
 	}
 }OPRTCount;
+
+struct OperandRuleCompositeForVADD: OperandRule
+{
+	//this thing deals with either a register or a 16-bit integer.
+	//a negative sign could precede things
+	OperandRuleCompositeForVADD(): OperandRule(Custom){}
+	virtual void Process(SubString &component)
+	{
+		//this function will deal with the negative sign. So the negative sign
+		//process in OPRRegister2ForVADD is redundant
+		bool negative = false;
+		if(component[0]=='-')
+		{
+			negative = true;
+			component.Start++;
+			component.Length--;
+			csCurrentInstruction.OpcodeWord0 |= 1<<7; //negative bit is the 8th bit from LSB
+		}
+		//register
+		if(component.IsRegister())
+		{
+			((OperandRule*)&OPRRegister2ForVADD)->Process(component);
+			//default composite mode is immediate, so has to do a mark
+			csCurrentInstruction.OpcodeWord1 |= 1 << 15; //register mark
+		}
+		//16-bit constant
+		else
+		{
+			int result;
+			//hex
+			if(component.IsHex())
+				result = component.ToImmediate32FromHexConstant(false);
+			//int
+			else
+				result = component.ToImmediate32FromInt32(); //issue: will work with negative integers. i.e. "--123" will be accepted, and cause 
+										//error 154 below
+			if((result & 0xFFFF0000)!=0)
+				throw 154; //cannot be longer than 16 bits
+			//write result, lowest 6 bits to OpcodeWord0
+			csCurrentInstruction.OpcodeWord0 |= result << 26;
+			csCurrentInstruction.OpcodeWord1 |= result >> 6;
+			//default is immediate operand, so no need to mark
+		}
+		if(negative)
+		{
+			component.Start--;
+			component.Length++;
+		}
+		
+	}
+};
+OperandRuleCompositeForVADD OPRCompositeForVADD;

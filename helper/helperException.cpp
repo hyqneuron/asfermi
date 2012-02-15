@@ -172,6 +172,12 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 151:	message = "Register number should be less than 62.";
 		break;
+	case 152:	message = "Unrecognised sub-word selector modifier.";
+		break;
+	case 153:	message = "Operand's sub-word selector is incompatible with its corresponding OpType modifier";
+		break;
+	case 154:	message = "VADD's immediate operand cannot be longer than 16 bits";
+		break;
 	default:	message = "Unknown Error.";
 		break;
 	};
