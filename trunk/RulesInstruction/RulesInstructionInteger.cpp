@@ -152,21 +152,21 @@ struct InstructionRuleVADD: InstructionRule
 {
 	InstructionRuleVADD(): InstructionRule("VADD", 6, true, false)
 	{
-		hpBinaryStringToOpcode8("0010 000000 1110 000000 000000 0000000000000000 1000000 000000 111 000011", OpcodeWord0, OpcodeWord1);
+		hpBinaryStringToOpcode8("0010 011000 1110 000000 000000 0000000110000000 1001100 000000 111 000011", OpcodeWord0, OpcodeWord1);
 		SetOperands(4,
 					&OPRRegisterWithCCAt16,
 					&OPRRegister1ForVADD,
 					&OPRCompositeForVADD,
 					&OPRRegister3ForCMP);
 		ModifierGroups[0].Initialize(true, 1, &MRVADD_UD);
-		ModifierGroups[1].Initialize(false, 6,  
+		ModifierGroups[1].Initialize(true, 6,  
 					&MRVADD_Op1_U8,
 					&MRVADD_Op1_U16,
 					&MRVADD_Op1_U32,
 					&MRVADD_Op1_S8,
 					&MRVADD_Op1_S16,
 					&MRVADD_Op1_S32);
-		ModifierGroups[2].Initialize(false, 6, 
+		ModifierGroups[2].Initialize(true, 6, 
 					&MRVADD_Op2_U8,
 					&MRVADD_Op2_U16,
 					&MRVADD_Op2_U32,
