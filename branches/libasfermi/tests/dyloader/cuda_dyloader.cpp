@@ -68,27 +68,10 @@ struct buffer_t
 
 struct CUDYloader_t;
 
-// Get the ELF binary size, implementation by awalk
-// https://bbs.archlinux.org/viewtopic.php?id=15298
-static size_t elf_size(ElfW(Ehdr) *ehdr)
-{
-	// Find the first program header.
-	ElfW(Phdr)* phdr = (ElfW(Phdr)*)((ElfW(Addr))ehdr + ehdr->e_phoff);
-
-	// Find the final PT_LOAD segment's extent.
-	ElfW(Addr) end;
-	for (int i = 0; i < ehdr->e_phnum; i++)
-	        if (phdr[i].p_type == PT_LOAD)
-        		end = phdr[i].p_vaddr + phdr[i].p_memsz;
-
-	// The start (virtual) address is always zero, so just return end.
-	return (size_t)end;
-}
-
 struct CUDYfunction_t
 {
 	unsigned int szbinary;
-	char* binary;
+	vector<char> binary;
 	
 	short regcount;
 
@@ -127,7 +110,9 @@ struct CUDYfunction_t
 		Elf* e = NULL;
 		try
 		{
-			size_t size = elf_size((ElfW(Ehdr)*)content.c_str());
+			ElfW(Ehdr)* elf_header = (ElfW(Ehdr)*)content.c_str();
+			size_t size = (size_t)elf_header->e_phoff +
+				elf_header->e_phentsize *  elf_header->e_phnum;
 			e = elf_memory((char*)content.c_str(), size);
 			size_t shstrndx;
 			if (elf_getshdrstrndx(e, &shstrndx))
@@ -151,12 +136,13 @@ struct CUDYfunction_t
 				regcount = shdr.sh_info >> 24;
 
 				// Extract binary opcodes and size.
-				binary = (char*)content.c_str() + shdr.sh_offset;
 				szbinary = shdr.sh_size;
+				binary.resize(szbinary);
+				memcpy(&binary[0], (char*)content.c_str() + shdr.sh_offset, szbinary);
 				
 				// For asynchronous data transfers to work, need to
 				// pin memory for binary content.
-				CUresult cuerr = cuMemHostRegister(binary, szbinary, 0);
+				CUresult cuerr = cuMemHostRegister(&binary[0], szbinary, 0);
 				if (cuerr != CUDA_SUCCESS)
 				{
 					if (cuerr != CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED)
@@ -164,6 +150,16 @@ struct CUDYfunction_t
 					
 					// We are fine, if memory is already registered.
 				}
+
+				// Also need to pin offset.
+				cuerr = cuMemHostRegister(&offset, sizeof(unsigned int), 0);
+				if (cuerr != CUDA_SUCCESS)
+				{
+					if (cuerr != CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED)
+						throw cuerr;
+
+					// We are fine, if memory is already registered.
+				}		
 
 				break;
 			}
@@ -184,13 +180,16 @@ struct CUDYfunction_t
 	CUDYfunction_t(CUDYloader_t* loader,
 		char* opcodes, size_t nopcodes, int regcount) :
 	
-	loader(loader), binary(opcodes), szbinary(8 * nopcodes),
-	regcount(regcount)
+	loader(loader), szbinary(8 * nopcodes), regcount(regcount)
 	
 	{
+		// Copy binary.
+		binary.resize(szbinary);
+		memcpy(&binary[0], opcodes, szbinary);
+	
 		// For asynchronous data transfers to work, need to
 		// pin memory for binary content.
-		CUresult cuerr = cuMemHostRegister(binary, szbinary, 0);
+		CUresult cuerr = cuMemHostRegister(&binary[0], szbinary, 0);
 		if (cuerr != CUDA_SUCCESS)
 		{
 			if (cuerr != CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED)
@@ -198,12 +197,32 @@ struct CUDYfunction_t
 
 			// We are fine, if memory is already registered.
 		}
+		
+		// Also need to pin offset.
+		cuerr = cuMemHostRegister(&offset, sizeof(unsigned int), 0);
+		if (cuerr != CUDA_SUCCESS)
+		{
+			if (cuerr != CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED)
+				throw cuerr;
+
+			// We are fine, if memory is already registered.
+		}		
 	}
 	
 	~CUDYfunction_t()
 	{
 		// Unpin pinned memory for binary.
-		CUresult cuerr = cuMemHostUnregister(binary);
+		CUresult cuerr = cuMemHostUnregister(&binary[0]);
+		if (cuerr != CUDA_SUCCESS)
+		{
+			if (cuerr != CUDA_ERROR_HOST_MEMORY_NOT_REGISTERED)
+				throw cuerr;
+			
+			// We are fine, if memory is already unregistered.
+		}
+
+		// Unpin pinned memory for offset.
+		cuerr = cuMemHostUnregister(&offset);
 		if (cuerr != CUDA_SUCCESS)
 		{
 			if (cuerr != CUDA_ERROR_HOST_MEMORY_NOT_REGISTERED)
@@ -381,32 +400,20 @@ struct CUDYloader_t
 		if (offset + function->szbinary > capacity)
 			throw CUDA_ERROR_OUT_OF_MEMORY;
 
-		// Synchronize stream.
-		CUTHROW( cuStreamSynchronize(stream) );
-	
-		// Load dynamic kernel binary.
-		CUTHROW( cuMemcpyHtoDAsync((CUdeviceptr)binary,
-			function->binary, function->szbinary, stream) );
-
-		// Synchronize stream.
-		CUTHROW( cuStreamSynchronize(stream) );
-
 		// Set dynamic kernel binary size.
 		CUTHROW( cuMemcpyHtoDAsync(buffer,
 			&function->szbinary, sizeof(unsigned int), stream) );
-
-		// Synchronize stream.
-		CUTHROW( cuStreamSynchronize(stream) );
 
 		// Initialize command value with ONE, so on the next
 		// launch uberkern will load dynamic kernel code and exit.
 		CUTHROW( cuMemsetD32Async(command, 1, 1, stream) );
 
-		// Synchronize stream.
-		CUTHROW( cuStreamSynchronize(stream) );
-
 		// Fill the dynamic kernel code BRA target address.
 		CUTHROW( cuMemcpyHtoDAsync(address, &offset, sizeof(int), stream) );
+
+		// Load dynamic kernel binary.
+		CUTHROW( cuMemcpyHtoDAsync((CUdeviceptr)binary,
+			&function->binary[0], function->szbinary, stream) );
 
 		// Synchronize stream.
 		CUTHROW( cuStreamSynchronize(stream) );
@@ -432,7 +439,8 @@ struct CUDYloader_t
 		function->offset = offset;
 
 		// Increment pool offset by the size of kernel binary.
-		offset += function->szbinary;
+		// XXX: 256 - an extra offset to force no caching/prefetching.
+		offset += function->szbinary + 256;
 		
 		// Track function for disposal.
 		functions.push_back(function);
@@ -450,6 +458,9 @@ struct CUDYloader_t
 		// XXX: 0x138 is #BRA of uberkernel loader code - the value
 		// may change if loader code gets changed. 
 		CUTHROW( cuMemsetD32Async(command, lepc + 0x138, 1, stream) );
+
+		// Fill the dynamic kernel code BRA target address.
+		CUTHROW( cuMemcpyHtoDAsync(address, &function->offset, sizeof(int), stream) );
 
 		// Synchronize stream.
 		CUTHROW( cuStreamSynchronize(stream) );
