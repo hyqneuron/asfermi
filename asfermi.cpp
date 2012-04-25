@@ -421,6 +421,8 @@ void Initialize() //set up the various lists
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRParam);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRShared);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRLocal);
+	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRMinStack);
+	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRMinFrame);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRConstant2);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DRConstant);
 	csDirectiveRulePrepList.push_back((DirectiveRule*)&DREndConstant);

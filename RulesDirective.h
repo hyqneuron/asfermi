@@ -26,6 +26,14 @@ extern DirectiveRuleShared DRShared;
 struct DirectiveRuleLocal;
 extern DirectiveRuleLocal DRLocal;
 
+//MinStack
+struct DirectiveRuleMinStack;
+extern DirectiveRuleMinStack DRMinStack;
+
+//MinFrame
+struct DirectiveRuleMinFrame;
+extern DirectiveRuleMinFrame DRMinFrame;
+
 //Constant2
 struct DirectiveRuleConstant2;
 extern DirectiveRuleConstant2 DRConstant2;
