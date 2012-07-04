@@ -87,8 +87,9 @@ struct InstructionRuleLDL: InstructionRule
 		SetOperands(2, 
 					&OPRRegister0ForMemory,					
 					&OPRGlobalMemoryWithImmediate24);
-		ModifierGroups[0].Initialize(true, 3,
+		ModifierGroups[0].Initialize(true, 4,
 					&MRLDCopCG,
+					&MRLDCopCS,
 					&MRLDCopLU,
 					&MRLDCopCV);
 		ModifierGroups[1].Initialize(true, 6,

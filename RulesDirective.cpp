@@ -258,56 +258,6 @@ struct DirectiveRuleLocal: DirectiveRule
 	}
 }DRLocal;
 
-//MinStack
-struct DirectiveRuleMinStack: DirectiveRule 
-{
-	DirectiveRuleMinStack()
-	{
-		Name = "MinStack";
-	}
-	virtual void Process()//!MinStack Size 
-	{
-		if(!csCurrentKernelOpened)
-			throw 1006; //only definable inside kernels
-		if(csCurrentDirective.Parts.size()!=2)
-			throw 1002; //incorrect no. of arguments
-
-		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
-		currentArg++;//currentArg is on size
-		int size;
-		if((*currentArg).Length>2 && (*currentArg)[0]=='0' && ((*currentArg)[1]=='x')||(*currentArg)[1]=='X')
-			size = currentArg->ToImmediate32FromHexConstant(false);
-		else
-			size = currentArg->ToImmediate32FromInt32(); //issue: what's the error message that it's gonna give?
-		csCurrentKernel.MinStackSize = size;
-	}
-}DRMinStack;
-
-//MinFrame
-struct DirectiveRuleMinFrame: DirectiveRule 
-{
-	DirectiveRuleMinFrame()
-	{
-		Name = "MinFrame";
-	}
-	virtual void Process()//!MinFrame Size 
-	{
-		if(!csCurrentKernelOpened)
-			throw 1006; //only definable inside kernels
-		if(csCurrentDirective.Parts.size()!=2)
-			throw 1002; //incorrect no. of arguments
-
-		list<SubString>::iterator currentArg = csCurrentDirective.Parts.begin(); 
-		currentArg++;//currentArg is on size
-		int size;
-		if((*currentArg).Length>2 && (*currentArg)[0]=='0' && ((*currentArg)[1]=='x')||(*currentArg)[1]=='X')
-			size = currentArg->ToImmediate32FromHexConstant(false);
-		else
-			size = currentArg->ToImmediate32FromInt32(); //issue: what's the error message that it's gonna give?
-		csCurrentKernel.MinFrameSize = size;
-	}
-}DRMinFrame;
-
 //Constant2
 struct DirectiveRuleConstant2: DirectiveRule //!Constant2 size
 {
@@ -506,6 +456,10 @@ struct DirectiveRuleArch: DirectiveRule
 		else if(strcmp("sm_21", part->Start)==0)
 		{
 			cubinArchitecture = sm_21;
+		}
+		else if(strcmp("sm_30", part->Start)==0)
+		{
+			cubinArchitecture = sm_30;
 		}
 		else
 			throw 1021;// unsupported argument
