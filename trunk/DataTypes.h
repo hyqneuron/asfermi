@@ -5,6 +5,7 @@
 
 #include "SubString.h"
 #include <list>
+#include <vector>
 
 
 
@@ -188,7 +189,7 @@ struct Label
 };
 struct LabelRequest
 {
-	list<Instruction>::iterator InstructionPointer;
+	std::vector<Instruction>::iterator InstructionPointer;
 	SubString RequestedLabelName;
 	bool Zero;
 };

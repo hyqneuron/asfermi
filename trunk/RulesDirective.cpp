@@ -77,7 +77,7 @@ void processLabels()
 		
 		LabelProcessing = true;
 		LabelAbsoluteAddr = offset;
-		list<Instruction>::iterator relatedInstruction;
+		vector<Instruction>::iterator relatedInstruction;
 		if(!request->Zero)
 		{
 			relatedInstruction = request->InstructionPointer; //on the one before the requesting instruction

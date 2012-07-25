@@ -59,8 +59,8 @@ LineParser*			csLineParser;
 InstructionParser*	csInstructionParser;
 DirectiveParser*	csDirectiveParser;
 
-list<Line> csLines;
-list<Instruction> csInstructions;
+vector<Line> csLines;
+vector<Instruction> csInstructions;
 list<Directive> csDirectives;	
 list<Label> csLabels;
 list<LabelRequest> csLabelRequests;

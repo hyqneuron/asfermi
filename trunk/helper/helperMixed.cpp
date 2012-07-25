@@ -252,7 +252,7 @@ void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint)		
 void hpPrintLines()
 {
 	cout<<"Lines:"<<endl;
-	for(list<Line>::iterator i = csLines.begin(); i!=csLines.end(); i++)
+	for(vector<Line>::iterator i = csLines.begin(); i!=csLines.end(); i++)
 	{
 		char * result = i->LineString.ToCharArray();
 		cout<<result<<endl;
@@ -262,7 +262,7 @@ void hpPrintLines()
 void hpPrintInstructions()
 {
 	cout<<"Instructions"<<endl;
-	for(list<Instruction>::iterator i = csInstructions.begin(); i!=csInstructions.end(); i++)
+	for(vector<Instruction>::iterator i = csInstructions.begin(); i!=csInstructions.end(); i++)
 	{
 		char * result = i->InstructionString.ToCharArray();
 		cout<<result<<endl;

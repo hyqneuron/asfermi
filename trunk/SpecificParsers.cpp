@@ -46,7 +46,7 @@ struct DirectiveParserDefault: DirectiveParser
 //-----Implementation of the parse() functions for parsers declared in 1.
 void MasterParserDefault:: Parse(unsigned int startinglinenumber)
 {
-	list<Line>::iterator cLine = csLines.begin(); //current line	
+	vector<Line>::iterator cLine = csLines.begin(); //current line	
 	
 	//Going through all lines
 	for(unsigned int i =startinglinenumber; i<csLines.size(); i++, cLine++)

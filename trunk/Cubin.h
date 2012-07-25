@@ -77,7 +77,7 @@ struct Kernel
 	
 	std::list<KernelParameter> Parameters;
 	unsigned int ParamTotalSize;
-	std::list<Instruction> KernelInstructions;
+	std::vector<Instruction> KernelInstructions;
 
 	void Reset();
 };

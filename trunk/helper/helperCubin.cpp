@@ -310,7 +310,7 @@ void hpCubinStage3()
 		kernel->TextSection.SectionSize = kernel->TextSize; //device functions not implemented. When implemented, this has to include size of device func as well
 		kernel->TextSection.SectionContent = new unsigned char[kernel->TextSection.SectionSize];
 		unsigned int *offset = (unsigned int *)(kernel->TextSection.SectionContent);
-		for(list<Instruction>::iterator inst = kernel->KernelInstructions.begin(); inst != kernel->KernelInstructions.end(); inst++)
+		for(vector<Instruction>::iterator inst = kernel->KernelInstructions.begin(); inst != kernel->KernelInstructions.end(); inst++)
 		{
 			*offset = inst->OpcodeWord0;
 			offset ++;
