@@ -46,10 +46,8 @@ int main(int argc, char** args)
 		Initialize();	//Initialize instruction and directive rules
 		//ExternInitialize(); //initialize custom rules
 
-
 		//---Process
 		csMasterParser->Parse(0); //starting from line 0
-
 
 		//---Postprocess
 		if(csErrorPresent)
@@ -82,7 +80,7 @@ void WriteToCubinReplace()
 {
 	if(csInstructionOffset + csOutputInstructionOffset> csOutputSectionSize )
 		throw 9; //output section not large enough
-	list<Instruction>::iterator inst = csInstructions.begin();
+	vector<Instruction>::iterator inst = csInstructions.begin();
 	csOutput.seekp(csOutput.beg + ::csOutputSectionOffset + ::csOutputInstructionOffset);
 
 	while(inst != csInstructions.end())

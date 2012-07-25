@@ -5,6 +5,7 @@
 
 #include <stack>
 #include <list>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include "DataTypes.h"
@@ -68,8 +69,8 @@ extern LineParser*			csLineParser;
 extern InstructionParser*	csInstructionParser;
 extern DirectiveParser*	csDirectiveParser;
 
-extern list<Line> csLines;
-extern list<Instruction> csInstructions;
+extern vector<Line> csLines;
+extern vector<Instruction> csInstructions;
 extern list<Directive> csDirectives;
 extern list<Label> csLabels;
 extern list<LabelRequest> csLabelRequests;
