@@ -189,9 +189,11 @@ struct Label
 };
 struct LabelRequest
 {
-	std::vector<Instruction>::iterator InstructionPointer;
+	// Index of the requesting instruction in kernel
+	unsigned RequestIndex;
+	//std::vector<Instruction>::iterator InstructionPointer;
 	SubString RequestedLabelName;
-	bool Zero;
+	//bool Zero;
 };
 //-----End of Label structures
 #else

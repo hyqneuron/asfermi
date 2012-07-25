@@ -65,19 +65,22 @@ void processLabels()
 		SortElement found = SortFind(SortedList, IndexList, count, request->RequestedLabelName);
 		if(found.ExtraInfo == SortNotFound.ExtraInfo)
 		{
+#if 0
 			if(!request->Zero)
 			{
 				csCurrentDirective.Reset((++request->InstructionPointer)->InstructionString, request->InstructionPointer->LineNumber);
 			}
 			else
 				csCurrentDirective.Reset(csInstructions.begin()->InstructionString, csInstructions.begin()->LineNumber);
+#endif
 			throw 1024;//label not found
 		}
 		int offset = ((Label*)found.ExtraInfo)->Offset;
 		
 		LabelProcessing = true;
 		LabelAbsoluteAddr = offset;
-		vector<Instruction>::iterator relatedInstruction;
+		Instruction *relatedInstruction = &csInstructions[request->RequestIndex];
+#if 0
 		if(!request->Zero)
 		{
 			relatedInstruction = request->InstructionPointer; //on the one before the requesting instruction
@@ -87,6 +90,7 @@ void processLabels()
 		{
 			relatedInstruction = csInstructions.begin(); // on the requesting instruction
 		}
+#endif
 
 		csInstructionOffset = relatedInstruction->Offset+(relatedInstruction->Is8?8:4); //offset of the instruction before it
 		csCurrentInstruction = *relatedInstruction;
@@ -506,6 +510,10 @@ struct DirectiveRuleArch: DirectiveRule
 		else if(strcmp("sm_21", part->Start)==0)
 		{
 			cubinArchitecture = sm_21;
+		}
+		else if(strcmp("sm_30", part->Start)==0)
+		{
+			cubinArchitecture = sm_30;
 		}
 		else
 			throw 1021;// unsupported argument

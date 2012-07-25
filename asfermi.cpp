@@ -217,6 +217,11 @@ void ProcessCommandsAndReadSource(int argc, char** args)
 			cubinArchitecture = sm_21;
 			currentArg += 1;
 		}
+		else if(strcmp(args[currentArg], "-sm_30")==0)
+		{
+			cubinArchitecture = sm_30;
+			currentArg += 1;
+		}
 		else if(strcmp(args[currentArg], "-32")==0)
 		{
 			hpCubinSet64(false);

@@ -280,7 +280,9 @@ struct OperandRuleInstructionAddress: OperandRule
 			if(labelName.Length==0)
 				throw 145; //empty label name
 			request.RequestedLabelName = labelName;
-			request.InstructionPointer = csInstructions.end();
+			request.RequestIndex = csInstructions.size();
+#if 0
+			//request.InstructionPointer = csInstructions.end();
 			if(csInstructions.size()==0)
 				request.Zero = true;
 			else
@@ -288,6 +290,7 @@ struct OperandRuleInstructionAddress: OperandRule
 				request.InstructionPointer--;
 				request.Zero = false;
 			}
+#endif
 			csLabelRequests.push_back(request);
 		}
 		//constant memory
