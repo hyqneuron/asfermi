@@ -66,6 +66,7 @@ void hpUsage()
 	puts("  -sm_20: output cubin for architecture sm_20. This is the default architectu-");
 	puts("     re assumed by asfermi.");
 	puts("  -sm_21: output cubin for architecture sm_21");
+	puts("  -sm_30: output cubin for architecture sm_30");
 	puts("  -32: output 32-bit cubin. This is the default behaviour.");
 	puts("  -64: output 64-bit cubin.");
 	puts("  -SelfDebug: throw unhandled exception when things go wrong. For debugging o-");

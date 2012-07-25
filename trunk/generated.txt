@@ -54,7 +54,7 @@ else
 endif
 
 CXX = g++
-CXXFLAGS = -w -O3
+CXXFLAGS = -w -g
 TARGET = asfermi.exe
 
 all: $(allobjects)
