@@ -1,6 +1,8 @@
 #ifndef RulesInstructionExecutionDefined
 #define RulesInstructionExecutionDefined
 
+struct InstructionRuleSCHI;
+extern InstructionRuleSCHI IRSCHI;
 
 struct InstructionRuleEXIT;
 extern InstructionRuleEXIT IREXIT;

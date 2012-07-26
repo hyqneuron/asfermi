@@ -11,6 +11,21 @@
 #include "../RulesOperand.h"
 
 
+struct InstructionRuleSCHI: InstructionRule
+{
+	InstructionRuleSCHI(): InstructionRule("SCHI", 0, true, false)
+	{
+		hpBinaryStringToOpcode8("1110 000000000000000000000000000000000000000000000000000000 000100", OpcodeWord0, OpcodeWord1);
+		SetOperands(7,	&OPRSCHI0, 
+						&OPRSCHI1,
+						&OPRSCHI2,
+						&OPRSCHI3,
+						&OPRSCHI4,
+						&OPRSCHI5,
+						&OPRSCHI6);
+	}
+}IRSCHI;
+
 struct InstructionRuleEXIT: InstructionRule
 {
 	InstructionRuleEXIT() : InstructionRule("EXIT", 0, true, false)

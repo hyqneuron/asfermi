@@ -356,7 +356,7 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRF2F);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRI2F);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRI2I);
-	//execution control: 16
+	//execution control: 17
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRSSY);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRBRA);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRJMP);
@@ -364,6 +364,7 @@ void Initialize() //set up the various lists
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRCAL);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRPRET);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRRET);
+	csInstructionRulePrepList.push_back((InstructionRule*)&IRSCHI);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IREXIT);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRPBK);
 	csInstructionRulePrepList.push_back((InstructionRule*)&IRBRK);

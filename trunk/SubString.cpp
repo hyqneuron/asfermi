@@ -44,6 +44,32 @@ char SubString::operator[] (int position)
 //but not in 20-bit functions
 	
 	
+unsigned int SubString::ToImmediate32FromBinary()
+{
+	unsigned result = 0;
+	if(Length<1)
+		throw 156; //incorrect binary
+	unsigned startPos = 0;
+	// binary can start with 'b', or not
+	if(Start[0]=='b')
+		startPos = 1;
+	
+	unsigned adder = 1;
+	unsigned i;
+	for(i=startPos; i<Length; i++, adder<<=1)
+	{
+		if(Start[i]=='0')
+		{}// do nothing
+		else if(Start[i]=='1')
+			result|=adder;
+		else break; //issue: warning?
+	}
+	// binary digits absent, or longer than 32 digits
+	if(adder==1 || i-startPos>32)
+		throw 156;
+	return result;
+}
+
 unsigned int SubString::ToImmediate20FromHexConstant(bool acceptNegative)
 {
 	unsigned int result = ToImmediate32FromHexConstant(acceptNegative);

@@ -6,6 +6,15 @@
 struct OperandRuleIgnored;
 extern OperandRuleIgnored OPRIgnored;
 
+struct OperandRuleSCHI;
+extern OperandRuleSCHI OPRSCHI0, 
+					   OPRSCHI1,
+					   OPRSCHI2,
+					   OPRSCHI3,
+					   OPRSCHI4,
+					   OPRSCHI5,
+					   OPRSCHI6;
+
 struct OperandRule32I;
 extern OperandRule32I OPR32I;
 

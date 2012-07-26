@@ -19,6 +19,39 @@ struct OperandRuleIgnored: OperandRule
 	}
 }OPRIgnored;
 
+struct OperandRuleSCHI: OperandRule
+{
+	unsigned Offset;
+	OperandRuleSCHI(unsigned offset): OperandRule(Custom)
+	{
+		Offset = offset;
+	}
+	virtual void Process(SubString &component)
+	{
+		unsigned result;
+		if(component.IsHex())
+			result = component.ToImmediate32FromHexConstant(false);
+		else
+			result = component.ToImmediate32FromBinary();
+		if(result>0x3f)
+			throw 155; //cannot exceed 0x3f
+		if(Offset < 32)
+		{
+			csCurrentInstruction.OpcodeWord0 |= result<< Offset;
+			if(Offset > 26)
+				csCurrentInstruction.OpcodeWord1 |= result>> 32 - Offset;
+		}
+		else
+			csCurrentInstruction.OpcodeWord1 |= result<< Offset - 32;
+	}
+};
+OperandRuleSCHI OPRSCHI0(4),
+				OPRSCHI1(12),
+				OPRSCHI2(20),
+				OPRSCHI3(28),
+				OPRSCHI4(36),
+				OPRSCHI5(44),
+				OPRSCHI6(52);
 
 
 
