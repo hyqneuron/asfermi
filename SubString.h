@@ -22,6 +22,7 @@ struct SubString
 	char* ToCharArray();
 	void SubEndWithNull();
 	void RecoverEndWithNull();	
+	unsigned int ToImmediate32FromBinary();
 	unsigned int ToImmediate32FromHexConstant(bool acceptNegative); 
 	unsigned int ToImmediate32FromFloat32();
 	unsigned int ToImmediate32FromFloat64();
