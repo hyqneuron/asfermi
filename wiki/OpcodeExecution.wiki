@@ -7,6 +7,28 @@ Also, [Opcode#imme immea] and [SourceFormat#Composite_operand composite operand]
 === Execution Control Instructions ===
 <wiki:toc>
 
+==== SCHI ====
+SCHI is a sm_30-only pseudo-instruction located at the beginning of each 0x40 byte-sized instruction block of sm_30's kernel. It controls the dispatch interval of the following 7 instructions.
+
+Instruction usage
+{{{
+SCHI op0, op1, op2, op3, op4, op5, op6;
+INST0
+INST1
+INST2
+INST3
+INST4
+INST5
+INST6
+}}}
+where op* is either a hex number of a binary number (least-significant bit first) not exceeding 0x3f or 111111. opx controls the dispatch interval between INSTx and INST(x+1)
+
+Template opcode
+{{{
+1110 00000000 00000000 00000000 00000000 00000000 00000000 000000 000100
+     op0      op1      op2      op3      op4      op5      op6
+}}}
+
 ==== SSY ====
 Instruction usage
 {{{
