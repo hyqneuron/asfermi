@@ -21,7 +21,7 @@ INST4
 INST5
 INST6
 }}}
-where op* is either a hex number of a binary number (least-significant bit first) not exceeding 0x3f or 111111. opx controls the dispatch interval between INSTx and INST(x+1)
+where op(x) is either a hex number or a binary number (least-significant bit first) not exceeding 0x3f or 111111, and INST(x) may be any instruction. op(x) controls the dispatch interval between INST(x) and INST(x+1)
 
 Template opcode
 {{{
@@ -29,6 +29,7 @@ Template opcode
      op0      op1      op2      op3      op4      op5      op6
 }}}
 
+----
 ==== SSY ====
 Instruction usage
 {{{
