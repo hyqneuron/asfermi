@@ -1,0 +1,18 @@
+This test checks how named and unnamed constants are working.
+Handles of constants are retrieved from host through their names,
+and then one of constants is assigned with a different value.
+
+$ make
+cd ../.. && make asfermi libasfermi.so
+make[1]: Entering directory `/home/marcusmae/forge/kernelgen/trunk/src/libasfermi'
+make[1]: `asfermi' is up to date.
+make[1]: `libasfermi.so' is up to date.
+make[1]: Leaving directory `/home/marcusmae/forge/kernelgen/trunk/src/libasfermi'
+../../asfermi constant3.s -sm_30 -64 -o constant3.cubin
+Done
+nvcc -g constant3.cu -o constant3 -lcuda
+$ ./constant3 
+unnamedConst2_0 addr = 0xb00200000 size = 16
+named addr = 0xb00200010, size = 48
+initial result = 1
+changed result = 10
