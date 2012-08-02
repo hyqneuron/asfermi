@@ -231,7 +231,7 @@ void hpDirectiveErrorHandler(int e)
 		break;
 	case 1010:	message = "Incorrect number of kernel arguments.";
 		break;
-	case 1011:	message = "Unsupported architecture. Please use only sm_20 or sm_21"; //issue: architecture support may increase in future
+	case 1011:	message = "Unsupported architecture. Please use only sm_20, sm_21 or sm_30"; //issue: architecture support may increase in future
 		break;
 	case 1012:	message = "Constant2 size must be declared to non-zero first before constant could be declared.";
 		break;

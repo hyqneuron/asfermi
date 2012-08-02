@@ -28,6 +28,7 @@
 
 const unsigned int ELFFlagsForsm_20 = 0x00140114;
 const unsigned int ELFFlagsForsm_21 = 0x00140115;
+const unsigned int ELFFlagsForsm_30 = 0x001E011E;
 
 
 //default is 32-bit
@@ -68,7 +69,7 @@ ELFHeader32::ELFHeader32()
 	//00aabbcc
 	//aa: ptx target architecture
 	//bb: ptx address size 01: 32-bit, 05:64-bit
-	//cc: architecture: 14: sm_20, 15: sm_21
+	//cc: architecture: 14: sm_20, 15: sm_21, 1E: sm_30
 		
 	//0x28
 	HeaderSize = 0x34;

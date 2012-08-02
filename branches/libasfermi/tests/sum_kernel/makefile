@@ -3,7 +3,7 @@
 all: sum_kernel
 
 ../../libasfermi.so:
-	cd ../.. && $(MAKE)
+	cd ../.. && $(MAKE) asfermi libasfermi.so
 
 sum_kernel: sum_kernel.cu sum_kernel.cubin
 	nvcc -g -DBLOCK_SIZE=256 $< -o $@ -lcuda

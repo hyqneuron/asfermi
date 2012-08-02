@@ -80,7 +80,7 @@ int main(int argc, char** args)
 		else if(csOperationMode == DirectOutput)
 		{
 			fstream csOutput;
-			csOutput.open(ofilename, fstream::out | fstream::binary |fstream::trunc);
+			csOutput.open(ofilename.c_str(), fstream::out | fstream::binary |fstream::trunc);
 			if(!csOutput.is_open() || !csOutput.good())
 				throw 4; //failed to open output file
 
@@ -114,7 +114,7 @@ void WriteToCubinReplace()
 		throw 9; //output section not large enough
 	list<Instruction>::iterator inst = csInstructions.begin();
 	ofstream csOutput;
-	csOutput.open(ofilename, fstream::out | fstream::binary |fstream::trunc);
+	csOutput.open(ofilename.c_str(), fstream::out | fstream::binary |fstream::trunc);
 	if(!csOutput.is_open() || !csOutput.good())
 		throw 4; //failed to open output file
 
@@ -242,6 +242,11 @@ void ProcessCommandsAndReadSource(int argc, char** args)
 		else if(strcmp(args[currentArg], "-sm_21")==0)
 		{
 			cubinArchitecture = sm_21;
+			currentArg += 1;
+		}
+		else if(strcmp(args[currentArg], "-sm_30")==0)
+		{
+			cubinArchitecture = sm_30;
 			currentArg += 1;
 		}
 		else if(strcmp(args[currentArg], "-32")==0)

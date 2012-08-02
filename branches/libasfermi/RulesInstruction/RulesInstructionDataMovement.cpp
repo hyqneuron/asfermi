@@ -106,11 +106,12 @@ struct InstructionRuleLDL: InstructionRule
 	InstructionRuleLDL() : InstructionRule("LDL", 2, true, false)
 	{
 		hpBinaryStringToOpcode8("1010 000100111000000000000000000000000000000000000000000000000011", OpcodeWord0, OpcodeWord1);
-		SetOperands(2, 
-					&OPRRegister0ForMemory,					
+		SetOperands(2,
+					&OPRRegister0ForMemory,
 					&OPRGlobalMemoryWithImmediate24);
-		ModifierGroups[0].Initialize(true, 3,
+		ModifierGroups[0].Initialize(true, 4,
 					&MRLDCopCG,
+					&MRLDCopCS,
 					&MRLDCopLU,
 					&MRLDCopCV);
 		ModifierGroups[1].Initialize(true, 6,

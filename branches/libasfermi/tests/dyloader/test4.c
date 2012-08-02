@@ -21,7 +21,9 @@
  */
 
 #include <assert.h>
+#include <cuda.h>
 #include <cuda_runtime.h>
+#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 
