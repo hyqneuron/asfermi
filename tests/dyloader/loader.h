@@ -26,7 +26,8 @@ static const char* uberkern[] =
 {
 	"!Machine 64",
 
-	"!Constant2 0x10",			// Reserve 16 bytes of constant memory to store:
+	"!Constant2 0x1000",			// Reserve 16 (padded to 4096) bytes of
+						// constant memory to store:
 	"!Constant long 0x0 uberkern_config",	// the address of uberkern config structure
 	"!EndConstant",
 	"!Constant int 0x8 uberkern_cmd",	// select command:

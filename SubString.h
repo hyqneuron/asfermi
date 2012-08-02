@@ -47,7 +47,7 @@ struct SubString
 	unsigned int ToImmediate32FromHexConstant(bool acceptNegative); 
 	unsigned int ToImmediate32FromFloat32();
 	unsigned int ToImmediate32FromFloat64();
-	unsigned int ToImmediate32FromInt32();
+	unsigned int ToImmediate32FromInt32(bool warnZero = true);
 	unsigned int ToImmediate32FromInt64();
 	unsigned int ToImmediate32FromIntConstant(); 
 	unsigned int ToImmediate32FromFloatConstant();

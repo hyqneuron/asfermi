@@ -33,6 +33,7 @@
 
 extern const unsigned int ELFFlagsForsm_20;
 extern const unsigned int ELFFlagsForsm_21;
+extern const unsigned int ELFFlagsForsm_30;
 
 extern int ELFHeaderSize;
 extern int ELFSectionHeaderSize;

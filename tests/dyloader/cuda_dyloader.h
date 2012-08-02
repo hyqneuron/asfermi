@@ -23,7 +23,7 @@
 #ifndef CUDA_DYLOADER_H
 #define CUDA_DYLOADER_H
 
-#include <cuda.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -50,10 +50,13 @@ CUresult cudyLoadOpcodes(CUDYfunction* function,
 	int regcount, CUstream stream);
 
 // Launch kernel function through the dynamic loader.
+// Additionally, measure the time of the kernel execution if
+// the time pointer is not NULL. Note measurement will cause
+// synchronization!
 CUresult cudyLaunch(CUDYfunction function,
 	unsigned int gx, unsigned int gy, unsigned int gz,
 	unsigned int bx, unsigned int by, unsigned int bz,
-	size_t szshmem, void* args, CUstream stream);
+	size_t szshmem, void* args, CUstream stream, float* time);
 
 // Dispose the specified CUDA dynamic loader instance.
 CUresult cudyDispose(CUDYloader loader);

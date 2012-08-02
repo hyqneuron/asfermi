@@ -115,7 +115,7 @@ extern bool cubinConstant2Overflown;
 
 extern void (*cubinCurrentConstant2Parser)(SubString &content);
 
-enum Architecture{sm_20, sm_21};
+enum Architecture{sm_20, sm_21, sm_30};
 extern Architecture cubinArchitecture;
 extern bool cubin64Bit;
 

@@ -124,40 +124,72 @@ int hpFileSizeAndSetBegin(fstream &file)		//===
 	return fileSize;
 }
 
-void hpReadSourceArray(char* src)
+void hpReadSourceArray(char* csSource)
 {
-	// Replace comments with newlines.
-	int length = strlen(src);
-	for (int i = 1; i < length; i++)
-	{
-		if ((src[i] == '*') && (src[i - 1] == '/'))
-		{
-			int start = i - 1;
-			for ( ; i < length; i++)
-				if ((src[i] == '/') && (src[i - 1] == '*'))
-					break;
-			memset(src + start, '\n', i - start + 1);
-		}
-	}
-	for (int i = 1; i < length; i++)
-	{
-		if ((src[i] == '/') && (src[i - 1] == '/'))
-		{
-			int start = i - 1;
-			for ( ; i < length; i++)
-				if (src[i] == '\n')
-					break;
-			memset(src + start, '\n', i - start + 1);
-		}
-	}
+	int lineNumber = 0;
+	bool inBlockComment = false;
 
-	// Tokenize source into lines.
-	char* psrc = strtok(src, "\n");
-	for (int iline = 0; psrc; iline++)
+	int startPos = 0;
+	int length = 0;
+	int lastLineFeedPos = 0;
+
+
+//Add lines
+	do
 	{
-		csLines.push_back(Line(SubString(psrc), iline));
-		psrc = strtok(NULL, "\n");
+		lastLineFeedPos = ::hpFindInSource(10, startPos, length);
+		//comment check
+		for(int i =startPos + 1; i< startPos + length; i++)
+		{
+			if(inBlockComment)
+			{
+				if(csSource[i]=='/' && csSource[i-1]=='*')
+				{
+					inBlockComment = false;
+					startPos = i + 1;
+					length = lastLineFeedPos - startPos;
+					i=startPos;
+					continue;
+				}
+			}
+			else
+			{
+				if(csSource[i]=='/' && csSource[i-1]=='/')
+				{
+					length = i - 1 - startPos;
+					break;
+				}
+				if(csSource[i]=='*' && csSource[i-1]=='/')
+				{
+					inBlockComment = true;
+					csLines.push_back(Line(SubString(startPos, i - 1 - startPos), lineNumber));
+					i++; //jump over a character
+					continue;
+				}
+			}
+		}
+		//comment check end
+		if(!inBlockComment)
+			csLines.push_back(Line(SubString(startPos, length), lineNumber));
+		startPos = lastLineFeedPos + 1;
+		lineNumber++;
 	}
+	while(lastLineFeedPos!=-1);
+}
+
+int hpFindInSource(char target, int startPos, int &length)
+{
+        int currentPos;
+        for(currentPos = startPos; currentPos < csSourceSize; currentPos++)
+        {
+                if(target == csSource[currentPos])
+                {
+                        length = currentPos - startPos;
+                        return currentPos;
+                }
+        }
+        length = currentPos - startPos;
+        return -1;
 }
 
 void hpReadSource(char* path)				//===

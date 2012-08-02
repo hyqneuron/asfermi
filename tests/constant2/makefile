@@ -3,7 +3,7 @@
 all: constant2
 
 ../../libasfermi.so:
-	cd ../.. && $(MAKE)
+	cd ../.. && $(MAKE) asfermi libasfermi.so
 
 constant2: constant2.cu constant2.cubin
 	nvcc -g $< -o $@ -lcuda

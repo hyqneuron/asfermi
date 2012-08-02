@@ -215,14 +215,14 @@ unsigned int SubString::ToImmediate32FromFloat64()
 }
 
 //Parse as int
-unsigned int SubString::ToImmediate32FromInt32()
+unsigned int SubString::ToImmediate32FromInt32(bool warnZero)
 {
 	char zeroSaver = Start[Length];
 	Start[Length] = 0;
 	int result = atoi(Start);
 	Start[Length] = zeroSaver;
 
-	if(result == 0)
+	if ((result == 0) && warnZero)
 		hpWarning(10);
 	else if(result == INT_MAX || result == INT_MIN)
 		hpWarning(11);

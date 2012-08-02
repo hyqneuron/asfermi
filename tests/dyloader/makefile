@@ -1,19 +1,19 @@
 .PHONY: ../../libasfermi.so
 
-all: libdyloader.so test1 test2 test3 test4 test5
+#all: libdyloader.so test1 test2 test3 test4 test5
+all: libdyloader.so
 
 ../../libasfermi.so:
-	cd ../.. && $(MAKE)
+	cd ../.. && $(MAKE) libasfermi.so
 
 libdyloader.so: cuda_dyloader.o ../../libasfermi.so
-	nvcc -shared $^ -o $@ -L../.. -lasfermi -lcuda -lelf
+	nvcc -shared $< -o $@ -L../.. -lasfermi -lelf
 
 cuda_dyloader.o: cuda_dyloader.cpp cuda_dyloader.h loader.h
-	nvcc -I../.. -Xcompiler -fPIC -g -c $< -o $@
+	nvcc -I. -I../.. -I../../.. -I/usr/include/libelf -Xcompiler -fPIC -g -c $< -o $@
 
 clean:
 	rm -rf *.o libdyloader.so test1 test2 test3 test4 test5
-	cd ../.. && $(MAKE) clean
 
 test1: test1.c libdyloader.so
 	nvcc -g $< -o $@ -L. -ldyloader -L../.. -lasfermi -lcuda
