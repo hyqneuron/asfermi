@@ -233,13 +233,13 @@ void hpDirectiveErrorHandler(int e)
 		break;
 	case 1011:	message = "Unsupported architecture. Please use only sm_20, sm_21 or sm_30"; //issue: architecture support may increase in future
 		break;
-	case 1012:	message = "Constant2 size must be declared to non-zero first before constant could be declared.";
+	case 1012:	message = "The constant2/constant3 size must be declared to non-zero first before constant could be declared.";
 		break;
-	case 1013:	message = "Offset is larger than constant2.";
+	case 1013:	message = "Offset is larger than constant2/constant3.";
 		break;
-	case 1014:	message = "Maximal constant2 size supported is 65536 bytes.";
+	case 1014:	message = "Maximal constant2/constant3 size supported is 65536 bytes.";
 		break;
-	case 1015:	message = "Constant2 could be declared only once per cubin.";
+	case 1015:	message = "The constant2/constant3 could be declared only once per cubin.";
 		break;
 	case 1016:	message = "Unsupported constant type.";
 		break;

@@ -121,7 +121,7 @@ char *cubin_str_constant0=	".nv.constant0.";
 char *cubin_str_info   =	".nv.info.";
 char *cubin_str_shared =	".nv.shared.";
 char *cubin_str_local  =	".nv.local.";
-char *cubin_str_constant2=	".nv.constant2";
+char *cubin_str_constant =	".nv.constant";
 char *cubin_str_nvinfo =	".nv.info";
 
 
