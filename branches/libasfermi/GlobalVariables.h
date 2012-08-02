@@ -132,7 +132,7 @@ extern char *cubin_str_constant0;
 extern char *cubin_str_info;
 extern char *cubin_str_shared;
 extern char *cubin_str_local;
-extern char *cubin_str_constant2;
+extern char *cubin_str_constant;
 extern char *cubin_str_nvinfo;
 
 

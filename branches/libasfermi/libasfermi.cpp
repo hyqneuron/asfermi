@@ -70,6 +70,7 @@ static char* asfermi_encode(char* source, int cc, bool embed, int elf64bit, size
 		{
 			case 20 : cubinArchitecture = sm_20; break;
 			case 21 : cubinArchitecture = sm_21; break;
+			case 30 : cubinArchitecture = sm_30; break;
 			default : return NULL;
 		}
 
