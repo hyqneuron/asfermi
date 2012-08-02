@@ -153,7 +153,7 @@ void hpCubinStage1()
 	{
 		cubinSectionConstant2.SectionIndex = cubinCurrentSectionIndex++;
 		cubinSectionConstant2.SHStrTabOffset = cubinCurrentSHStrTabOffset;
-		cubinCurrentSHStrTabOffset += strlen(cubin_str_constant2) + 1;
+		cubinCurrentSHStrTabOffset += strlen(cubin_str_constant) + 2;
 	}
 
 	cubinSectionNVInfo.SectionIndex = cubinCurrentSectionIndex++;
@@ -226,7 +226,15 @@ inline void hpCubinStage2SetSHStrTabSectionContent()
 	}
 	//tail sections
 	if(cubinConstant2Size)
-		hpCubinAddSectionName2(cubinSectionSHStrTab.SectionContent, currentOffset, cubin_str_constant2);
+	{
+		// Switch between .nv.constant2 and .nv.constant3, depending on target architecture.
+		string name = cubin_str_constant;
+		if(cubinArchitecture == sm_20||cubinArchitecture ==sm_21)
+			name += "2";
+		else if(cubinArchitecture ==sm_30)
+			name += "3";
+		hpCubinAddSectionName2(cubinSectionSHStrTab.SectionContent, currentOffset, name.c_str());
+	}
 	hpCubinAddSectionName2(cubinSectionSHStrTab.SectionContent, currentOffset, cubin_str_nvinfo);
 }
 inline void hpCubinStage2SetStrTabSectionContent()
@@ -455,7 +463,7 @@ void hpCubinStage3()
 			{
 				*offset++ = 0x000c1704; //identifier: 04 17 0c 00
 				*offset++ = 0x0; //index, always -0x1
-				*offset++ = 0xffffffff; //index, always -0x1
+				//*offset++ = 0xffffffff; //index, always -0x1
 				*offset++ = ( ordinal-- )| (param->Offset<<16); // aa bb cc dd: bbaa is ordinal, ddcc is offset
 				*offset++ = (((param->Size+3)/4)<<20)|0x0001f000; //aaa b c b dd: aaa is size of param/4, bb is cbank, c is space, dd is logAlignment
 			}
