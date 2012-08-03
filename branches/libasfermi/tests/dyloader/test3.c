@@ -160,7 +160,7 @@ int sum_host(float* a, float* b, float* c, int n)
 	struct { void *aDev, *bDev, *cDev; } args =
 		{ .aDev = aDev, .bDev = bDev, .cDev = cDev };
 	cuerr = cudyLaunch(function,
-		n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1, 0, &args, 0);
+		n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1, 0, &args, 0, NULL);
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot launch kernel function: %d\n",

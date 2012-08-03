@@ -131,7 +131,7 @@ int main (int argc, char* argv[])
 
 		// Launch kernel function within dynamic loader.
 		err = cudyLaunch(function,
-			1, 1, 1, 1, 1, 1, 0, &lock, stream2);
+			1, 1, 1, 1, 1, 1, 0, &lock, stream2, NULL);
 		assert(err == CUDA_SUCCESS);
 		
 		printf("Submitted kernel2\n");

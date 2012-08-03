@@ -44,11 +44,11 @@ static const char* uberkern[] =
 
 	"LEPC R0",				// R0 = LEPC
 
-	"MOV R2, c[0x2][0x8]",			// Check if the uberkern_cmd contains 0.
+	"MOV R2, c$BANK[0x8]",			// Check if the uberkern_cmd contains 0.
 	"ISETP.NE.AND P0, pt, R2, RZ, pt",
 	"@P0 BRA !LD",				// If not - go to !LD
-	"MOV R2, c[0x2][0x0]",
-	"MOV R3, c[0x2][0x4]",
+	"MOV R2, c$BANK[0x0]",
+	"MOV R3, c$BANK[0x4]",
 	"ST.E [R2], R0",			// If yes, write LEPC to uberkern_config and exit.
 	"EXIT",
 
@@ -62,15 +62,15 @@ static const char* uberkern[] =
 						// Load the dynamic kernel starting address.
 
 	"!Label GO",
-	"MOV R1, c[0x2][0xc]",			// R1 = c[0x2][0x12]		<-- 4-byte value of goto offset
+	"MOV R1, c$BANK[0xc]",			// R1 = c$BANK[0x12]		<-- 4-byte value of goto offset
 	"IADD R1, R1, 0x140",			// R1 += !FRE
 	"IADD R0, R0, R1",			// R0 += R1
 	"MOV R1, 0x1",				// R1 = 1			<-- low word compound = 1
 
 						// Load kernel's size and then load each instruction in a loop.
 
-	"MOV R2, c[0x2][0x0]",
-	"MOV R3, c[0x2][0x4]",
+	"MOV R2, c$BANK[0x0]",
+	"MOV R3, c$BANK[0x4]",
 	"LD.E R6, [R2]",			// R6 = *(R2, R3)
 	"IADD R2, R2, 8",			// R2 = R2 + 8			<-- address of uberkern_args_t.binary
 	"LD.E.64 R4, [R2]",			// (R4, R5) = *(R2, R3)
@@ -99,7 +99,7 @@ static const char* uberkern[] =
 	"NOP",
 	"NOP",
 	"!Label BRA",
-	"BRA c[0x2][0xc]",			// goto dynamic kernel offset
+	"BRA c$BANK[0xc]",			// goto dynamic kernel offset
 	"!Label FRE",
 	"$BUF",					// $BUF more NOPs here as free space for code insertions
 	"!EndKernel"

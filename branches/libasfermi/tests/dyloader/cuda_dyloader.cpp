@@ -273,6 +273,23 @@ struct CUDYloader_t
 	{
 		int ntokens = sizeof(uberkern) / sizeof(const char*);
 
+		int device;
+		CUresult curesult = cuDeviceGet(&device, 0);
+		if (curesult != CUDA_SUCCESS)
+		{
+			if (verbose)
+				cerr << "Cannot get the CUDA device" << endl;
+			throw curesult;
+		}
+		int major = 2, minor = 0;
+		curesult = cuDeviceComputeCapability(&major, &minor, device);
+		if (curesult != CUDA_SUCCESS)
+		{
+			if (verbose)
+				cerr << "Cannot get the CUDA device compute capability" << endl;
+			throw curesult;
+		}
+
 		stringstream stream;
 		stream << setfill('0');
 		for (int i = 0, ilines = 0; i < ntokens; i++)
@@ -283,6 +300,17 @@ struct CUDYloader_t
 			{
 				stream << "\t\t" << line << endl;
 				continue;
+			}
+
+			// Replace $BANK with [0x2] or [0x3], depending on target architecture.
+			string bank = "";
+			if (major == 2) bank = "[0x2]";
+			if (major == 3) bank = "[0x3]";
+			for (size_t index = line.find("$BANK", 0);
+				index = line.find("$BANK", index); index++)
+			{
+				if (index == string::npos) break;
+				line.replace(index, bank.length(), bank);
 			}
 
 			// Output the specified number of NOPs in place of $BUF.
@@ -325,8 +353,8 @@ struct CUDYloader_t
 
 		try
 		{
-			// Emit cubin.
-			cubin = asfermi_encode_cubin(csource, 20, 0, NULL);
+			// Emit cubin for the current device architecture.
+			cubin = asfermi_encode_cubin(csource, major * 10 + minor, 0, NULL);
 			if (!cubin)
 			{
 				if (verbose)
@@ -335,7 +363,7 @@ struct CUDYloader_t
 			}
 
 			// Load binary containing uberkernel to deivce memory.
-			CUresult curesult = cuModuleLoadData(&module, cubin);
+			curesult = cuModuleLoadData(&module, cubin);
 			if (curesult != CUDA_SUCCESS)
 			{
 				if (verbose)

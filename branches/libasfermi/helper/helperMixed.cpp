@@ -124,7 +124,7 @@ int hpFileSizeAndSetBegin(fstream &file)		//===
 	return fileSize;
 }
 
-void hpReadSourceArray(char* csSource)
+void hpReadSourceArray(char* csSource, int csSourceSize)
 {
 	int lineNumber = 0;
 	bool inBlockComment = false;
@@ -137,7 +137,7 @@ void hpReadSourceArray(char* csSource)
 //Add lines
 	do
 	{
-		lastLineFeedPos = ::hpFindInSource(10, startPos, length);
+		lastLineFeedPos = ::hpFindInSource(csSource, csSourceSize, 10, startPos, length);
 		//comment check
 		for(int i =startPos + 1; i< startPos + length; i++)
 		{
@@ -177,7 +177,7 @@ void hpReadSourceArray(char* csSource)
 	while(lastLineFeedPos!=-1);
 }
 
-int hpFindInSource(char target, int startPos, int &length)
+int hpFindInSource(char* csSource, int csSourceSize, char target, int startPos, int &length)
 {
         int currentPos;
         for(currentPos = startPos; currentPos < csSourceSize; currentPos++)
@@ -206,7 +206,7 @@ void hpReadSource(char* path)				//===
 	csInput.read(csSource, csSourceSize);		//read all into csSource
 	csInput.close();
 	
-	hpReadSourceArray(csSource);
+	hpReadSourceArray(csSource, csSourceSize);
 }
 
 void hpCheckOutputForReplace(char* path, char* kernelname, char* replacepoint)		//===
