@@ -74,7 +74,7 @@ static char* asfermi_encode(char* source, int cc, bool embed, int elf64bit, size
 			default : return NULL;
 		}
 
-		hpReadSourceArray(source);
+		hpReadSourceArray(source, strlen(source));
 		csMasterParser->Parse(0);
 		if (csErrorPresent) throw 98;
 

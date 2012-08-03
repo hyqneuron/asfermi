@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
 
 		// Launch kernel function within dynamic loader.
 		cuerr = cudyLaunch(function,
-			1, 1, 1, 1, 1, 1, 0, &args, 0);
+			1, 1, 1, 1, 1, 1, 0, &args, 0, NULL);
 		if (cuerr != CUDA_SUCCESS)
 		{
 			fprintf(stderr, "Cannot launch kernel function: %d\n",

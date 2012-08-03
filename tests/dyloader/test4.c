@@ -242,7 +242,7 @@ int sum_host(CUDYloader loader, float* a, float* b, int n, int narrays)
 	
 	// Launch kernel function within dynamic loader.
 	cuerr = cudyLaunch(function,
-		n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1, 0, args, 0);
+		n / BLOCK_SIZE, 1, 1, BLOCK_SIZE, 1, 1, 0, args, 0, NULL);
 	if (cuerr != CUDA_SUCCESS)
 	{
 		fprintf(stderr, "Cannot launch kernel function: %d\n",
@@ -399,7 +399,7 @@ int main ( int argc, char* argv[] )
 		float sum = 0.0f;
 		for (int j = 0; j < narrays; j++)
 			sum += a[imaxdiff + n * j];
-		printf("Max diff = %f% @ i = %d: %f != %f\n",
+		printf("Max diff = %f%% @ i = %d: %f != %f\n",
 			maxdiff * 100, imaxdiff, b[imaxdiff], sum);
 
 	finish:
