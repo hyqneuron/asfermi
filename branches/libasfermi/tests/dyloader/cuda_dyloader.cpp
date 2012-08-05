@@ -43,17 +43,21 @@
 using namespace std;
 
 // The maximum number of registers per thread.
-#define MAX_REGCOUNT	63
+#define MAX_REGCOUNT		63
 
 // The register footprint of uberkern loader code itself.
 // Engine still should be able to run dynamic kernels with
 // smaller footprints, but when loader code is running, this
 // number is a must.
-#define LOADER_REGCOUNT	7
+#define LOADER_REGCOUNT		7
+
+// Ad extra offset between the end of uberkerel loader code
+// and the first dynamic kernel code
+#define BASE_EXTRA_OFFSET	1024
 
 // An extra offset between loaded dynamic kernels codes to
 // force no caching/prefetching.
-#define EXTRA_OFFSET	512
+#define EXTRA_OFFSET		512
 
 static int verbose = 1;
 
@@ -269,7 +273,7 @@ struct CUDYloader_t
 	
 	list<CUDYfunction_t*> functions;
 	
-	CUDYloader_t(int capacity) : offset(0), capacity(capacity * 8), buffer(0)
+	CUDYloader_t(int capacity) : offset(BASE_EXTRA_OFFSET), capacity(BASE_EXTRA_OFFSET + capacity * 8), buffer(0)
 	{
 		int ntokens = sizeof(uberkern) / sizeof(const char*);
 
@@ -290,6 +294,11 @@ struct CUDYloader_t
 			throw curesult;
 		}
 
+		// Select the bank number: differs between Fermi and Kepler.
+		string bank = "";
+		if (major == 2) bank = "[0x2]";
+		if (major == 3) bank = "[0x3]";
+
 		stringstream stream;
 		stream << setfill('0');
 		for (int i = 0, ilines = 0; i < ntokens; i++)
@@ -303,9 +312,6 @@ struct CUDYloader_t
 			}
 
 			// Replace $BANK with [0x2] or [0x3], depending on target architecture.
-			string bank = "";
-			if (major == 2) bank = "[0x2]";
-			if (major == 3) bank = "[0x3]";
 			for (size_t index = line.find("$BANK", 0);
 				index = line.find("$BANK", index); index++)
 			{
@@ -335,7 +341,7 @@ struct CUDYloader_t
 			stream << "\t\t!Kernel uberkern" << regcount << endl;
 			stream << "\t\t!RegCount " << regcount << endl;
 			stream << "\t\t!Param 256 1" << endl;
-			stream << "/* 0x0000 */\tJMP c[0x2][0x8];" << endl;
+			stream << "/* 0x0000 */\tJMP c" << bank << "[0x8];" << endl;
 			stream << "\t\t!EndKernel" << endl;
 		}
 
@@ -354,7 +360,8 @@ struct CUDYloader_t
 		try
 		{
 			// Emit cubin for the current device architecture.
-			cubin = asfermi_encode_cubin(csource, major * 10 + minor, 0, NULL);
+			size_t size;
+			cubin = asfermi_encode_cubin(csource, major * 10 + minor, 0, &size);
 			if (!cubin)
 			{
 				if (verbose)
