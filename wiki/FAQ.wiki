@@ -79,7 +79,7 @@ More special registers: [OpcodeMiscellaneous#S2R]
 
 
 ==== `MOV R1, c[0x1][0x100]` ====
-This instruction appears at the beginning of all ptxas/nvcc-generated cubins. C[0x1][0x100] is the initial stack top and local window top. NVCC/PTXAS use its content to initialize the virtual SP register (and of course to access local variables) in __global__ functions and R1 is always the current virtual SP passed to __device__ function.  the Local window/stack is alway 32-bit (actually it's 24-bit) in both 32-bit/64-bit device code. the stack is top-down growing.
+This instruction appears at the beginning of all ptxas/nvcc-generated cubins. `C[0x1][0x100]` is the initial stack top and local window top. NVCC/PTXAS use its content to initialize the virtual SP register (and of course to access local variables) in __global__ functions and R1 is always the current virtual SP passed to __device__ function.  the Local window/stack is alway 32-bit (actually it's 24-bit) in both 32-bit/64-bit device code. the stack is top-down growing.
 (description contributed by Sun HuanHuan)
 
 ==== `MOV R0, c[0x0][0x20]` ====
