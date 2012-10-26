@@ -79,7 +79,8 @@ More special registers: [OpcodeMiscellaneous#S2R]
 
 
 ==== `MOV R1, c[0x1][0x100]` ====
-This instruction appears at the beginning of all ptxas/nvcc-generated cubins. c`[0x1`]`[0x100`] is a 4-byte constant value in bank 1 address 0x100. Currently the purpose of this constant value remains unknown. No problem has been discovered when this instruction is removed from cubin. However, attemping "ST.E `[R1]`, Rxx" will always result in kernel launch failure. Whether the same is true for "ST `[R1]`, Rxx" or not has not been tested.
+This instruction appears at the beginning of all ptxas/nvcc-generated cubins. C[0x1][0x100] is the initial stack top and local window top. NVCC/PTXAS use its content to initialize the virtual SP register (and of course to access local variables) in __global__ functions and R1 is always the current virtual SP passed to __device__ function.  the Local window/stack is alway 32-bit (actually it's 24-bit) in both 32-bit/64-bit device code. the stack is top-down growing.
+(description contributed by Sun HuanHuan)
 
 ==== `MOV R0, c[0x0][0x20]` ====
 A kernel's parameter window starts at `c[0x0][0x20]` and can be at most 256-byte wide. The instruction `MOV R0, c[0x0][0x20]` Loads the first 4 bytes of the parameters passed in to `R0`.
