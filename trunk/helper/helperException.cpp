@@ -178,7 +178,7 @@ void hpInstructionErrorHandler(int e)
 		break;
 	case 154:	message = "VADD's immediate operand cannot be longer than 16 bits";
 		break;
-	case 155:	message = "Schedule number cannot exceed 0x3f, or 111111";
+	case 155:	message = "Schedule number cannot exceed 0xff, or 11111111";
 		break;
 	case 156:	message = "Incorrect binary number";
 		break;
