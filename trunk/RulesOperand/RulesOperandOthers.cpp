@@ -33,12 +33,12 @@ struct OperandRuleSCHI: OperandRule
 			result = component.ToImmediate32FromHexConstant(false);
 		else
 			result = component.ToImmediate32FromBinary();
-		if(result>0x3f)
-			throw 155; //cannot exceed 0x3f
+		if(result>0xff)
+			throw 155; //cannot exceed 0xff
 		if(Offset < 32)
 		{
 			csCurrentInstruction.OpcodeWord0 |= result<< Offset;
-			if(Offset > 26)
+			if(Offset > 24)
 				csCurrentInstruction.OpcodeWord1 |= result>> 32 - Offset;
 		}
 		else
