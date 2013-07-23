@@ -21,11 +21,11 @@ INST4
 INST5
 INST6
 }}}
-where op(x) is either a hex number or a binary number (least-significant bit first) not exceeding 0x3f or 111111, and INST(x) may be any instruction. op(x) controls the dispatch interval between INST(x) and INST(x+1)
+where op(x) is either a hex number or a binary number (least-significant bit first) not exceeding 0xff or 11111111, and INST(x) may be any instruction. op(x) controls the dispatch interval between INST(x) and INST(x+1)
 
 Template opcode
 {{{
-1110 00000000 00000000 00000000 00000000 00000000 00000000 000000 000100
+1110 00000000 00000000 00000000 00000000 00000000 00000000 00000000 0100
      op0      op1      op2      op3      op4      op5      op6
 }}}
 
