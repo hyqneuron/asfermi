@@ -1,11 +1,12 @@
-<b><font size='5'>asfermi: An assembler for the NVIDIA Fermi Instruction Set</font></b>
+# asfermi: An assembler for the NVIDIA Fermi Instruction Set
 
-`========================================================================`
+---
+
 Note: entire project imported from [Google
 Code](http://code.google.com/p/asfermi). This project is no longer actively
 maintained, and the wiki is pretty much broken on GitHub.
 
-`========================================================================`
+---
 
 asfermi is an assembler for the NVIDIA Fermi ISA. It can output assembled kernels directly into cubin files (an ELF format file that NVIDIA uses to store its machine code), or it can be used to modify existing cubin kernels. Currently around 70 instructions are supported. asfermi works on both 32-bit and 64-bit platforms.
 
